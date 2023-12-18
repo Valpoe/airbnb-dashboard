@@ -16,7 +16,7 @@ interface User {
 }
 
 export default function UsersTable({ users }: { users: User[] }) {
-
+  // fadfda
   console.log("Users table: ", users);
   return (
     <Table>
