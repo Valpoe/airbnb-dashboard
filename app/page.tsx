@@ -15,12 +15,25 @@ export default async function IndexPage({
 }: {
   searchParams: { q: string };
 }) {
-  const search = searchParams.q ?? '';
-  const result = await sql`
-    SELECT id, name, username, email 
-    FROM users 
-    WHERE name ILIKE ${'%' + search + '%'};
-  `;
+  const search = searchParams.q || '';  // Use an empty string if searchParams.q is falsy
+  let result;
+
+  if (search.trim() === '') {
+    // If search term is empty, select all users
+    result = await sql`
+      SELECT id, name, username, email 
+      FROM users;
+    `;
+  } else {
+    // If search term is not empty, use ILIKE to filter by name
+    result = await sql`
+      SELECT id, name, username, email 
+      FROM users 
+      WHERE name ILIKE ${'%' + search + '%'};
+    `;
+  }
+
+  console.log("Result: ", result);
   const users = result.rows as User[];
 
   return (
@@ -34,3 +47,4 @@ export default async function IndexPage({
     </main>
   );
 }
+
