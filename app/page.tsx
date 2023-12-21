@@ -15,6 +15,7 @@ export default async function IndexPage({
 }: {
   searchParams: { q: string };
 }) {
+
   const search = searchParams.q || '';  // Use an empty string if searchParams.q is falsy
   let result;
 
