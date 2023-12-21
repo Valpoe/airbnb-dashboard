@@ -36,6 +36,7 @@ const handler = NextAuth({
             email: user.email,
           };
         }
+        console.log({ user });
 
         return null;
       },
