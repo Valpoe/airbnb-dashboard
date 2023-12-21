@@ -16,7 +16,6 @@
 //   );
 // }
 import { getServerSession } from 'next-auth';
-import Form from './form';
 import { redirect } from 'next/navigation';
 import LoginForm from './loginForm';
 export default async function LoginPage() {
