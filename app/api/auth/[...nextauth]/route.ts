@@ -12,9 +12,6 @@ const handler = NextAuth({
   },
   providers: [
     CredentialsProvider({
-      id: 'credentialsProvider',
-      name: 'Credentials',
-      type: 'credentials',
       credentials: {
         username: {},
         password: {},
