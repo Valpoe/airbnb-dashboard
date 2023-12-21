@@ -7,14 +7,14 @@ const handler = NextAuth({
   session: {
     strategy: 'jwt',
   },
-  jwt: {
-    secret: process.env.JWT_SECRET,
-  },
   pages: {
     signIn: '/login',
   },
   providers: [
     CredentialsProvider({
+      id: 'credentialsProvider',
+      name: 'Credentials',
+      type: 'credentials',
       credentials: {
         username: {},
         password: {},
