@@ -1,45 +1,20 @@
-import { sql } from '@vercel/postgres';
-import { Card, Title, Text } from '@tremor/react';
-import Search from './search';
-import UsersTable from './table';
-import { User } from './lib/definitions';
+import LoginForm from './components/loginForm';
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "./api/auth/[...nextauth]/route";
+import { Card } from "@tremor/react";
 
-export default async function IndexPage({
-  searchParams
-}: {
-  searchParams: { q: string };
-}) {
+export default async function Home() {
+  const session = await getServerSession(authOptions);
 
-  const search = searchParams.q || '';  // Use an empty string if searchParams.q is falsy
-  let result;
-
-  if (search.trim() === '') {
-    // If search term is empty, select all users
-    result = await sql`
-      SELECT id, name, username, email 
-      FROM users;
-    `;
-  } else {
-    // If search term is not empty, use ILIKE to filter by name
-    result = await sql`
-      SELECT id, name, username, email 
-      FROM users 
-      WHERE name ILIKE ${'%' + search + '%'};
-    `;
-  }
-
-  console.log("Result: ", result);
-  const users = result.rows as User[];
+  if (session) redirect("/dashboard");
 
   return (
-    <main className="p-4 md:p-10 mx-auto max-w-7xl">
-      <Title>Users</Title>
-      <Text>A list of users retrieved from a Postgres database.</Text>
-      <Search />
-      <Card className="mt-6">
-        <UsersTable users={users} />
+    <main className="flex items-center justify-center md:h-screen">
+      <Card className="max-w-xs mx-auto" decoration='top' decorationColor='blue'>
+            <LoginForm />
       </Card>
-    </main>
+        </main>
   );
 }
 

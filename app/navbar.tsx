@@ -8,7 +8,7 @@ import { signIn, signOut } from 'next-auth/react';
 import Image from 'next/image';
 
 const navigation = [
-  { name: 'Dashboard', href: '/' },
+  { name: 'Dashboard', href: '/dashboard' },
   { name: 'Playground', href: '/playground' }
 ];
 
@@ -18,7 +18,6 @@ function classNames(...classes: string[]) {
 
 export default function Navbar({ user }: { user: any }) {
   const pathname = usePathname();
-  console.log("Logged in user: ", user);
 
   return (
     <Disclosure as="nav" className="bg-white shadow-sm">
