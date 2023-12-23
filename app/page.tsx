@@ -10,7 +10,7 @@ export default async function Home() {
   if (session) redirect("/dashboard");
 
   return (
-    <main className="flex items-center justify-center md:h-screen">
+    <main className="p-4 md:p-10 flex items-center">
       <Card className="max-w-xs mx-auto" decoration='top' decorationColor='blue'>
             <LoginForm />
       </Card>
