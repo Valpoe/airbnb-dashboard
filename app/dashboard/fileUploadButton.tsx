@@ -1,7 +1,5 @@
 // components/FileUploadButton.tsx
 import CSVReader, { CSVReaderProps } from 'react-csv-reader';
-import { useState } from 'react';
-
 
 interface FileUploadButtonProps {
   onDataUpload: (data: any[]) => void;
@@ -18,13 +16,12 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onDataUpload }) => 
     skipEmptyLines: true,
   };
 
-  return (
-    <CSVReader
-      onFileLoaded={handleFile}
-      parserOptions={papaparseOptions}
-    >
-    </CSVReader>
-  );
+  const csvReaderProps: Omit<CSVReaderProps, 'children'> = {
+    onFileLoaded: handleFile,
+    parserOptions: papaparseOptions,
+  };
+
+  return <CSVReader {...csvReaderProps} />;
 };
 
 export default FileUploadButton;
