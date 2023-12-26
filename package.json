@@ -42,6 +42,8 @@
     "trailingComma": "none"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2"
+    "@tailwindcss/typography": "^0.5.10",
+    "@types/bcrypt": "^5.0.2",
+    "daisyui": "^4.4.24"
   }
 }

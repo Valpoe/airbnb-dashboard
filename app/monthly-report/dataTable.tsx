@@ -20,11 +20,6 @@ const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
-const getMonthName = (dateString: string) => {
-  const options: Intl.DateTimeFormatOptions = { month: 'long' };
-  return new Date(dateString).toLocaleDateString(undefined, options);
-};
-
 const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const filteredData = data.filter((row) => row.Type !== 'Payout');
 
@@ -43,12 +38,11 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
 
   // Extract month from the first row's "Date" column
   const firstRowDate = new Date(filteredData[0].Date);
-  const reportMonth = getMonthName(firstRowDate.toISOString());
 
   return (
     <div>
       <Title className="mt-5" style={{ color: 'black' }}>
-        Airbnb {reportMonth} Report
+        Airbnb Report
       </Title>
       <Table className="mt-5" style={{ width: 'auto' }}>
         <TableHead>

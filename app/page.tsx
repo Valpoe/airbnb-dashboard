@@ -7,7 +7,7 @@ import { Card } from "@tremor/react";
 export default async function Home() {
   const session = await getServerSession(authOptions);
 
-  if (session) redirect("/dashboard");
+  if (session) redirect("/monthly-report");
 
   return (
     <main className="p-4 md:p-10 flex items-center">

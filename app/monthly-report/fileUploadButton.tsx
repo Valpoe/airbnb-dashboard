@@ -1,4 +1,3 @@
-// components/FileUploadButton.tsx
 import CSVReader, { CSVReaderProps } from 'react-csv-reader';
 
 interface FileUploadButtonProps {
