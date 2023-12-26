@@ -2,18 +2,13 @@ import './globals.css';
 
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import Nav from './nav';
 import { Suspense } from 'react';
 import AuthProvider from './context/authProvider';
-// import { Nunito } from 'next/font/google';
+import Nav from './nav';
+
 import { Inter } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'] })
-
-// const nunito = Nunito({
-//   subsets: ['latin'],
-//   variable: '--font-nunito-sans',
-// })
 
 export const metadata = {
   title: 'Airbnb dashboard',
@@ -30,7 +25,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full bg-gray-200">
+    <html lang="en" className="h-full bg-gray-300">
       <body className={`${inter.className} h-full`}>
         <AuthProvider>
         <Suspense>
