@@ -1,16 +1,10 @@
-// components/DataTable.tsx
-import {
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Title,
-  Card
-} from '@tremor/react';
+import React from 'react';
+
 interface DataTableProps {
   data: any[];
+  contentRef: React.RefObject<HTMLDivElement>;
 }
+
 const formatDate = (dateString: string) => {
   const options: Intl.DateTimeFormatOptions = {
     day: 'numeric',
@@ -20,7 +14,7 @@ const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
-const DataTable: React.FC<DataTableProps> = ({ data }) => {
+const DataTable: React.FC<DataTableProps> = ({ data, contentRef }) => {
   const filteredData = data.filter((row) => row.Type !== 'Payout');
 
   if (data.length === 0) {
@@ -40,80 +34,76 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const firstRowDate = new Date(filteredData[0].Date);
 
   return (
-    <div>
-      <Title className="mt-5" style={{ color: 'black' }}>
-        Airbnb Report
-      </Title>
-      <Table className="mt-5" style={{ width: 'auto' }}>
-        <TableHead>
-          <TableRow>
+    <div className="overflow-x-auto" ref={contentRef}>
+      <h2>Airbnb Report</h2>
+      <table className="table">
+        <thead>
+          <tr>
             {columns.map((column, index) => (
-              <TableCell key={index}>{column}</TableCell>
+              <th key={index}>{column}</th>
             ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
+          </tr>
+        </thead>
+        <tbody>
           {filteredData.map((row, rowIndex) => (
-            <TableRow key={rowIndex}>
+            <tr key={rowIndex}>
               {columns.map((column, colIndex) => (
-                <TableCell key={colIndex}>
+                <td key={colIndex}>
                   {column === 'Date'
                     ? formatDate(row[column])
                     : String(row[column])}
-                </TableCell>
+                </td>
               ))}
-            </TableRow>
+            </tr>
           ))}
-        </TableBody>
-      </Table>
-      <Title className="mt-5" style={{ color: 'black' }}>
-        Summary
-      </Title>
-      <Table className="mt-5" style={{ width: 'auto' }}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Type</TableCell>
-            <TableCell>Currency</TableCell>
-            <TableCell>Amount</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell>Airbnb amount (VAT 0%)</TableCell>
-            <TableCell>EUR</TableCell>
-            <TableCell>{sumAmount.toFixed(2)}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Commission (VAT 0%)</TableCell>
-            <TableCell>EUR</TableCell>
-            <TableCell>{((sumAmount * 0.4) / 1.24).toFixed(2)}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Commission 40% (VAT 24%)</TableCell>
-            <TableCell>EUR</TableCell>
-            <TableCell>{(sumAmount * 0.4).toFixed(2)}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>The customer is paid</TableCell>
-            <TableCell>EUR</TableCell>
-            <TableCell>{(sumAmount - commissionAmount).toFixed(2)}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Number of reservations</TableCell>
-            <TableCell>EUR</TableCell>
-            <TableCell>
+        </tbody>
+      </table>
+      <h2>Summary</h2>
+      <table className="table" style={{ width: 'auto' }}>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Currency</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Airbnb amount (VAT 0%)</td>
+            <td>EUR</td>
+            <td>{sumAmount.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>Commission (VAT 0%)</td>
+            <td>EUR</td>
+            <td>{((sumAmount * 0.4) / 1.24).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>Commission 40% (VAT 24%)</td>
+            <td>EUR</td>
+            <td>{(sumAmount * 0.4).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>The customer is paid</td>
+            <td>EUR</td>
+            <td>{(sumAmount - commissionAmount).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>Number of reservations</td>
+            <td>EUR</td>
+            <td>
               {filteredData.filter((row) => row.Type === 'Reservation').length}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Number of nights booked</TableCell>
-            <TableCell>EUR</TableCell>
-            <TableCell>
+            </td>
+          </tr>
+          <tr>
+            <td>Number of nights booked</td>
+            <td>EUR</td>
+            <td>
               {filteredData.reduce((sum, row) => sum + parseInt(row.Nights), 0)}
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 };

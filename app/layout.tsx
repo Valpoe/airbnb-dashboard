@@ -25,7 +25,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full bg-gray-300">
+    <html lang="en" className="h-full">
       <body className={`${inter.className} h-full`}>
         <AuthProvider>
         <Suspense>
