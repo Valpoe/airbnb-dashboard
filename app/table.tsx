@@ -7,16 +7,10 @@ import {
   TableCell,
   Text
 } from '@tremor/react';
-
-interface User {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
-}
+import { User } from './lib/definitions';
 
 export default function UsersTable({ users }: { users: User[] }) {
-
+  // fadfda
   console.log("Users table: ", users);
   return (
     <Table>
