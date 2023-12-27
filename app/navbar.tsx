@@ -23,7 +23,7 @@ export default function Navbar({ user }: { user: any }) {
   const router = useRouter();
 
   return (
-    <Disclosure as="nav" className="bg-gray-200 shadow-sm sticky top-0 z-10">
+    <Disclosure as="nav" className="bg-amber-400 shadow-sm sticky top-0 z-10">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -71,16 +71,19 @@ export default function Navbar({ user }: { user: any }) {
                 </div>
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
+                {user && (
+                  <p className="border-slate-500 text-gray-900">{user.name}</p>
+                )}
                 <Menu as="div" className="relative ml-3">
                   <div>
                     <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
                       <Image
                         className="h-8 w-8 rounded-full"
-                        src={user?.image || 'https://avatar.vercel.sh/leerob'}
+                        src={'https://avatar.vercel.sh/leerob'}
                         height={32}
                         width={32}
-                        alt={`${user?.name || 'placeholder'} avatar`}
+                        alt={'User avatar'}
                       />
                     </Menu.Button>
                   </div>
@@ -92,7 +95,7 @@ export default function Navbar({ user }: { user: any }) {
                     leave="transition ease-in duration-75"
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
-                  >
+                    >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       {user && (
                         <Menu.Item>
@@ -152,12 +155,12 @@ export default function Navbar({ user }: { user: any }) {
                 <>
                   <div className="flex items-center px-4">
                     <div className="flex-shrink-0">
-                      <Image
+                    <Image
                         className="h-8 w-8 rounded-full"
-                        src={user.image}
+                        src={'https://avatar.vercel.sh/leerob'}
                         height={32}
                         width={32}
-                        alt={`${user.name} avatar`}
+                        alt={'User avatar'}
                       />
                     </div>
                     <div className="ml-3">

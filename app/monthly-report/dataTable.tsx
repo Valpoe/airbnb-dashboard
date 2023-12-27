@@ -35,8 +35,8 @@ const DataTable: React.FC<DataTableProps> = ({ data, contentRef }) => {
 
   return (
     <div className="overflow-x-auto" ref={contentRef}>
-      <h2>Airbnb Report</h2>
-      <table className="table">
+      <h2 className="flex justify-center">Airbnb Report</h2>
+      <table className="table mb-5">
         <thead>
           <tr>
             {columns.map((column, index) => (
@@ -58,12 +58,13 @@ const DataTable: React.FC<DataTableProps> = ({ data, contentRef }) => {
           ))}
         </tbody>
       </table>
-      <h2>Summary</h2>
+      <h2 className="flex justify-center">Summary</h2>
+      <div className="flex justify-center">
       <table className="table" style={{ width: 'auto' }}>
         <thead>
           <tr>
+            <th>Event</th>
             <th>Type</th>
-            <th>Currency</th>
             <th>Amount</th>
           </tr>
         </thead>
@@ -90,20 +91,21 @@ const DataTable: React.FC<DataTableProps> = ({ data, contentRef }) => {
           </tr>
           <tr>
             <td>Number of reservations</td>
-            <td>EUR</td>
+            <td>Amount</td>
             <td>
               {filteredData.filter((row) => row.Type === 'Reservation').length}
             </td>
           </tr>
           <tr>
             <td>Number of nights booked</td>
-            <td>EUR</td>
+            <td>Amount</td>
             <td>
               {filteredData.reduce((sum, row) => sum + parseInt(row.Nights), 0)}
             </td>
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
   );
 };
