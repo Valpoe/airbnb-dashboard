@@ -20,7 +20,7 @@ export default function Dashboard() {
       {csvData.length > 0 && (
           <>
             <ReactToPrint
-              trigger={() => <button className="btn mb-5 bg-primary hover:bg-neutral">Download Report</button>}
+              trigger={() => <button className="btn mb-5 bg-primary hover:text-accent">Download Report</button>}
               content={() => contentRef.current}
               documentTitle='Airbnb Report'
               pageStyle='@page { size: landscape; margin: 0; } @media print { body { -webkit-print-color-adjust: exact; padding: 1cm } }'

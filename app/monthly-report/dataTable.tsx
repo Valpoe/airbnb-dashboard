@@ -35,8 +35,10 @@ const DataTable: React.FC<DataTableProps> = ({ data, contentRef }) => {
 
   return (
     <div className="overflow-x-auto" ref={contentRef}>
-      <h2 className="flex justify-center">Airbnb Report</h2>
       <table className="table mb-5">
+      <caption className="p-5 text-lg font-semibold text-left rtl:text-right">
+          Airbnb Report
+        </caption>
         <thead>
           <tr>
             {columns.map((column, index) => (
@@ -58,9 +60,11 @@ const DataTable: React.FC<DataTableProps> = ({ data, contentRef }) => {
           ))}
         </tbody>
       </table>
-      <h2 className="flex justify-center">Summary</h2>
       <div className="flex justify-center">
       <table className="table" style={{ width: 'auto' }}>
+      <caption className="p-5 text-lg font-semibold text-left rtl:text-right">
+          Summary
+        </caption>
         <thead>
           <tr>
             <th>Event</th>
