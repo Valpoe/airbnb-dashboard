@@ -23,7 +23,7 @@ export default function Dashboard() {
               trigger={() => <button className="btn mb-5 bg-primary hover:text-accent">Download Report</button>}
               content={() => contentRef.current}
               documentTitle='Airbnb Report'
-              pageStyle='@page { size: landscape; margin: 0; } @media print { body { -webkit-print-color-adjust: exact; padding: 1cm } }'
+              pageStyle='@page { size: landscape; margin: 0; } @media print { body { -webkit-print-color-adjust: exact; padding: 0.5cm } }'
             />
           </>
         )}

@@ -34,7 +34,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, contentRef }) => {
   const firstRowDate = new Date(filteredData[0].Date);
 
   return (
-    <div className="overflow-x-auto" ref={contentRef}>
+    <div className="relative overflow-x-auto bg-neutral" ref={contentRef}>
       <table className="table mb-5">
       <caption className="p-5 text-lg font-semibold text-left rtl:text-right">
           Airbnb Report
@@ -61,7 +61,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, contentRef }) => {
         </tbody>
       </table>
       <div className="flex justify-center">
-      <table className="table" style={{ width: 'auto' }}>
+      <table className="table mb-5" style={{ width: 'auto' }}>
       <caption className="p-5 text-lg font-semibold text-left rtl:text-right">
           Summary
         </caption>
