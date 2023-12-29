@@ -61,7 +61,7 @@ export default function Navbar({ user }: { user: any }) {
                         pathname === item.href
                           ? 'border-gray-300 text-accent'
                           : 'border-transparent text-primary-content hover:text-secondary hover:border-slate-500',
-                        'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium'
+                        'inline-flex items-center px-1 pt-1 border-b-2 text-md font-medium'
                       )}
                       aria-current={pathname === item.href ? 'page' : undefined}
                     >
@@ -119,7 +119,7 @@ export default function Navbar({ user }: { user: any }) {
                 </Menu>                
               </div>
               <div className="-mr-2 flex items-center sm:hidden">
-                <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
+                <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-accent focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
                     <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -140,8 +140,8 @@ export default function Navbar({ user }: { user: any }) {
                   href={item.href}
                   className={classNames(
                     pathname === item.href
-                      ? 'bg-slate-50 border-slate-500 text-slate-700'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800',
+                      ? 'bg-slate-600 border-slate-400 text-accent'
+                      : 'border-transparent text-primary-content hover:bg-gray-100 hover:border-slate-400 hover:text-secondary',
                     'block pl-3 pr-4 py-2 border-l-4 text-base font-medium'
                   )}
                   aria-current={pathname === item.href ? 'page' : undefined}

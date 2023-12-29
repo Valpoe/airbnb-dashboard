@@ -1,10 +1,10 @@
 
-
+/* 
 @media all {
     .page-break {
         display: none;
     }
-}
+} */
 
 @media print {
     html,
