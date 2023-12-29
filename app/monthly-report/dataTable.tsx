@@ -60,7 +60,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, contentRef }) => {
           ))}
         </tbody>
       </table>
-      <div className="flex justify-center">
+      <div className="flex justify-center page-break">
       <table className="table mb-5" style={{ width: 'auto' }}>
       <caption className="p-5 text-lg font-semibold text-left rtl:text-right">
           Summary
