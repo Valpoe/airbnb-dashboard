@@ -41,8 +41,8 @@ const DataTable: React.FC<DataTableProps> = ({ data, contentRef }) => {
         </caption>
         <thead>
           <tr>
-            {columns.map((column, index) => (
-              <th key={index}>{column}</th>
+            {columns.map((column, columnIndex) => (
+              <th key={columnIndex}>{column}</th>
             ))}
           </tr>
         </thead>
