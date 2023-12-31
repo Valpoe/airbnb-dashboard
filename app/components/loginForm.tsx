@@ -39,7 +39,7 @@ export default function Form() {
         placeholder='Password'
         required
       />
-      <button type="submit">Login</button>
+      <button className="btn btn-primary" type="submit">SIGN IN</button>
     </form>
   );
 }

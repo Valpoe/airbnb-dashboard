@@ -70,10 +70,9 @@ export default function Navbar({ user }: { user: any }) {
                   ))}
                 </div>
               </div>
-              <div className="hidden sm:ml-6 sm:flex sm:items-center">
                 {user && (
-                  <p className="primary-content">{user.name}</p>
-                )}
+              <div className="hidden sm:ml-6 sm:flex sm:items-center">
+                <p className="primary-content">{user.name}</p>
                 <Menu as="div" className="relative ml-3">
                   <div>
                     <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
@@ -84,7 +83,7 @@ export default function Navbar({ user }: { user: any }) {
                         height={32}
                         width={32}
                         alt={'User avatar'}
-                      />
+                        />
                     </Menu.Button>
                   </div>
                   <Transition
@@ -101,14 +100,14 @@ export default function Navbar({ user }: { user: any }) {
                         <Menu.Item>
                           {({ active }) => (
                             <button
-                              className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'flex w-full px-4 py-2 text-sm text-gray-700'
+                            className={classNames(
+                              active ? 'bg-gray-100' : '',
+                              'flex w-full px-4 py-2 text-sm text-gray-700'
                               )}
                               onClick={async () => {
                                 await signOut()
                                 router.push('/')}}
-                            >
+                                >
                               Sign out
                             </button>
                           )}
@@ -118,6 +117,7 @@ export default function Navbar({ user }: { user: any }) {
                   </Transition>
                 </Menu>                
               </div>
+                )}
               <div className="-mr-2 flex items-center sm:hidden">
                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-accent focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
                   <span className="sr-only">Open main menu</span>
