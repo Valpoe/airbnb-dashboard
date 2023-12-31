@@ -39,7 +39,7 @@ export default function Form() {
         placeholder='Password'
         required
       />
-      <button type="submit" className="loading loading-spinner">Login</button>
+      <button type="submit">Login</button>
     </form>
   );
 }
