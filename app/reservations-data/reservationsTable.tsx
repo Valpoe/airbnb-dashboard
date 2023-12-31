@@ -1,11 +1,11 @@
 import { Reservation } from '../lib/definitions';
-import { format } from 'date-fns';
+import dayjs from 'dayjs';
 
 interface ReservationsTableProps {
     reservations: Reservation[];
   }
 
-const formatDate = (date: Date) => format(date, 'dd.MM.yyyy');
+const formatDate = (date: Date) => dayjs(date).format('DD/MM/YYYY');
 
 const columns = [
     'Date',

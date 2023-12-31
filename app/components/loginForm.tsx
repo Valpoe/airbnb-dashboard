@@ -3,7 +3,6 @@
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FormEvent } from 'react';
-import { TextInput, Button } from '@tremor/react'
 export default function Form() {
   const router = useRouter();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -26,19 +25,21 @@ export default function Form() {
       onSubmit={handleSubmit}
       className="space-y-4 md:space-y-6"
     >
-      <TextInput
+      <input
+        className="input input-bordered w-full max-w-xs"
         name="username"
         type="text"
         placeholder='Username'
         required
       />
-      <TextInput
+      <input
+        className="input input-bordered w-full max-w-xs"
         name="password"
         type="password"
         placeholder='Password'
         required
       />
-      <Button type="submit" variant="secondary" className="w-full">Login</Button>
+      <button type="submit" className="loading loading-spinner">Login</button>
     </form>
   );
 }
