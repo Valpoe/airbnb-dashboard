@@ -21,7 +21,6 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin-bottom: 2.01cm;
         height: 100vh;
         page-break-before: always;
     }
@@ -29,5 +28,5 @@
 
 @page {
     size: auto;
-    margin: 0;
+    margin: none;
 }

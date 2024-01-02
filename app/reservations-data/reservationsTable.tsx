@@ -24,8 +24,8 @@ const columns = [
 
 const ReservationsTable: React.FC<ReservationsTableProps> = ({ reservations }) => {
     return (
-        <div className='relative overflox-x-auto bg-neutral'>
-        <table className="table mb-5 overflox-y-auto max-h-600px">
+        <div className='relative overflow-x-auto bg-neutral'>
+        <table className="table mb-5 overflow-y-auto max-h-600px">
           <thead>
             <tr>
               {columns.map((column, columnIndex) => (

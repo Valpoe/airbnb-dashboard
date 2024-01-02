@@ -27,8 +27,7 @@ export default function Dashboard() {
             />
           </>
         )}
-      {csvData.length > 0 && <DataTable data={csvData} contentRef={contentRef} />}
-      
+      {csvData.length > 0 && <DataTable data={csvData} contentRef={contentRef} />}   
     </div>
   </main>
   );
