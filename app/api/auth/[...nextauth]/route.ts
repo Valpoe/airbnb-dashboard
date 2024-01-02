@@ -39,8 +39,6 @@ export const authOptions: NextAuthOptions = {
             email: user.email,
           };
         }
-        console.log({ user });
-
         return null;
       },
     }),

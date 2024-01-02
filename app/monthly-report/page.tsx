@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import FileUploadButton from './fileUploadButton';
 import DataTable from './dataTable';
 import ReactToPrint from 'react-to-print';
+import "./printTable.css";
 
 export default function Dashboard() {
   const [csvData, setCsvData] = useState<any[]>([]);
@@ -20,10 +21,9 @@ export default function Dashboard() {
       {csvData.length > 0 && (
           <>
             <ReactToPrint
-              trigger={() => <button className="btn-lg mb-5">Download Report</button>}
+              trigger={() => <button className="btn mb-5 bg-primary hover:text-accent">Download Report</button>}
               content={() => contentRef.current}
               documentTitle='Airbnb Report'
-              pageStyle='@page { size: landscape; margin: 0; } @media print { body { -webkit-print-color-adjust: exact; padding: 1cm } }'
             />
           </>
         )}
