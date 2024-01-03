@@ -21,3 +21,8 @@ export type User = {
     earnings_year: number;
   };
   
+  export type Listing = {
+    id: number;
+    listing: string;
+    internal_name: string;
+  }

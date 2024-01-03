@@ -21,7 +21,7 @@ const DatePicker = ({ onDateChange }) => {
   return (
     <Datepicker
       primaryColor="orange"
-      inputClassName="border border-secondary-content w-full py-2 px-3 text-primary-content focus:outline-none focus:shadow-outline"
+      inputClassName="border border-secondary-content h-14 bg-neutral w-full w-80 py-3 px-3 focus:outline-none focus:shadow-outline"
       displayFormat={'DD/MM/YYYY'}
       placeholder='Select a date range'
       startFrom={new Date('2022-01-01')}

@@ -3,6 +3,7 @@
 
 import { sql } from '@vercel/postgres';
 import { Reservation } from './definitions';
+import { Listing } from './definitions';
 
 export async function fetchReservations_2022() {
   const result = await sql`
@@ -21,5 +22,13 @@ export async function fetchReservationsByDateRange(
     WHERE payout_date >= ${startDate} AND payout_date <= ${endDate}
   `;
   const data = result.rows as Reservation[];
+  return data;
+}  
+
+export async function fetchListings() {
+  const result = await sql`
+    SELECT * FROM listings
+  `;
+  const data = result.rows as Listing[];
   return data;
 }
