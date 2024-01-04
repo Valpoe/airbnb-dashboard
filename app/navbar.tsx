@@ -164,10 +164,10 @@ export default function Navbar({ user }: { user: any }) {
                       />
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-medium text-gray-800">
+                      <div className="text-base font-medium">
                         {user.name}
                       </div>
-                      <div className="text-sm font-medium text-gray-500">
+                      <div className="text-sm font-medium">
                         {user.email}
                       </div>
                     </div>
@@ -177,7 +177,7 @@ export default function Navbar({ user }: { user: any }) {
                       onClick={async() => {
                         await signOut()
                         router.push('/')}}
-                      className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                      className="block px-4 py-2 text-base font-medium text-primary-content hover:bg-gray-100 hover:text-secondary"
                     >
                       Sign out
                     </button>
