@@ -40,7 +40,6 @@ export default function ReservationDataPage() {
         <div className="flex flex-row mb-5">
           <div className="flex">
             <DatePicker onDateChange={handleDateChange} />
-            <div>
               <div className="flex ml-4">
                 <details className="dropdown">
                   <summary className="btn w-48 h-14 border border-secondary-content bg-neutral">
@@ -58,7 +57,11 @@ export default function ReservationDataPage() {
                   </ul>
                 </details>
               </div>
-            </div>
+              <div className='flex ml-4 gap-4'>
+              <button className="btn w-28 h-14 border border-secondary-content bg-neutral">Table</button>
+              <button className="btn w-28 h-14 border border-secondary-content bg-neutral">Line Chart</button>
+              <button className="btn w-28 h-14 border border-secondary-content bg-neutral">Bar Chart</button>
+              </div>
           </div>
         </div>
         <ReservationsTable reservations={reservations} />
