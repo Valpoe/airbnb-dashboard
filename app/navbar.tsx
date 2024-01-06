@@ -6,11 +6,11 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import Link from 'next/link';
 
 const navigation = [
   { name: 'Monthly Report', href: '/monthly-report' },
-  { name: 'Reservations Data', href: '/reservations-data'},
+  { name: 'Reservations Data', href: '/reservations-data' },
   { name: 'Playground', href: '/playground' }
 ];
 
@@ -54,7 +54,7 @@ export default function Navbar({ user }: { user: any }) {
                 </div>
                 <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                   {navigation.map((item) => (
-                    <a
+                    <Link
                       key={item.name}
                       href={item.href}
                       className={classNames(
@@ -66,26 +66,34 @@ export default function Navbar({ user }: { user: any }) {
                       aria-current={pathname === item.href ? 'page' : undefined}
                     >
                       {item.name}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>
-                {/* {user && ( */}
+              {user && (
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
-                {/* <p className="primary-content">{user.name}</p> */}
+                <p className="primary-content">{user.name}</p>
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="flex rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
+                    <Menu.Button className="flex rounded-full text-sm hover:text-accent">
                       <span className="sr-only">Open user menu</span>
-                      <Image
-                        className="h-8 w-8 rounded-full"
-                        src={'https://avatar.vercel.sh/leerob'}
-                        height={32}
-                        width={32}
-                        alt={'User avatar'}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-8 h-8"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
                         />
+                      </svg>
                     </Menu.Button>
                   </div>
+              
                   <Transition
                     as={Fragment}
                     enter="transition ease-out duration-200"
@@ -94,20 +102,21 @@ export default function Navbar({ user }: { user: any }) {
                     leave="transition ease-in duration-75"
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
-                    >
+                  >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       {user && (
                         <Menu.Item>
                           {({ active }) => (
                             <button
-                            className={classNames(
-                              active ? 'bg-gray-100' : '',
-                              'flex w-full px-4 py-2 text-sm text-gray-700'
+                              className={classNames(
+                                active ? 'bg-gray-100' : '',
+                                'flex w-full px-4 py-2 text-sm text-gray-700'
                               )}
                               onClick={async () => {
-                                await signOut()
-                                router.push('/')}}
-                                >
+                                await signOut();
+                                router.push('/');
+                              }}
+                            >
                               Sign out
                             </button>
                           )}
@@ -115,9 +124,9 @@ export default function Navbar({ user }: { user: any }) {
                       )}
                     </Menu.Items>
                   </Transition>
-                </Menu>                
+                </Menu>
               </div>
-                {/* )} */}
+              )}
               <div className="-mr-2 flex items-center sm:hidden">
                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-accent focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
                   <span className="sr-only">Open main menu</span>
@@ -134,9 +143,8 @@ export default function Navbar({ user }: { user: any }) {
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 pt-2 pb-3">
               {navigation.map((item) => (
-                <Disclosure.Button
+                <Link
                   key={item.name}
-                  as="a"
                   href={item.href}
                   className={classNames(
                     pathname === item.href
@@ -147,7 +155,7 @@ export default function Navbar({ user }: { user: any }) {
                   aria-current={pathname === item.href ? 'page' : undefined}
                 >
                   {item.name}
-                </Disclosure.Button>
+                </Link>
               ))}
             </div>
             <div className="border-t border-gray-200 pt-4 pb-3">
@@ -155,28 +163,32 @@ export default function Navbar({ user }: { user: any }) {
                 <>
                   <div className="flex items-center px-4">
                     <div className="flex-shrink-0">
-                    <Image
-                        className="h-8 w-8 rounded-full"
-                        src={'https://avatar.vercel.sh/leerob'}
-                        height={32}
-                        width={32}
-                        alt={'User avatar'}
-                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-8 h-8"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                        />
+                      </svg>
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-medium">
-                        {user.name}
-                      </div>
-                      <div className="text-sm font-medium">
-                        {user.email}
-                      </div>
+                      <div className="text-base font-medium">{user.name}</div>
+                      <div className="text-sm font-medium">{user.email}</div>
                     </div>
                   </div>
                   <div className="mt-3 space-y-1">
                     <button
-                      onClick={async() => {
-                        await signOut()
-                        router.push('/')}}
+                      onClick={async () => {
+                        await signOut();
+                        router.push('/');
+                      }}
                       className="block px-4 py-2 text-base font-medium text-primary-content hover:bg-gray-100 hover:text-secondary"
                     >
                       Sign out
