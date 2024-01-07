@@ -45,6 +45,7 @@
     "trailingComma": "none"
   },
   "devDependencies": {
+    "@fontsource-variable/nunito-sans": "^5.0.9",
     "@tailwindcss/typography": "^0.5.10",
     "@types/bcrypt": "^5.0.2",
     "@types/papaparse": "^5.3.14",

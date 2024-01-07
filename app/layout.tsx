@@ -6,9 +6,9 @@ import Nav from 'app/nav';
 import { Suspense } from 'react';
 import AuthProvider from './context/authProvider';
 
-import { Inter } from 'next/font/google';
+// import { Inter } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+// const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'Airbnb dashboard',
@@ -25,7 +25,8 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${inter.className} h-full`}>
+      {/* <body className={`${inter.className} h-full`}> */}
+      <body className="h-full">
         <AuthProvider>
           <Suspense>
             <Nav />
