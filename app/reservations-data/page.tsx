@@ -1,37 +1,66 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  fetchReservations_2022,
-  fetchReservationsByDateRange,
-  fetchListings
+  fetchListings,
+  fetchListingsByDateRangeAndListings,
+  fetchReservations_2022
 } from '../lib/database';
-import ReservationsTable from './reservationsTable';
-import DatePicker from './datePicker';
 import { Listing, Reservation } from '../lib/definitions';
+import DatePicker from './datePicker';
+import ReservationsTable from './reservationsTable';
 
 export default function ReservationDataPage() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
+  const [dateRange, setDateRange] = useState({
+    startDate: '2022-01-01',
+    endDate: '2023-12-31'
+  });
   const [listings, setListings] = useState<Listing[]>([]);
+  const [selectedListings, setSelectedListings] = useState<number[]>([]);
 
   useEffect(() => {
-    const fetchListingsData = async () => {
-      const data = await fetchListings();
-      setListings(data);
+    const fetchInitialData = async () => {
+      try {
+        const fetchedListings = await fetchListings();
+        const reservations = await fetchReservations_2022();
+        setListings(fetchedListings);
+        setSelectedListings(fetchedListings.map((listing) => listing.id));
+        setReservations(reservations);
+      } catch (error) {
+        console.error('Error fetching initial data: ', error);
+      }
     };
 
-    fetchListingsData();
+    fetchInitialData();
   }, []);
 
-  const fetchReservations = async (startDate: string, endDate: string) => {
-    const data = await fetchReservationsByDateRange(startDate, endDate);
-    setReservations(data);
+  useEffect(() => {
+    const fetchReservations = async () => {
+      const data = await fetchListingsByDateRangeAndListings(
+        dateRange.startDate,
+        dateRange.endDate,
+        selectedListings
+      );
+      setReservations(data);
+    };
+
+    fetchReservations();
+  }, [dateRange.startDate, dateRange.endDate, selectedListings]);
+
+  const handleListingChange = (listingId: number) => {
+    setSelectedListings((prevListings) => {
+      const updatedListings = prevListings.includes(listingId)
+        ? prevListings.filter((id) => id !== listingId)
+        : [...prevListings, listingId];
+
+      return updatedListings;
+    });
   };
 
-  const handleDateChange = (startDate: string, endDate: string) => {
-    setDateRange({ startDate, endDate });
-    fetchReservations(startDate, endDate);
-  };
+  //TODO: FIX THIS
+  // const handleDateChange = (startDate: string, endDate: string) => {
+  //   setDateRange({ startDate, endDate });
+  // };
 
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
@@ -39,7 +68,7 @@ export default function ReservationDataPage() {
         <h1 className="text-xl mb-5">Hello from reservations-data</h1>
         <div className="flex flex-row mb-5">
           <div className="flex">
-            <DatePicker onDateChange={handleDateChange} />
+            <DatePicker onDateChange={setDateRange} selectedRange={dateRange} />
             <div className="flex ml-4">
               <details className="dropdown">
                 <summary className="btn w-48 h-14 border border-secondary-content bg-neutral">
@@ -49,7 +78,12 @@ export default function ReservationDataPage() {
                   {listings.map((listing, id) => (
                     <li key={id}>
                       <label className="flex items-center">
-                        <input type="checkbox" className="checkbox" />
+                        <input
+                          type="checkbox"
+                          className="checkbox"
+                          onChange={() => handleListingChange(listing.id)}
+                          checked={selectedListings.includes(listing.id)}
+                        />
                         <span className="ml-2">{listing.internal_name}</span>
                       </label>
                     </li>
