@@ -7,7 +7,7 @@ import { Suspense } from 'react';
 import AuthProvider from './context/authProvider';
 
 // import { Inter } from 'next/font/google';
-
+// test
 // const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
