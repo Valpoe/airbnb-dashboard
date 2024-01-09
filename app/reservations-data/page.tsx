@@ -1,32 +1,68 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { fetchListings, fetchReservationsByDateRange } from '../lib/database';
+import {
+  fetchListings,
+  fetchListingsByDateRangeAndListings,
+  fetchReservations_2022
+} from '../lib/database';
 import { Listing, Reservation } from '../lib/definitions';
 import DatePicker from './datePicker';
 import ReservationsTable from './reservationsTable';
 
 export default function ReservationDataPage() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
+  const [dateRange, setDateRange] = useState({
+    startDate: '2022-01-01',
+    endDate: new Date().toISOString()
+  });
   const [listings, setListings] = useState<Listing[]>([]);
+  const [selectedListings, setSelectedListings] = useState<number[]>([]);
 
   useEffect(() => {
-    const fetchListingsData = async () => {
-      const data = await fetchListings();
-      setListings(data);
+    const fetchInitialData = async () => {
+      try {
+        const fetchedListings = await fetchListings();
+        const reservations = await fetchReservations_2022();
+        setListings(fetchedListings);
+        setSelectedListings(fetchedListings.map((listing) => listing.id));
+        setReservations(reservations);
+      } catch (error) {
+        console.error('Error fetching initial data: ', error);
+      }
     };
 
-    fetchListingsData();
+    fetchInitialData();
   }, []);
 
-  const fetchReservations = async (startDate: string, endDate: string) => {
-    const data = await fetchReservationsByDateRange(startDate, endDate);
-    setReservations(data);
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        const reservations = await fetchListingsByDateRangeAndListings(
+          dateRange.startDate,
+          dateRange.endDate,
+          selectedListings
+        );
+        setReservations(reservations);
+      } catch (error) {
+        console.error('Error fetching reservations: ', error);
+      }
+    };
+
+    fetchReservations();
+  }, [dateRange.startDate, dateRange.endDate, selectedListings]);
+
+  const handleListingChange = (listingId: number) => {
+    setSelectedListings((prevListings) => {
+      const updatedListings = prevListings.includes(listingId)
+        ? prevListings.filter((id) => id !== listingId)
+        : [...prevListings, listingId];
+
+      return updatedListings;
+    });
   };
 
   const handleDateChange = (startDate: string, endDate: string) => {
     setDateRange({ startDate, endDate });
-    fetchReservations(startDate, endDate);
   };
 
   return (
@@ -45,7 +81,12 @@ export default function ReservationDataPage() {
                   {listings.map((listing, id) => (
                     <li key={id}>
                       <label className="flex items-center">
-                        <input type="checkbox" className="checkbox" />
+                        <input
+                          type="checkbox"
+                          className="checkbox"
+                          onChange={() => handleListingChange(listing.id)}
+                          checked={selectedListings.includes(listing.id)}
+                        />
                         <span className="ml-2">{listing.internal_name}</span>
                       </label>
                     </li>
