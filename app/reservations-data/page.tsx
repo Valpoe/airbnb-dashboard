@@ -1,13 +1,9 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import {
-  fetchReservations_2022,
-  fetchReservationsByDateRange,
-  fetchListings
-} from '../lib/database';
-import ReservationsTable from './reservationsTable';
-import DatePicker from './datePicker';
+import { useEffect, useState } from 'react';
+import { fetchListings, fetchReservationsByDateRange } from '../lib/database';
 import { Listing, Reservation } from '../lib/definitions';
+import DatePicker from './datePicker';
+import ReservationsTable from './reservationsTable';
 
 export default function ReservationDataPage() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
@@ -42,7 +38,7 @@ export default function ReservationDataPage() {
             <DatePicker onDateChange={handleDateChange} />
             <div className="flex ml-4">
               <details className="dropdown">
-                <summary className="btn w-48 h-14 border border-secondary-content bg-neutral">
+                <summary className="btn w-48 h-14 border-2 border-secondary-content hover:border-primary-content bg-neutral">
                   Select listings
                 </summary>
                 <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 w-80">
@@ -58,7 +54,7 @@ export default function ReservationDataPage() {
               </details>
             </div>
             <div className="flex ml-4 gap-4">
-              <button className="btn w-36 h-14 border border-secondary-content bg-neutral inline-flex items-center">
+              <button className="btn w-36 h-14 border-2 border-secondary-content bg-neutral inline-flex items-center hover:border-primary-content">
                 Table
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +71,7 @@ export default function ReservationDataPage() {
                   />
                 </svg>
               </button>
-              <button className="btn w-36 h-14 border border-secondary-content bg-neutral inline-flex items-center">
+              <button className="btn w-36 h-14 border-2 border-secondary-content bg-neutral inline-flex items-center hover:border-primary-content">
                 Line Chart
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -92,7 +88,7 @@ export default function ReservationDataPage() {
                   />
                 </svg>
               </button>
-              <button className="btn w-36 h-14 border border-secondary-content bg-neutral inline-flex items-center">
+              <button className="btn w-36 h-14 border-2 border-secondary-content bg-neutral inline-flex items-center hover:border-primary-content">
                 Bar Chart
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
