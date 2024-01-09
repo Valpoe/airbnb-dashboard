@@ -13,7 +13,7 @@ export default function ReservationDataPage() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [dateRange, setDateRange] = useState({
     startDate: '2022-01-01',
-    endDate: '2023-12-31'
+    endDate: new Date().toISOString()
   });
   const [listings, setListings] = useState<Listing[]>([]);
   const [selectedListings, setSelectedListings] = useState<number[]>([]);
@@ -36,12 +36,16 @@ export default function ReservationDataPage() {
 
   useEffect(() => {
     const fetchReservations = async () => {
-      const data = await fetchListingsByDateRangeAndListings(
-        dateRange.startDate,
-        dateRange.endDate,
-        selectedListings
-      );
-      setReservations(data);
+      try {
+        const reservations = await fetchListingsByDateRangeAndListings(
+          dateRange.startDate,
+          dateRange.endDate,
+          selectedListings
+        );
+        setReservations(reservations);
+      } catch (error) {
+        console.error('Error fetching reservations: ', error);
+      }
     };
 
     fetchReservations();
@@ -57,10 +61,9 @@ export default function ReservationDataPage() {
     });
   };
 
-  //TODO: FIX THIS
-  // const handleDateChange = (startDate: string, endDate: string) => {
-  //   setDateRange({ startDate, endDate });
-  // };
+  const handleDateChange = (startDate: string, endDate: string) => {
+    setDateRange({ startDate, endDate });
+  };
 
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
@@ -68,7 +71,7 @@ export default function ReservationDataPage() {
         <h1 className="text-xl mb-5">Hello from reservations-data</h1>
         <div className="flex flex-row mb-5">
           <div className="flex">
-            <DatePicker onDateChange={setDateRange} selectedRange={dateRange} />
+            <DatePicker onDateChange={handleDateChange} />
             <div className="flex ml-4">
               <details className="dropdown">
                 <summary className="btn w-48 h-14 border border-secondary-content bg-neutral">

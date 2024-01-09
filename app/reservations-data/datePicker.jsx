@@ -1,29 +1,25 @@
 'use client';
-import { useEffect } from 'react';
+import { useState } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
 
-const DatePicker = ({ onDateChange, selectedRange }) => {
-  const handleSelectedRangeChange = (newSelectedRange) => {
-    // Update the parent component's state with the new selected range
-    onDateChange(newSelectedRange.startDate, newSelectedRange.endDate);
-  };
+const DatePicker = ({ onDateChange }) => {
+  const [value, setValue] = useState({
+    startDate: null,
+    endDate: null
+  });
 
-  // Use useEffect to listen for changes in the selectedRange prop
-  useEffect(() => {
-    if (selectedRange.startDate && selectedRange.endDate) {
-      // Update the parent component's state when selectedRange changes
-      onDateChange(selectedRange.startDate, selectedRange.endDate);
-    }
-  }, [onDateChange, selectedRange]);
+  const handleValueChange = (newValue) => {
+    setValue(newValue);
+    onDateChange(newValue.startDate, newValue.endDate);
+  };
 
   return (
     <Datepicker
       primaryColor="orange"
-      inputClassName="border border-secondary-content h-14 bg-neutral w-full w-80 py-3 px-3 focus:outline-none focus:shadow-outline"
+      inputClassName="border border-secondary-content h-14 bg-neutral text-neutral-content w-80 py-3 px-3 focus:outline-none focus:shadow-outline"
       displayFormat={'DD/MM/YYYY'}
       placeholder="Select a date range"
-      startFrom={selectedRange.startDate}
-      endTo={selectedRange.endDate}
+      startFrom={new Date('2022-01-01')}
       startWeekOn="mon"
       showShortcuts={true}
       configs={{
@@ -48,8 +44,8 @@ const DatePicker = ({ onDateChange, selectedRange }) => {
       }}
       showFooter={true}
       readOnly={true}
-      selectedRange={selectedRange}
-      onChange={handleSelectedRangeChange}
+      value={value}
+      onChange={handleValueChange}
     />
   );
 };

@@ -16,7 +16,7 @@ const columns = [
   'Listing',
   'Currency',
   'Amount',
-  // 'Host fee',
+  'Host fee',
   // 'Cleaning fee',
   // 'Gross earnings',
   'Earnings year'
@@ -27,10 +27,7 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({
 }) => {
   return (
     <div className="relative overflow-x-auto p-5 bg-neutral-content">
-      <table
-        className="table border border-neutral text-neutral mb-5 overflow-y-auto max-h-600px"
-        style={{ width: 'auto' }}
-      >
+      <table className="table border border-neutral text-neutral overflow-y-auto max-h-600px">
         <thead className="text-neutral text-base">
           <tr>
             {columns.map((column, columnIndex) => (
@@ -49,8 +46,8 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({
               <td>{row.listing}</td>
               <td>{row.currency}</td>
               <td>{row.amount}</td>
-              {/* <td>{row.host_fee}</td>
-              <td>{row.cleaning_fee}</td>
+              <td>{row.host_fee}</td>
+              {/* <td>{row.cleaning_fee}</td>
               <td>{row.gross_earnings}</td> */}
               <td>{row.earnings_year}</td>
             </tr>
