@@ -68,7 +68,7 @@ export default function ReservationDataPage() {
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <div className="container mx-auto">
-        <h1 className="text-xl mb-5">Hello from reservations-data</h1>
+        <h1 className="text-xl mb-5">Reservations data</h1>
         <div className="flex flex-row mb-5">
           <div className="flex">
             <DatePicker onDateChange={handleDateChange} />
