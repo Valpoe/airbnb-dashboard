@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
 
 const DatePicker = ({ onDateChange }) => {
@@ -10,18 +10,13 @@ const DatePicker = ({ onDateChange }) => {
 
   const handleValueChange = (newValue) => {
     setValue(newValue);
+    onDateChange(newValue.startDate, newValue.endDate);
   };
-
-  useEffect(() => {
-    if (value.startDate && value.endDate) {
-      onDateChange(value.startDate, value.endDate);
-    }
-  }, [onDateChange, value]);
 
   return (
     <Datepicker
       primaryColor="orange"
-      inputClassName="border border-secondary-content h-14 bg-neutral w-full w-80 py-3 px-3 focus:outline-none focus:shadow-outline"
+      inputClassName="border-2 border-secondary-content hover:border-primary-content h-14 bg-neutral w-full w-80 py-3 px-3 focus:outline-none focus:shadow-outline"
       displayFormat={'DD/MM/YYYY'}
       placeholder="Select a date range"
       startFrom={new Date('2022-01-01')}
