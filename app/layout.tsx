@@ -3,6 +3,7 @@ import './globals.css';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Nav from 'app/nav';
+import { Metadata } from 'next';
 import { Suspense } from 'react';
 import AuthProvider from './context/authProvider';
 
@@ -10,9 +11,9 @@ import AuthProvider from './context/authProvider';
 // test
 // const inter = Inter({ subsets: ['latin'] });
 
-export const metadata = {
-  title: 'Airbnb dashboard',
-  description: 'Data visualization',
+export const metadata: Metadata = {
+  title: { template: '%s | Data Dashboard', default: 'Data Dashboard' },
+  description: 'Built with Next.js, PostgreSQL, Vercel',
   icons: {
     icon: '/favicon.ico'
   }

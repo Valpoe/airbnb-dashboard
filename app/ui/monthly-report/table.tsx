@@ -16,7 +16,7 @@ const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
-const DataTable: React.FC<DataTableProps> = ({ data, contentRef }) => {
+export default function DataTable({ data, contentRef }: DataTableProps) {
   const filteredData = data.filter((row) => row.Type !== 'Payout');
 
   if (data.length === 0) {
@@ -206,6 +206,4 @@ const DataTable: React.FC<DataTableProps> = ({ data, contentRef }) => {
       </div>
     </div>
   );
-};
-
-export default DataTable;
+}

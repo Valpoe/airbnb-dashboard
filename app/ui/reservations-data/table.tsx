@@ -1,5 +1,5 @@
+import { Reservation } from '@/app/lib/definitions';
 import dayjs from 'dayjs';
-import { Reservation } from '../lib/definitions';
 
 interface ReservationsTableProps {
   reservations: Reservation[];
@@ -22,9 +22,9 @@ const columns = [
   'Earnings year'
 ];
 
-const ReservationsTable: React.FC<ReservationsTableProps> = ({
+export default function ReservationsTable({
   reservations
-}) => {
+}: ReservationsTableProps) {
   return (
     <div className="relative overflow-x-auto p-5 bg-neutral-content">
       <table className="table border border-neutral text-neutral overflow-y-auto max-h-600px">
@@ -56,6 +56,4 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({
       </table>
     </div>
   );
-};
-
-export default ReservationsTable;
+}

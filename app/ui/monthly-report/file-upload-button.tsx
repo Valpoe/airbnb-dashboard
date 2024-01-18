@@ -4,7 +4,9 @@ interface FileUploadButtonProps {
   onDataUpload: (data: any[]) => void;
 }
 
-const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onDataUpload }) => {
+export default function FileUploadButton({
+  onDataUpload
+}: FileUploadButtonProps) {
   const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = event.target.files;
     if (fileList && fileList.length > 0) {
@@ -19,7 +21,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onDataUpload }) => 
             const parsedResult = Papa.parse(result, {
               header: true,
               dynamicTyping: true,
-              skipEmptyLines: true,
+              skipEmptyLines: true
             }) as ParseResult<any>;
 
             onDataUpload(parsedResult.data);
@@ -40,6 +42,4 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onDataUpload }) => 
       onChange={handleFile}
     />
   );
-};
-
-export default FileUploadButton;
+}

@@ -1,13 +1,13 @@
 'use client';
-import { useEffect, useState } from 'react';
 import {
   fetchListings,
   fetchListingsByDateRangeAndListings,
   fetchReservations_2022
-} from '../lib/database';
-import { Listing, Reservation } from '../lib/definitions';
-import DatePicker from './datePicker';
-import ReservationsTable from './reservationsTable';
+} from '@/app/lib/database';
+import { Listing, Reservation } from '@/app/lib/definitions';
+import DatePicker from '@/app/ui/reservations-data/date-picker';
+import ReservationsTable from '@/app/ui/reservations-data/table';
+import { useEffect, useState } from 'react';
 
 export default function ReservationDataPage() {
   const [reservations, setReservations] = useState<Reservation[]>([]);

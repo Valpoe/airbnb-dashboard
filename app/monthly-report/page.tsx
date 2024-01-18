@@ -1,9 +1,9 @@
 'use client';
+import FileUploadButton from '@/app/ui/monthly-report/file-upload-button';
+import '@/app/ui/monthly-report/print-table.css';
+import DataTable from '@/app/ui/monthly-report/table';
 import { useRef, useState } from 'react';
 import ReactToPrint from 'react-to-print';
-import DataTable from './dataTable';
-import FileUploadButton from './fileUploadButton';
-import './printTable.css';
 
 export default function Dashboard() {
   const [csvData, setCsvData] = useState<any[]>([]);
