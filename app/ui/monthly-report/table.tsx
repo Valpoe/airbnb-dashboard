@@ -1,20 +1,10 @@
+import { formatDate } from '@/app/lib/utils';
 import React from 'react';
 
 interface DataTableProps {
   data: any[];
   contentRef: React.RefObject<HTMLDivElement>;
 }
-
-const formatDate = (dateString: string) => {
-  if (!dateString) return dateString;
-
-  const options: Intl.DateTimeFormatOptions = {
-    day: 'numeric',
-    month: 'numeric',
-    year: 'numeric'
-  };
-  return new Date(dateString).toLocaleDateString(undefined, options);
-};
 
 export default function DataTable({ data, contentRef }: DataTableProps) {
   const filteredData = data.filter((row) => row.Type !== 'Payout');

@@ -1,11 +1,9 @@
 import { Reservation } from '@/app/lib/definitions';
-import dayjs from 'dayjs';
+import { formatDate } from '@/app/lib/utils';
 
 interface ReservationsTableProps {
   reservations: Reservation[];
 }
-
-const formatDate = (date: Date) => dayjs(date).format('DD/MM/YYYY');
 
 const columns = [
   'Date',
