@@ -13,8 +13,6 @@ export default function Dashboard() {
     setCsvData(data);
   };
 
-  // kmaegknmlaegnaegkj
-
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <div>

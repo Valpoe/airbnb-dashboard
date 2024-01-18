@@ -1,14 +1,18 @@
-'use client';
+// 'use client';
 import { useState } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
 
-export default function DatePicker({ onDateChange }) {
+interface DatePickerProps {
+  onDateChange: (startDate: string, endDate: string) => void;
+}
+
+export default function DatePicker({ onDateChange }: DatePickerProps) {
   const [value, setValue] = useState({
     startDate: null,
     endDate: null
   });
 
-  const handleValueChange = (newValue) => {
+  const handleValueChange = (newValue: any) => {
     setValue(newValue);
     onDateChange(newValue.startDate, newValue.endDate);
   };
