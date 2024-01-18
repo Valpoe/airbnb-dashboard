@@ -1,7 +1,11 @@
 'use client';
 
 import { Disclosure, Menu, Transition } from '@headlessui/react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import {
+  Bars3Icon,
+  UserCircleIcon,
+  XMarkIcon
+} from '@heroicons/react/24/outline';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -72,7 +76,7 @@ export default function Navbar({ user }: { user: any }) {
               {user && (
                 <div className="hidden sm:ml-6 sm:flex sm:items-center">
                   <div className="avatar placeholder">
-                    <div className="text-primary-content bg-neutral mask-square h-8 w-20">
+                    <div className="text-primary-content bg-primary mask-square h-8 w-20">
                       <span className="text-base">{user.name}</span>
                     </div>
                   </div>
@@ -80,20 +84,10 @@ export default function Navbar({ user }: { user: any }) {
                     <div>
                       <Menu.Button className="flex rounded-full text-sm hover:text-accent">
                         <span className="sr-only">Open user menu</span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                          className="w-8 h-8"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-                          />
-                        </svg>
+                        <UserCircleIcon
+                          className="h-8 w-8"
+                          aria-hidden="true"
+                        />
                       </Menu.Button>
                     </div>
 
@@ -166,24 +160,11 @@ export default function Navbar({ user }: { user: any }) {
                 <>
                   <div className="flex items-center px-4">
                     <div className="flex-shrink-0">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-8 h-8"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-                        />
-                      </svg>
+                      <UserCircleIcon className="h-8 w-8" aria-hidden="true" />
                     </div>
                     <div className="ml-3">
                       <div className="avatar placeholder">
-                        <div className="text-primary-content bg-neutral mask-square h-8 w-20">
+                        <div className="text-primary-content bg-primary mask-square h-8 w-20">
                           <span className="text-base">{user.name}</span>
                         </div>
                       </div>

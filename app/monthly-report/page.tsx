@@ -17,17 +17,32 @@ export default function Dashboard() {
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <div>
         <h1 className="text-xl mb-5">Upload Airbnb csv file with fields:</h1>
-        <ul className="flex flex-row list-inside list-disc mb-5 space-x-2">
-          <li>Type</li>
-          <li>Booking Date</li>
-          <li>Nights</li>
-          <li>Guest</li>
-          <li>Listing</li>
-          <li>Currency</li>
-          <li>Amount</li>
-          <li>Host Fee</li>
+        <ul className="flex flex-wrap list-inside list-disc gap-2 mb-5">
+          <li>
+            <span className="badge badge-lg badge-primary">Type</span>
+          </li>
+          <li>
+            <span className="badge badge-lg badge-primary">Booking Date</span>
+          </li>
+          <li>
+            <span className="badge badge-lg badge-primary">Nights</span>
+          </li>
+          <li>
+            <span className="badge badge-lg badge-primary">Guest</span>
+          </li>
+          <li>
+            <span className="badge badge-lg badge-primary">Listing</span>
+          </li>
+          <li>
+            <span className="badge badge-lg badge-primary">Currency</span>
+          </li>
+          <li>
+            <span className="badge badge-lg badge-primary">Amount</span>
+          </li>
+          <li>
+            <span className="badge badge-lg badge-primary">Host Fee</span>
+          </li>
         </ul>
-        <h1 className="text-xl mb-5">Upload CSV File</h1>
         <FileUploadButton onDataUpload={handleDataUpload} />
         {csvData.length > 0 && (
           <>

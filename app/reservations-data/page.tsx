@@ -74,7 +74,7 @@ export default function ReservationDataPage() {
             <DatePicker onDateChange={handleDateChange} />
             <div className="flex ml-4">
               <details className="dropdown">
-                <summary className="btn w-48 h-14 border-2 border-secondary-content hover:border-primary-content bg-neutral">
+                <summary className="btn w-48 h-14 bg-primary hover:text-accent">
                   Select listings
                 </summary>
                 <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 w-80">
@@ -95,7 +95,7 @@ export default function ReservationDataPage() {
               </details>
             </div>
             <div className="flex ml-4 gap-4">
-              <button className="btn w-36 h-14 border-2 border-secondary-content bg-neutral inline-flex items-center hover:border-primary-content">
+              <button className="btn w-36 h-14 bg-primary inline-flex items-center hover:text-accent">
                 Table
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -112,7 +112,7 @@ export default function ReservationDataPage() {
                   />
                 </svg>
               </button>
-              <button className="btn w-36 h-14 border-2 border-secondary-content bg-neutral inline-flex items-center hover:border-primary-content">
+              <button className="btn w-36 h-14 bg-primary inline-flex items-center hover:text-accent">
                 Line Chart
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +129,7 @@ export default function ReservationDataPage() {
                   />
                 </svg>
               </button>
-              <button className="btn w-36 h-14 border-2 border-secondary-content bg-neutral inline-flex items-center hover:border-primary-content">
+              <button className="btn w-36 h-14 bg-primary inline-flex items-center hover:text-accent">
                 Bar Chart
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
