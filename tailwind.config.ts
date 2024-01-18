@@ -1,6 +1,6 @@
 import type { Config } from 'tailwindcss';
 const daisyui = require('daisyui');
-const typography = require('@tailwindcss/typography');
+// const typography = require('@tailwindcss/typography');
 const headlessui = require('@headlessui/react');
 
 export default {
@@ -11,18 +11,18 @@ export default {
     './node_modules/react-tailwindcss-datepicker/dist/index.esm.js'
   ],
 
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Nunito Sans Variable', 'sans-serif']
-      }
-    }
-  },
+  // theme: {
+  //   extend: {
+  //     fontFamily: {
+  //       sans: ['Nunito Sans Variable', 'sans-serif']
+  //     }
+  //   }
+  // },
 
   daisyui: {
     themes: ['business'],
     logs: false,
     prefix: ''
   },
-  plugins: [typography, daisyui, headlessui]
+  plugins: [daisyui, headlessui]
 } satisfies Config;

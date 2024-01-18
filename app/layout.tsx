@@ -4,12 +4,11 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Nav from 'app/nav';
 import { Metadata } from 'next';
+import { Nunito_Sans } from 'next/font/google';
 import { Suspense } from 'react';
-import AuthProvider from './context/authProvider';
+import AuthProvider from './context/auth-provider';
 
-// import { Inter } from 'next/font/google';
-// test
-// const inter = Inter({ subsets: ['latin'] });
+const nunitoSans = Nunito_Sans({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: { template: '%s | Data Dashboard', default: 'Data Dashboard' },
@@ -26,8 +25,7 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full">
-      {/* <body className={`${inter.className} h-full`}> */}
-      <body className="h-full">
+      <body className={`${nunitoSans.className} h-full`}>
         <AuthProvider>
           <Suspense>
             <Nav />
