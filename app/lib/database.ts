@@ -5,31 +5,46 @@ import { sql } from '@vercel/postgres';
 import { Listing, Reservation } from './definitions';
 
 export async function fetchReservations_2022() {
-  const result = await sql`
+  try {
+    const result = await sql<Reservation>`
     SELECT * FROM airbnb_2022
   `;
-  const data = result.rows as Reservation[];
-  return data;
+    const data = result.rows;
+    return data;
+  } catch (error) {
+    console.log('Database error: ', error);
+    throw new Error('Error fetching reservations');
+  }
 }
 
 export async function fetchReservationsByDateRange(
   startDate: string,
   endDate: string
 ) {
-  const result = await sql`
+  try {
+    const result = await sql<Reservation>`
     SELECT * FROM airbnb_2022
     WHERE payout_date >= ${startDate} AND payout_date <= ${endDate}
   `;
-  const data = result.rows as Reservation[];
-  return data;
+    const data = result.rows;
+    return data;
+  } catch (error) {
+    console.log('Database error: ', error);
+    throw new Error('Error fetching reservations');
+  }
 }
 
 export async function fetchListings() {
-  const result = await sql`
+  try {
+    const result = await sql<Listing>`
     SELECT * FROM listings
   `;
-  const data = result.rows as Listing[];
-  return data;
+    const data = result.rows;
+    return data;
+  } catch (error) {
+    console.log('Database error: ', error);
+    throw new Error('Error fetching listings');
+  }
 }
 
 export async function fetchListingsByDateRangeAndListings(
@@ -37,14 +52,19 @@ export async function fetchListingsByDateRangeAndListings(
   endDate: string,
   selectedListings: number[]
 ) {
-  const formattedListings = `{${selectedListings.join(',')}}`;
+  try {
+    const formattedListings = `{${selectedListings.join(',')}}`;
 
-  const result = await sql`
+    const result = await sql<Reservation>`
     SELECT * FROM airbnb_2022
     WHERE payout_date >= ${startDate} 
       AND payout_date <= ${endDate} 
       AND listing_id = ANY(${formattedListings})
   `;
-  const data = result.rows as Reservation[];
-  return data;
+    const data = result.rows;
+    return data;
+  } catch (error) {
+    console.log('Database error: ', error);
+    throw new Error('Error fetching reservations');
+  }
 }
