@@ -48,13 +48,19 @@ export default function Dashboard() {
           <>
             <ReactToPrint
               trigger={() => (
-                <button className="btn mb-5 bg-primary hover:text-accent">
+                <button className="btn mb-5 bg-primary hover:text-accent mr-2">
                   Download Report
                 </button>
               )}
               content={() => contentRef.current}
               documentTitle="Airbnb Report"
             />
+            <button
+              className="btn mb-5 bg-primary hover:text-accent"
+              onClick={() => setCsvData([])}
+            >
+              Clear
+            </button>
           </>
         )}
         {csvData.length > 0 && (

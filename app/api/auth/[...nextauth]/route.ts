@@ -11,7 +11,7 @@ async function getUser(username: string): Promise<User | undefined> {
       await sql<User>`SELECT * FROM users WHERE username=${username}`;
     return user.rows[0];
   } catch (error) {
-    console.log('Failed to fetch user: ', error);
+    console.error('Failed to fetch user: ', error);
     throw new Error('Error fetching user');
   }
 }
