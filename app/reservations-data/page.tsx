@@ -5,16 +5,11 @@ import {
   fetchReservations_2022
 } from '@/app/lib/database';
 import { Listing, Reservation } from '@/app/lib/definitions';
+import DataButtons from '@/app/ui/reservations-data/data-buttons';
 import DatePicker from '@/app/ui/reservations-data/date-picker';
 import Statistics from '@/app/ui/reservations-data/statistics';
 import ReservationsTable from '@/app/ui/reservations-data/table';
-import {
-  ArrowTrendingUpIcon,
-  ChartBarIcon,
-  ChevronDownIcon,
-  DocumentMagnifyingGlassIcon,
-  TableCellsIcon
-} from '@heroicons/react/24/outline';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 
 export default function ReservationDataPage() {
@@ -77,11 +72,23 @@ export default function ReservationDataPage() {
   const renderChartComponent = () => {
     switch (selectedButton) {
       case 'statistics':
-        return <Statistics reservations={reservations} />;
+        return (
+          <Statistics
+            reservations={reservations}
+            listings={listings}
+            selectedListings={selectedListings}
+          />
+        );
       case 'table':
         return <ReservationsTable reservations={reservations} />;
       default:
-        return <Statistics reservations={reservations} />;
+        return (
+          <Statistics
+            reservations={reservations}
+            listings={listings}
+            selectedListings={selectedListings}
+          />
+        );
     }
   };
 
@@ -119,38 +126,10 @@ export default function ReservationDataPage() {
               ))}
             </ul>
           </div>
-          <button
-            className={`btn w-36 h-14 inline-flex items-center bg-neutral hover:text-accent hover:bg-neutral 
-            ${selectedButton === 'statistics' ? 'text-accent' : ''}`}
-            onClick={() => setselectedButton('statistics')}
-          >
-            Statistics
-            <DocumentMagnifyingGlassIcon className="w-6 h-6" />
-          </button>
-          <button
-            className={`btn w-36 h-14 inline-flex items-center bg-neutral hover:text-accent hover:bg-neutral
-            ${selectedButton === 'table' ? 'text-accent' : ''}`}
-            onClick={() => setselectedButton('table')}
-          >
-            Table
-            <TableCellsIcon className="w-6 h-6" />
-          </button>
-          <button
-            className={`btn w-36 h-14 inline-flex items-center bg-neutral hover:text-accent hover:bg-neutral 
-            ${selectedButton === 'line-chart' ? 'text-accent' : ''}`}
-            onClick={() => setselectedButton('line-chart')}
-          >
-            Line Chart
-            <ArrowTrendingUpIcon className="w-6 h-6" />
-          </button>
-          <button
-            className={`btn w-36 h-14 inline-flex items-center bg-neutral hover:text-accent hover:bg-neutral
-            ${selectedButton === 'bar-chart' ? 'text-accent' : ''}`}
-            onClick={() => setselectedButton('bar-chart')}
-          >
-            Bar Chart
-            <ChartBarIcon className="w-6 h-6" />
-          </button>
+          <DataButtons
+            selectedButton={selectedButton}
+            setselectedButton={setselectedButton}
+          />
         </div>
         {renderChartComponent()}
       </div>
