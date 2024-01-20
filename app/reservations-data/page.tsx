@@ -6,17 +6,20 @@ import {
 } from '@/app/lib/database';
 import { Listing, Reservation } from '@/app/lib/definitions';
 import DatePicker from '@/app/ui/reservations-data/date-picker';
+import Statistics from '@/app/ui/reservations-data/statistics';
 import ReservationsTable from '@/app/ui/reservations-data/table';
 import {
   ArrowTrendingUpIcon,
   ChartBarIcon,
   ChevronDownIcon,
+  DocumentMagnifyingGlassIcon,
   TableCellsIcon
 } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 
 export default function ReservationDataPage() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [selectedButton, setselectedButton] = useState('statistics');
   const [dateRange, setDateRange] = useState({
     startDate: '2022-01-01',
     endDate: new Date().toISOString()
@@ -71,53 +74,85 @@ export default function ReservationDataPage() {
     setDateRange({ startDate, endDate });
   };
 
+  const renderChartComponent = () => {
+    switch (selectedButton) {
+      case 'statistics':
+        return <Statistics reservations={reservations} />;
+      case 'table':
+        return <ReservationsTable reservations={reservations} />;
+      default:
+        return <Statistics reservations={reservations} />;
+    }
+  };
+
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <div className="container mx-auto">
         <h1 className="text-xl mb-5">Reservations data</h1>
-        <div className="flex flex-row mb-5">
-          <div className="flex">
-            <DatePicker onDateChange={handleDateChange} />
-            <div className="flex ml-4">
-              <details className="dropdown">
-                <summary className="btn w-48 h-14 bg-primary hover:text-accent">
-                  Select listings
-                  <ChevronDownIcon className="w-6 h-6" />
-                </summary>
-                <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 w-80">
-                  {listings.map((listing, id) => (
-                    <li key={id}>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          onChange={() => handleListingChange(listing.id)}
-                          checked={selectedListings.includes(listing.id)}
-                        />
-                        <span className="ml-2">{listing.internal_name}</span>
-                      </label>
-                    </li>
-                  ))}
-                </ul>
-              </details>
+        <div className="flex flex-row mb-5 gap-4">
+          <DatePicker onDateChange={handleDateChange} />
+          <div className="dropdown">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn w-48 h-14 bg-neutral hover:bg-neutral"
+            >
+              Select listings
+              <ChevronDownIcon className="w-6 h-6" />
             </div>
-            <div className="flex ml-4 gap-4">
-              <button className="btn w-36 h-14 bg-primary inline-flex items-center hover:text-accent">
-                Table
-                <TableCellsIcon className="w-6 h-6" />
-              </button>
-              <button className="btn w-36 h-14 bg-primary inline-flex items-center hover:text-accent">
-                Line Chart
-                <ArrowTrendingUpIcon className="w-6 h-6" />
-              </button>
-              <button className="btn w-36 h-14 bg-primary inline-flex items-center hover:text-accent">
-                Bar Chart
-                <ChartBarIcon className="w-6 h-6" />
-              </button>
-            </div>
+            <ul
+              tabIndex={0}
+              className="p-2 shadow menu dropdown-content z-[1] bg-base-100 w-80"
+            >
+              {listings.map((listing, id) => (
+                <li key={id}>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      className="checkbox"
+                      onChange={() => handleListingChange(listing.id)}
+                      checked={selectedListings.includes(listing.id)}
+                    />
+                    <span className="ml-2">{listing.internal_name}</span>
+                  </label>
+                </li>
+              ))}
+            </ul>
           </div>
+          <button
+            className={`btn w-36 h-14 inline-flex items-center bg-neutral hover:text-accent hover:bg-neutral 
+            ${selectedButton === 'statistics' ? 'text-accent' : ''}`}
+            onClick={() => setselectedButton('statistics')}
+          >
+            Statistics
+            <DocumentMagnifyingGlassIcon className="w-6 h-6" />
+          </button>
+          <button
+            className={`btn w-36 h-14 inline-flex items-center bg-neutral hover:text-accent hover:bg-neutral
+            ${selectedButton === 'table' ? 'text-accent' : ''}`}
+            onClick={() => setselectedButton('table')}
+          >
+            Table
+            <TableCellsIcon className="w-6 h-6" />
+          </button>
+          <button
+            className={`btn w-36 h-14 inline-flex items-center bg-neutral hover:text-accent hover:bg-neutral 
+            ${selectedButton === 'line-chart' ? 'text-accent' : ''}`}
+            onClick={() => setselectedButton('line-chart')}
+          >
+            Line Chart
+            <ArrowTrendingUpIcon className="w-6 h-6" />
+          </button>
+          <button
+            className={`btn w-36 h-14 inline-flex items-center bg-neutral hover:text-accent hover:bg-neutral
+            ${selectedButton === 'bar-chart' ? 'text-accent' : ''}`}
+            onClick={() => setselectedButton('bar-chart')}
+          >
+            Bar Chart
+            <ChartBarIcon className="w-6 h-6" />
+          </button>
         </div>
-        <ReservationsTable reservations={reservations} />
+        {renderChartComponent()}
       </div>
     </main>
   );
