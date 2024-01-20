@@ -25,7 +25,7 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${nunitoSans.className} antialiased h-full`}>
+      <body className={`${nunitoSans.className} antialiased`}>
         <AuthProvider>
           <Suspense>
             <Nav />
