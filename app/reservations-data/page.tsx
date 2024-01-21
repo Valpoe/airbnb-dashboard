@@ -5,8 +5,10 @@ import {
   fetchReservations_2022
 } from '@/app/lib/database';
 import { Listing, Reservation } from '@/app/lib/definitions';
+import BarChart from '@/app/ui/reservations-data/bar-chart';
 import DataButtons from '@/app/ui/reservations-data/data-buttons';
 import DatePicker from '@/app/ui/reservations-data/date-picker';
+import LineChart from '@/app/ui/reservations-data/line-chart';
 import Statistics from '@/app/ui/reservations-data/statistics';
 import ReservationsTable from '@/app/ui/reservations-data/table';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
@@ -81,6 +83,22 @@ export default function ReservationDataPage() {
         );
       case 'table':
         return <ReservationsTable reservations={reservations} />;
+      case 'line-chart':
+        return (
+          <LineChart
+            reservations={reservations}
+            listings={listings}
+            selectedListings={selectedListings}
+          />
+        );
+      case 'bar-chart':
+        return (
+          <BarChart
+            reservations={reservations}
+            listings={listings}
+            selectedListings={selectedListings}
+          />
+        );
       default:
         return (
           <Statistics
