@@ -1,6 +1,6 @@
 import 'chart.js/auto';
 import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm';
-import dayjs from 'dayjs'; // Make sure to import dayjs
+import dayjs from 'dayjs';
 import { Line } from 'react-chartjs-2';
 import { Listing, Reservation } from '../../lib/definitions';
 

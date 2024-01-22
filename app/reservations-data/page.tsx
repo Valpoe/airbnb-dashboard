@@ -1,8 +1,8 @@
 'use client';
 import {
+  fetchAllReservations,
   fetchListings,
-  fetchListingsByDateRangeAndListings,
-  fetchReservations_2022
+  fetchListingsByDateRangeAndListings
 } from '@/app/lib/database';
 import { Listing, Reservation } from '@/app/lib/definitions';
 import BarChart from '@/app/ui/reservations-data/bar-chart';
@@ -28,7 +28,7 @@ export default function ReservationDataPage() {
     const fetchInitialData = async () => {
       try {
         const fetchedListings = await fetchListings();
-        const reservations = await fetchReservations_2022();
+        const reservations = await fetchAllReservations();
         setListings(fetchedListings);
         setSelectedListings(fetchedListings.map((listing) => listing.id));
         setReservations(reservations);
