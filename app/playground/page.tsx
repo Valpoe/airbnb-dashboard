@@ -1,11 +1,13 @@
 import DataTabs from '@/app/ui/playground/data-tabs';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
+import { StatisticsSkeleton } from '../ui/skeletons';
 
 export const metadata: Metadata = {
   title: 'Playground'
 };
 
-export default function IndexPage() {
+export default async function IndexPage() {
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <div>
@@ -14,7 +16,9 @@ export default function IndexPage() {
           This is a playground page. You can use it to test out new components
           and ideas.
         </p>
-        <DataTabs />
+        <Suspense fallback={<StatisticsSkeleton />}>
+          <DataTabs />
+        </Suspense>
       </div>
     </main>
   );
