@@ -13,7 +13,16 @@ export default function Dashboard() {
     setCsvData(data);
   };
 
-  const columns = Object.keys(csvData[0]);
+  const columns = [
+    'Type',
+    'Booking Date',
+    'Nights',
+    'Guests',
+    'Listing',
+    'Currency',
+    'Amount',
+    'Host Fee'
+  ];
 
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
