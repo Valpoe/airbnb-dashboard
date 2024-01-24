@@ -12,10 +12,11 @@ import LineChart from '@/app/ui/reservations-data/line-chart';
 import Statistics from '@/app/ui/reservations-data/statistics';
 import ReservationsTable from '@/app/ui/reservations-data/table';
 import { StatisticsSkeleton } from '@/app/ui/skeletons';
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { Suspense, useEffect, useState } from 'react';
 
 export default function ReservationDataPage() {
+  const [dropDownOpen, setDropDownOpen] = useState(false);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [selectedButton, setselectedButton] = useState('statistics');
   const [dateRange, setDateRange] = useState({
@@ -123,19 +124,19 @@ export default function ReservationDataPage() {
         <h1 className="text-xl mb-5">Reservations data</h1>
         <div className="flex flex-row mb-5 gap-4">
           <DatePicker onDateChange={handleDateChange} />
-          <div className="dropdown">
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn w-48 h-14 bg-neutral hover:bg-neutral"
+          <details className="dropdown">
+            <summary
+              className="btn w-48 h-14 bg-neutral hover:bg-neutral hover:text-accent"
+              onClick={() => setDropDownOpen(!dropDownOpen)}
             >
               Select listings
-              <ChevronDownIcon className="w-6 h-6" />
-            </div>
-            <ul
-              tabIndex={0}
-              className="p-2 shadow menu dropdown-content z-[1] bg-base-100 w-80"
-            >
+              {dropDownOpen ? (
+                <ChevronUpIcon className="w-5 h-5 ml-2" />
+              ) : (
+                <ChevronDownIcon className="w-5 h-5 ml-2" />
+              )}
+            </summary>
+            <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 w-80 rounded-box">
               {listings.map((listing, id) => (
                 <li key={id}>
                   <label className="flex items-center">
@@ -150,7 +151,7 @@ export default function ReservationDataPage() {
                 </li>
               ))}
             </ul>
-          </div>
+          </details>
           <DataButtons
             selectedButton={selectedButton}
             setselectedButton={setselectedButton}
