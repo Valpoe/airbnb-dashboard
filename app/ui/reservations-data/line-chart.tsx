@@ -28,7 +28,7 @@ export default function LineChart({
       const data = listingReservations.map((reservation) => {
         cumulativeAmount += reservation.amount;
         return {
-          x: dayjs(reservation.payout_date).format(),
+          x: dayjs(reservation.payout_date).format('YYYY-MM-DD'),
           y: cumulativeAmount
         };
       });
@@ -61,9 +61,6 @@ export default function LineChart({
     plugins: {
       legend: {
         position: 'top' as const
-      },
-      title: {
-        display: false
       }
     },
     scales: {
@@ -72,8 +69,9 @@ export default function LineChart({
         time: {
           unit: 'day' as const,
           displayFormats: {
-            day: 'MMM D' // Customize the display format
-          }
+            day: 'MMM D'
+          },
+          tooltipFormat: 'MMMM D, YYYY'
         },
         title: {
           display: true,
