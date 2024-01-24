@@ -13,35 +13,18 @@ export default function Dashboard() {
     setCsvData(data);
   };
 
+  const columns = Object.keys(csvData[0]);
+
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <div>
         <h1 className="text-xl mb-5">Upload Airbnb csv file with fields:</h1>
         <ul className="flex flex-wrap list-inside list-disc gap-2 mb-5">
-          <li>
-            <span className="badge badge-lg badge-primary">Type</span>
-          </li>
-          <li>
-            <span className="badge badge-lg badge-primary">Booking Date</span>
-          </li>
-          <li>
-            <span className="badge badge-lg badge-primary">Nights</span>
-          </li>
-          <li>
-            <span className="badge badge-lg badge-primary">Guest</span>
-          </li>
-          <li>
-            <span className="badge badge-lg badge-primary">Listing</span>
-          </li>
-          <li>
-            <span className="badge badge-lg badge-primary">Currency</span>
-          </li>
-          <li>
-            <span className="badge badge-lg badge-primary">Amount</span>
-          </li>
-          <li>
-            <span className="badge badge-lg badge-primary">Host Fee</span>
-          </li>
+          {columns.map((column, index) => (
+            <li key={index}>
+              <span className="badge badge-lg badge-primary">{column}</span>
+            </li>
+          ))}
         </ul>
         <FileUploadButton onDataUpload={handleDataUpload} />
         {csvData.length > 0 && (
