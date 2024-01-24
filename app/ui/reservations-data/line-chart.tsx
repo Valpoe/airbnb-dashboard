@@ -23,10 +23,15 @@ export default function LineChart({
             new Date(b.payout_date).getTime()
         );
 
-      const data = listingReservations.map((reservation) => ({
-        x: dayjs(reservation.payout_date).format(),
-        y: reservation.amount
-      }));
+      let cumulativeAmount = 0;
+
+      const data = listingReservations.map((reservation) => {
+        cumulativeAmount += reservation.amount;
+        return {
+          x: dayjs(reservation.payout_date).format(),
+          y: cumulativeAmount
+        };
+      });
 
       const startDate = new Date(listingReservations[0]?.payout_date);
       const endDate = new Date(
