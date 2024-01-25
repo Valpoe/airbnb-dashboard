@@ -24,8 +24,8 @@ export default function ReservationsTable({
   reservations
 }: ReservationsTableProps) {
   return (
-    <div className="relative overflow-x-auto p-5 bg-neutral-content">
-      <table className="table border border-neutral text-neutral overflow-y-auto max-h-600px">
+    <div className="relative overflow-x-auto max-h-[680px] p-5 bg-neutral-content">
+      <table className="table border border-neutral text-neutral">
         <thead className="text-neutral text-base">
           <tr>
             {columns.map((column, columnIndex) => (
@@ -33,7 +33,7 @@ export default function ReservationsTable({
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="overflow-y-auto">
           {reservations.map((row, rowIndex) => (
             <tr key={rowIndex}>
               <td>{formatDate(row.payout_date)}</td>

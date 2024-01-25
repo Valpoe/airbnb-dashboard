@@ -6,7 +6,7 @@ export default function Loading() {
           <h1 className="mt-4 text-2xl font-bold tracking-tight text-primary-content sm:text-5xl">
             Loading...
           </h1>
-          <span className="loading loading-infinity loading-lg"></span>
+          <span className="loading loading-spinner loading-lg"></span>
         </div>
       </main>
     </>

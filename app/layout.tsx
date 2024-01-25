@@ -24,8 +24,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full">
-      <body className={`${nunitoSans.className} antialiased h-full`}>
+    <html lang="en" className="h-full bg-base-200">
+      <body className={`${nunitoSans.className} antialiased`}>
         <AuthProvider>
           <Suspense>
             <Nav />
