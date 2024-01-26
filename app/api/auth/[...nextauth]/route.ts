@@ -18,7 +18,8 @@ async function getUser(username: string): Promise<User | undefined> {
 
 export const authOptions: NextAuthOptions = {
   session: {
-    strategy: 'jwt'
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60 // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
@@ -43,6 +44,7 @@ export const authOptions: NextAuthOptions = {
           const { username, password } = parsedCredentials.data;
           const user = await getUser(username);
           if (!user) return null;
+
           const passwordCorrect = await bcrypt.compare(password, user.password);
 
           if (passwordCorrect) {
