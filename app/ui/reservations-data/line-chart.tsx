@@ -1,8 +1,30 @@
 import 'chart.js/auto';
 import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm';
 import dayjs from 'dayjs';
+import { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Listing, Reservation } from '../../lib/definitions';
+
+type DataType = {
+  label: string;
+  property: keyof Reservation;
+};
+const dataTypes: Record<string, DataType> = {
+  amount: {
+    label: 'Amount',
+    property: 'amount'
+  },
+  nights: {
+    label: 'Nights',
+    property: 'nights'
+  },
+  reservations: {
+    label: 'Reservations',
+    property: 'event_type'
+  }
+};
+
+type DataTypeKey = keyof typeof dataTypes;
 
 export default function LineChart({
   reservations,
@@ -13,6 +35,13 @@ export default function LineChart({
   listings: Listing[];
   selectedListings: number[];
 }) {
+  const [selectedDataType, setSelectedDataType] =
+    useState<DataTypeKey>('amount');
+
+  const toggleDataType = (dataType: DataTypeKey) => {
+    setSelectedDataType(dataType);
+  };
+
   const getStatisticsForSelectedListings = () => {
     return selectedListings.map((selectedListingId) => {
       const listingReservations = reservations
@@ -26,7 +55,18 @@ export default function LineChart({
       let cumulativeAmount = 0;
 
       const data = listingReservations.map((reservation) => {
-        cumulativeAmount += reservation.amount;
+        let propertyValue;
+
+        if (dataTypes[selectedDataType].property === 'event_type') {
+          // For 'Reservations' type, calculate the count of rows
+          propertyValue = 1;
+        } else {
+          propertyValue = reservation[dataTypes[selectedDataType].property];
+        }
+
+        cumulativeAmount +=
+          typeof propertyValue === 'number' ? propertyValue : 0;
+
         return {
           x: dayjs(reservation.payout_date).format('YYYY-MM-DD'),
           y: cumulativeAmount
@@ -81,7 +121,7 @@ export default function LineChart({
       y: {
         title: {
           display: true,
-          text: 'Amount'
+          text: dataTypes[selectedDataType].label
         }
       }
     }
@@ -90,12 +130,19 @@ export default function LineChart({
   return (
     <div>
       <div className="flex flex-row mb-5 gap-4">
-        <button className="btn w-36 inline-flex items-center bg-neutral hover:text-accent hover:bg-neutral">
-          Amount
-        </button>
-        <button className="btn w-36 inline-flex items-center bg-neutral hover:text-accent hover:bg-neutral">
-          Occupancy Rate
-        </button>
+        {Object.keys(dataTypes).map((dataType) => (
+          <button
+            key={dataType}
+            className={`btn w-36 inline-flex items-center bg-neutral ${
+              selectedDataType === dataType
+                ? 'text-accent hover:bg-neutral'
+                : 'hover:text-accent bg-neutral hover:bg-neutral'
+            }`}
+            onClick={() => toggleDataType(dataType as DataTypeKey)}
+          >
+            {dataTypes[dataType].label}
+          </button>
+        ))}
       </div>
       <Line options={options} data={data} />
     </div>
