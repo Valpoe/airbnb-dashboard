@@ -89,6 +89,14 @@ export default function LineChart({
 
   return (
     <div>
+      <div className="flex flex-row mb-5 gap-4">
+        <button className="btn w-36 inline-flex items-center bg-neutral hover:text-accent hover:bg-neutral">
+          Amount
+        </button>
+        <button className="btn w-36 inline-flex items-center bg-neutral hover:text-accent hover:bg-neutral">
+          Occupancy Rate
+        </button>
+      </div>
       <Line options={options} data={data} />
     </div>
   );

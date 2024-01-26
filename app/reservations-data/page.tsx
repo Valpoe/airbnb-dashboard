@@ -80,6 +80,7 @@ export default function ReservationDataPage() {
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}
+            dateRange={dateRange}
           />
         );
       case 'table':
@@ -106,6 +107,7 @@ export default function ReservationDataPage() {
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}
+            dateRange={dateRange}
           />
         );
     }
