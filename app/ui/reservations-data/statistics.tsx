@@ -1,5 +1,6 @@
 // statistics.tsx
 import { Listing, Reservation } from '@/app/lib/definitions';
+import { calculateAmountOfDays } from '../../lib/utils';
 
 interface StatisticsProps {
   reservations: Reservation[];
@@ -53,13 +54,6 @@ export default function Statistics({
       totalHostFee,
       totalCleaningFee
     };
-  };
-
-  const calculateAmountOfDays = (startDate: string, endDate: string) => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    const days = (end.getTime() - start.getTime()) / (1000 * 3600 * 24);
-    return days;
   };
 
   const getStatisticsForSelectedListings = () => {

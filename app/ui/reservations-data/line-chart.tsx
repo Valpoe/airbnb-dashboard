@@ -1,14 +1,11 @@
+import { DataType, Listing, Reservation } from '@/app/lib/definitions';
+import { calculateAmountOfDays, getRandomColor } from '@/app/lib/utils';
 import 'chart.js/auto';
 import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Line } from 'react-chartjs-2';
-import { Listing, Reservation } from '../../lib/definitions';
 
-type DataType = {
-  label: string;
-  property: keyof Reservation;
-};
 const dataTypes: Record<string, DataType> = {
   amount: {
     label: 'Amount',
@@ -21,6 +18,10 @@ const dataTypes: Record<string, DataType> = {
   reservations: {
     label: 'Reservations',
     property: 'event_type'
+  },
+  occupancy_rate: {
+    label: 'Occupancy Rate',
+    property: 'nights'
   }
 };
 
@@ -29,11 +30,13 @@ type DataTypeKey = keyof typeof dataTypes;
 export default function LineChart({
   reservations,
   listings,
-  selectedListings
+  selectedListings,
+  dateRange
 }: {
   reservations: Reservation[];
   listings: Listing[];
   selectedListings: number[];
+  dateRange: { startDate: string; endDate: string };
 }) {
   const [selectedDataType, setSelectedDataType] =
     useState<DataTypeKey>('amount');
@@ -57,9 +60,16 @@ export default function LineChart({
       const data = listingReservations.map((reservation) => {
         let propertyValue;
 
-        if (dataTypes[selectedDataType].property === 'event_type') {
+        if (dataTypes[selectedDataType].label === 'Reservations') {
           // For 'Reservations' type, calculate the count of rows
           propertyValue = 1;
+        } else if (dataTypes[selectedDataType].label === 'Occupancy Rate') {
+          // For 'Occupancy Rate' type, calculate the occupancy rate
+          const totalNights = reservation.nights;
+          propertyValue =
+            (totalNights /
+              calculateAmountOfDays(dateRange.startDate, dateRange.endDate)) *
+            100;
         } else {
           propertyValue = reservation[dataTypes[selectedDataType].property];
         }
@@ -129,7 +139,7 @@ export default function LineChart({
 
   return (
     <div>
-      <div className="flex flex-row mb-5 gap-4">
+      <div className="flex flex-row mb-5 gap-4 justify-center">
         {Object.keys(dataTypes).map((dataType) => (
           <button
             key={dataType}
@@ -147,14 +157,4 @@ export default function LineChart({
       <Line options={options} data={data} />
     </div>
   );
-}
-
-// Function to generate a random color
-function getRandomColor() {
-  const letters = '0123456789ABCDEF';
-  let color = '#';
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
 }

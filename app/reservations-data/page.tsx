@@ -91,6 +91,7 @@ export default function ReservationDataPage() {
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}
+            dateRange={dateRange}
           />
         );
       case 'bar-chart':
@@ -99,6 +100,7 @@ export default function ReservationDataPage() {
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}
+            dateRange={dateRange}
           />
         );
       default:

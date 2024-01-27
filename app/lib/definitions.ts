@@ -27,3 +27,8 @@ export type Listing = {
   listing: string;
   internal_name: string;
 };
+
+export type DataType = {
+  label: string;
+  property: keyof Reservation;
+};
