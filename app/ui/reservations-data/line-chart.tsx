@@ -1,31 +1,15 @@
-import { DataType, Listing, Reservation } from '@/app/lib/definitions';
+import {
+  DataTypeKey,
+  Listing,
+  Reservation,
+  dataTypes
+} from '@/app/lib/definitions';
 import { calculateAmountOfDays, getRandomColor } from '@/app/lib/utils';
 import 'chart.js/auto';
 import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Line } from 'react-chartjs-2';
-
-const dataTypes: Record<string, DataType> = {
-  amount: {
-    label: 'Amount',
-    property: 'amount'
-  },
-  nights: {
-    label: 'Nights',
-    property: 'nights'
-  },
-  reservations: {
-    label: 'Reservations',
-    property: 'event_type'
-  },
-  occupancy_rate: {
-    label: 'Occupancy Rate',
-    property: 'nights'
-  }
-};
-
-type DataTypeKey = keyof typeof dataTypes;
 
 export default function LineChart({
   reservations,
@@ -58,24 +42,23 @@ export default function LineChart({
       let cumulativeAmount = 0;
 
       const data = listingReservations.map((reservation) => {
-        let propertyValue;
+        let totalValue;
 
         if (dataTypes[selectedDataType].label === 'Reservations') {
           // For 'Reservations' type, calculate the count of rows
-          propertyValue = 1;
+          totalValue = 1;
         } else if (dataTypes[selectedDataType].label === 'Occupancy Rate') {
           // For 'Occupancy Rate' type, calculate the occupancy rate
           const totalNights = reservation.nights;
-          propertyValue =
+          totalValue =
             (totalNights /
               calculateAmountOfDays(dateRange.startDate, dateRange.endDate)) *
             100;
         } else {
-          propertyValue = reservation[dataTypes[selectedDataType].property];
+          totalValue = reservation[dataTypes[selectedDataType].property];
         }
 
-        cumulativeAmount +=
-          typeof propertyValue === 'number' ? propertyValue : 0;
+        cumulativeAmount += typeof totalValue === 'number' ? totalValue : 0;
 
         return {
           x: dayjs(reservation.payout_date).format('YYYY-MM-DD'),

@@ -1,29 +1,13 @@
-import { DataType, Listing, Reservation } from '@/app/lib/definitions';
+import {
+  DataTypeKey,
+  Listing,
+  Reservation,
+  dataTypes
+} from '@/app/lib/definitions';
 import { calculateAmountOfDays, getRandomColor } from '@/app/lib/utils';
 import 'chart.js/auto';
 import { useState } from 'react';
 import { Bar } from 'react-chartjs-2';
-
-const dataTypes: Record<string, DataType> = {
-  amount: {
-    label: 'Amount',
-    property: 'amount'
-  },
-  nights: {
-    label: 'Nights',
-    property: 'nights'
-  },
-  reservations: {
-    label: 'Reservations',
-    property: 'event_type'
-  },
-  occupancy_rate: {
-    label: 'Occupancy Rate',
-    property: 'nights'
-  }
-};
-
-type DataTypeKey = keyof typeof dataTypes;
 
 export default function BarChart({
   reservations,
@@ -99,7 +83,6 @@ export default function BarChart({
 
   const statistics = getStatisticsForSelectedListings();
 
-  // Instead of using listing names as labels, use a single label "listing" for the x-axis
   const labels = ['Listing'];
 
   const data = {

@@ -28,7 +28,28 @@ export type Listing = {
   internal_name: string;
 };
 
-export type DataType = {
+type DataType = {
   label: string;
   property: keyof Reservation;
 };
+
+export const dataTypes: Record<string, DataType> = {
+  amount: {
+    label: 'Amount',
+    property: 'amount'
+  },
+  nights: {
+    label: 'Nights',
+    property: 'nights'
+  },
+  reservations: {
+    label: 'Reservations',
+    property: 'event_type'
+  },
+  occupancy_rate: {
+    label: 'Occupancy Rate',
+    property: 'nights'
+  }
+};
+
+export type DataTypeKey = keyof typeof dataTypes;

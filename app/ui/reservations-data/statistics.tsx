@@ -1,6 +1,5 @@
-// statistics.tsx
 import { Listing, Reservation } from '@/app/lib/definitions';
-import { calculateAmountOfDays } from '../../lib/utils';
+import { calculateAmountOfDays } from '@/app/lib/utils';
 
 interface StatisticsProps {
   reservations: Reservation[];
