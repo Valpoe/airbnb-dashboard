@@ -41,9 +41,12 @@ export default function Statistics({
       .reduce((acc, cur) => acc + cur.host_fee, 0)
       .toFixed(2);
 
-    const totalCleaningFee = selectedReservations
-      .reduce((acc, cur) => acc + cur.cleaning_fee, 0)
-      .toFixed(2);
+    const totalOccupancyRate = (
+      ((totalNights /
+        calculateAmountOfDays(dateRange.startDate, dateRange.endDate)) *
+        100) /
+      selectedListings.length
+    ).toFixed(2);
 
     return {
       totalNights,
@@ -51,7 +54,7 @@ export default function Statistics({
       totalAmount,
       totalGrossEarnings,
       totalHostFee,
-      totalCleaningFee
+      totalOccupancyRate
     };
   };
 
@@ -120,6 +123,10 @@ export default function Statistics({
           <div className="stat-value">{totalValues.totalReservations}</div>
         </div>
         <div className="stat">
+          <div className="stat-title">Total Occupancy Rate</div>
+          <div className="stat-value">{totalValues.totalOccupancyRate}%</div>
+        </div>
+        <div className="stat">
           <div className="stat-title">Total Amount</div>
           <div className="stat-value">{totalValues.totalAmount}</div>
         </div>
@@ -130,10 +137,6 @@ export default function Statistics({
         <div className="stat">
           <div className="stat-title">Total Host Fee</div>
           <div className="stat-value">{totalValues.totalHostFee}</div>
-        </div>
-        <div className="stat">
-          <div className="stat-title">Total Cleaning Fee</div>
-          <div className="stat-value">{totalValues.totalCleaningFee}</div>
         </div>
       </div>
 

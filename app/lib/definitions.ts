@@ -16,7 +16,6 @@ export type Reservation = {
   currency: string;
   amount: number;
   host_fee: number;
-  cleaning_fee: number;
   gross_earnings: number;
   earnings_year: number;
   listing_id: number;

@@ -53,6 +53,7 @@ export async function fetchListings() {
     SELECT * FROM listings
   `;
     const data = result.rows;
+    console.log(data);
     return data;
   } catch (error) {
     console.log('Database error: ', error);

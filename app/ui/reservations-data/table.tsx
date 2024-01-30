@@ -15,7 +15,6 @@ const columns = [
   'Currency',
   'Amount',
   'Host fee',
-  // 'Cleaning fee',
   // 'Gross earnings',
   'Earnings year'
 ];
@@ -45,8 +44,7 @@ export default function ReservationsTable({
               <td>{row.currency}</td>
               <td>{row.amount}</td>
               <td>{row.host_fee}</td>
-              {/* <td>{row.cleaning_fee}</td>
-              <td>{row.gross_earnings}</td> */}
+              {/* <td>{row.gross_earnings}</td> */}
               <td>{row.earnings_year}</td>
             </tr>
           ))}
