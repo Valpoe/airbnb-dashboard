@@ -1,6 +1,5 @@
 'use client';
 
-import { ArrowLongRightIcon } from '@heroicons/react/20/solid';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { SignInOptions, signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -90,8 +89,12 @@ function LoginButton({ loading }: { loading: boolean }) {
         <span className="loading loading-spinner"></span>
       ) : (
         <div className="flex items-center">
-          <span>SIGN IN</span>
-          <ArrowLongRightIcon className="w-6 h-6 ml-2" />{' '}
+          <span>
+            SIGN IN{' '}
+            <span className="text-lg" aria-hidden="true">
+              &rarr;
+            </span>
+          </span>
         </div>
       )}
     </button>

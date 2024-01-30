@@ -42,7 +42,6 @@ export default function FileUploadButton({
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-
     // Clear data
     onDataUpload([]);
   };

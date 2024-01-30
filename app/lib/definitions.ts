@@ -16,7 +16,6 @@ export type Reservation = {
   currency: string;
   amount: number;
   host_fee: number;
-  cleaning_fee: number;
   gross_earnings: number;
   earnings_year: number;
   listing_id: number;
@@ -27,3 +26,29 @@ export type Listing = {
   listing: string;
   internal_name: string;
 };
+
+type DataType = {
+  label: string;
+  property: keyof Reservation;
+};
+
+export const dataTypes: Record<string, DataType> = {
+  amount: {
+    label: 'Amount',
+    property: 'amount'
+  },
+  nights: {
+    label: 'Nights',
+    property: 'nights'
+  },
+  reservations: {
+    label: 'Reservations',
+    property: 'event_type'
+  },
+  occupancy_rate: {
+    label: 'Occupancy Rate',
+    property: 'nights'
+  }
+};
+
+export type DataTypeKey = keyof typeof dataTypes;

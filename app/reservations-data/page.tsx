@@ -11,9 +11,8 @@ import DatePicker from '@/app/ui/reservations-data/date-picker';
 import LineChart from '@/app/ui/reservations-data/line-chart';
 import Statistics from '@/app/ui/reservations-data/statistics';
 import ReservationsTable from '@/app/ui/reservations-data/table';
-import { StatisticsSkeleton } from '@/app/ui/skeletons';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ReservationDataPage() {
   const [dropDownOpen, setDropDownOpen] = useState(false);
@@ -77,26 +76,22 @@ export default function ReservationDataPage() {
     switch (selectedButton) {
       case 'statistics':
         return (
-          <Suspense fallback={<StatisticsSkeleton />}>
-            <Statistics
-              reservations={reservations}
-              listings={listings}
-              selectedListings={selectedListings}
-            />
-          </Suspense>
+          <Statistics
+            reservations={reservations}
+            listings={listings}
+            selectedListings={selectedListings}
+            dateRange={dateRange}
+          />
         );
       case 'table':
-        return (
-          <Suspense fallback={<StatisticsSkeleton />}>
-            <ReservationsTable reservations={reservations} />
-          </Suspense>
-        );
+        return <ReservationsTable reservations={reservations} />;
       case 'line-chart':
         return (
           <LineChart
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}
+            dateRange={dateRange}
           />
         );
       case 'bar-chart':
@@ -105,6 +100,7 @@ export default function ReservationDataPage() {
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}
+            dateRange={dateRange}
           />
         );
       default:
@@ -113,6 +109,7 @@ export default function ReservationDataPage() {
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}
+            dateRange={dateRange}
           />
         );
     }

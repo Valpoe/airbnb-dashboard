@@ -1,16 +1,18 @@
-// statistics.tsx
 import { Listing, Reservation } from '@/app/lib/definitions';
+import { calculateAmountOfDays } from '@/app/lib/utils';
 
 interface StatisticsProps {
   reservations: Reservation[];
   listings: Listing[];
   selectedListings: number[];
+  dateRange: { startDate: string; endDate: string };
 }
 
 export default function Statistics({
   reservations,
   listings,
-  selectedListings
+  selectedListings,
+  dateRange
 }: StatisticsProps) {
   const getTotalValuesForSelectedListings = () => {
     // Filter reservations based on selected listings
@@ -39,9 +41,12 @@ export default function Statistics({
       .reduce((acc, cur) => acc + cur.host_fee, 0)
       .toFixed(2);
 
-    const totalCleaningFee = selectedReservations
-      .reduce((acc, cur) => acc + cur.cleaning_fee, 0)
-      .toFixed(2);
+    const totalOccupancyRate = (
+      ((totalNights /
+        calculateAmountOfDays(dateRange.startDate, dateRange.endDate)) *
+        100) /
+      selectedListings.length
+    ).toFixed(2);
 
     return {
       totalNights,
@@ -49,7 +54,7 @@ export default function Statistics({
       totalAmount,
       totalGrossEarnings,
       totalHostFee,
-      totalCleaningFee
+      totalOccupancyRate
     };
   };
 
@@ -80,9 +85,11 @@ export default function Statistics({
         .reduce((acc, cur) => acc + cur.host_fee, 0)
         .toFixed(2);
 
-      const totalCleaningFee = listingReservations
-        .reduce((acc, cur) => acc + cur.cleaning_fee, 0)
-        .toFixed(2);
+      const occupancyRate = (
+        (totalNights /
+          calculateAmountOfDays(dateRange.startDate, dateRange.endDate)) *
+        100
+      ).toFixed(2);
 
       return {
         listingId: selectedListingId,
@@ -94,7 +101,7 @@ export default function Statistics({
         totalAmount,
         totalGrossEarnings,
         totalHostFee,
-        totalCleaningFee
+        occupancyRate
       };
     });
   };
@@ -116,6 +123,10 @@ export default function Statistics({
           <div className="stat-value">{totalValues.totalReservations}</div>
         </div>
         <div className="stat">
+          <div className="stat-title">Total Occupancy Rate</div>
+          <div className="stat-value">{totalValues.totalOccupancyRate}%</div>
+        </div>
+        <div className="stat">
           <div className="stat-title">Total Amount</div>
           <div className="stat-value">{totalValues.totalAmount}</div>
         </div>
@@ -126,10 +137,6 @@ export default function Statistics({
         <div className="stat">
           <div className="stat-title">Total Host Fee</div>
           <div className="stat-value">{totalValues.totalHostFee}</div>
-        </div>
-        <div className="stat">
-          <div className="stat-title">Total Cleaning Fee</div>
-          <div className="stat-value">{totalValues.totalCleaningFee}</div>
         </div>
       </div>
 
@@ -149,6 +156,10 @@ export default function Statistics({
               <div className="stat-value">{listingStat.totalReservations}</div>
             </div>
             <div className="stat">
+              <div className="stat-title">Occupancy Rate</div>
+              <div className="stat-value">{listingStat.occupancyRate}%</div>
+            </div>
+            <div className="stat">
               <div className="stat-title">Amount</div>
               <div className="stat-value">{listingStat.totalAmount}</div>
             </div>
@@ -159,10 +170,6 @@ export default function Statistics({
             <div className="stat">
               <div className="stat-title">Host Fee</div>
               <div className="stat-value">{listingStat.totalHostFee}</div>
-            </div>
-            <div className="stat">
-              <div className="stat-title">Cleaning Fee</div>
-              <div className="stat-value">{listingStat.totalCleaningFee}</div>
             </div>
           </div>
         </div>
