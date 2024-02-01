@@ -24,7 +24,15 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
 
     for (const column in formattedRow) {
       if (column.toLowerCase().includes('date')) {
-        formattedRow[column] = formatDate(formattedRow[column]);
+        const originalDate = formattedRow[column];
+        const formattedDate = formatDate(originalDate);
+
+        // Check if the formatted date is valid
+        if (formattedDate !== 'Invalid Date') {
+          formattedRow[column] = formattedDate;
+        } else {
+          formattedRow[column] = ''; // Convert invalid dates to empty strings
+        }
       }
 
       // Check if any cell is null and convert it to an empty string
@@ -45,7 +53,7 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
 
   // Calculate the sum of host fee
   const sumHostFee = filteredData.reduce(
-    (sum, row) => sum + (parseFloat(row['Host Fee']) || 0),
+    (sum, row) => sum + (parseFloat(row['Host service fee']) || 0),
     0
   );
 
