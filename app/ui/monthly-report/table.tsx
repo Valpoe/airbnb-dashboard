@@ -45,8 +45,8 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
   });
 
   const columns = Object.keys(filteredData[0]);
-  // Calculate the sum of values in the "Amount" column
-  const sumAmount = filteredData.reduce(
+
+  let sumAmount = filteredData.reduce(
     (sum, row) => sum + (parseFloat(row.Amount) || 0),
     0
   );
@@ -65,7 +65,7 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
       ref={contentRef}
     >
       <table
-        className="table border border-neutral mb-5 text-neutral"
+        className="table border border-neutral mb-5 text-neutral mx-auto"
         style={{ width: 'auto' }}
       >
         <caption className="p-5 text-xl font-semibold text-center text-neutral">

@@ -59,7 +59,7 @@ export default function FileUploadButton({
           className="btn mb-5 bg-neutral hover:text-accent hover:bg-neutral me-5"
           onClick={handleClear}
         >
-          Clear Report
+          Clear
         </button>
       )}
     </>
