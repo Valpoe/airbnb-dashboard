@@ -24,7 +24,15 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
 
     for (const column in formattedRow) {
       if (column.toLowerCase().includes('date')) {
-        formattedRow[column] = formatDate(formattedRow[column]);
+        const originalDate = formattedRow[column];
+        const formattedDate = formatDate(originalDate);
+
+        // Check if the formatted date is valid
+        if (formattedDate !== 'Invalid Date') {
+          formattedRow[column] = formattedDate;
+        } else {
+          formattedRow[column] = ''; // Convert invalid dates to empty strings
+        }
       }
 
       // Check if any cell is null and convert it to an empty string
@@ -37,15 +45,15 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
   });
 
   const columns = Object.keys(filteredData[0]);
-  // Calculate the sum of values in the "Amount" column
-  const sumAmount = filteredData.reduce(
+
+  let sumAmount = filteredData.reduce(
     (sum, row) => sum + (parseFloat(row.Amount) || 0),
     0
   );
 
   // Calculate the sum of host fee
   const sumHostFee = filteredData.reduce(
-    (sum, row) => sum + (parseFloat(row['Host Fee']) || 0),
+    (sum, row) => sum + (parseFloat(row['Host service fee']) || 0),
     0
   );
 
@@ -57,7 +65,7 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
       ref={contentRef}
     >
       <table
-        className="table border border-neutral mb-5 text-neutral"
+        className="table border border-neutral mb-5 text-neutral mx-auto"
         style={{ width: 'auto' }}
       >
         <caption className="p-5 text-xl font-semibold text-center text-neutral">
