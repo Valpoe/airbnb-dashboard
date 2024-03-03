@@ -25,7 +25,7 @@ export default function LoginForm() {
         return;
       }
 
-      if (!/^[a-z0-9]{1,20}$/.test(password || '')) {
+      if (!/^[a-zA-Z0-9]{1,50}$/.test(password || '')) {
         setError('Invalid password');
         setLoading(false);
         return;
