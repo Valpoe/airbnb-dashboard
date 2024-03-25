@@ -4,6 +4,7 @@ import '@/app/ui/monthly-report/print-table.css';
 import DataTable from '@/app/ui/monthly-report/table';
 import { useRef, useState } from 'react';
 import ReactToPrint from 'react-to-print';
+import { monthlyReportColumns } from '@/app/lib/definitions';
 
 export default function Dashboard() {
   const [csvData, setCsvData] = useState<any[]>([]);
@@ -55,42 +56,31 @@ export default function Dashboard() {
     setResolutionPayoutDescription('');
   };
 
-  const columns = [
-    'Date',
-    'Type',
-    'Nights',
-    'Guests',
-    'Listing',
-    'Currency',
-    'Amount',
-    'Host Fee'
-  ];
-
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <div>
         <h1 className="text-xl mb-5">Upload Airbnb csv file with fields:</h1>
         <ul className="flex flex-wrap list-inside list-disc gap-2 mb-5">
-          {columns.map((column, index) => (
+          {monthlyReportColumns.map((column, index) => (
             <li key={index}>
               <span className="badge badge-lg badge-primary">{column}</span>
             </li>
           ))}
         </ul>
-        <div className="flex flex-row">
+        <div className="flex flex-col md:flex-row">
           <FileUploadButton onDataUpload={handleDataUpload} />
           {csvData.length > 0 && (
             <>
               <ReactToPrint
                 trigger={() => (
-                  <button className="btn mb-5 bg-neutral hover:text-accent mr-5 hover:bg-neutral">
+                  <button className="btn mb-5 bg-neutral hover:text-accent md:mr-5 hover:bg-neutral max-w-xs">
                     Download
                   </button>
                 )}
                 content={() => contentRef.current}
                 documentTitle="Airbnb Report"
               />
-              <div className="flex flex-row">
+              <div className="flex">
                 <label className="label cursor-pointer mb-5 mr-5">
                   <span className="label-text mr-2">Resolution Payout</span>
                   <input

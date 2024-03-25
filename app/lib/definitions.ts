@@ -52,3 +52,14 @@ export const dataTypes: Record<string, DataType> = {
 };
 
 export type DataTypeKey = keyof typeof dataTypes;
+
+export const monthlyReportColumns = [
+  'Date',
+  'Type',
+  'Nights',
+  'Guests',
+  'Listing',
+  'Currency',
+  'Amount',
+  'Host Fee'
+];
