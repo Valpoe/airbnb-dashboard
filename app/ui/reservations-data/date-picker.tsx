@@ -27,13 +27,18 @@ export default function DatePicker({ onDateChange }: DatePickerProps) {
       showShortcuts={true}
       configs={{
         shortcuts: {
-          currentMonth: 'This month',
-          pastMonth: 'Last month',
           year2022: {
             text: '2022',
             period: {
               start: '2022-01-01',
               end: '2022-12-31'
+            }
+          },
+          year2023: {
+            text: '2023',
+            period: {
+              start: '2023-01-01',
+              end: '2023-12-31'
             }
           },
           allTime: {
