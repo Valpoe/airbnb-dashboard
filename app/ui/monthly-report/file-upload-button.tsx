@@ -50,13 +50,13 @@ export default function FileUploadButton({
     <>
       <input
         type="file"
-        className="file-input file-input-bordered w-full max-w-xs mb-5 me-5"
+        className="file-input file-input-bordered w-full max-w-xs mb-5 md:mr-5"
         onChange={handleFile}
         ref={fileInputRef}
       />
       {fileInputRef.current && fileInputRef.current.value && (
         <button
-          className="btn mb-5 bg-neutral hover:text-accent hover:bg-neutral me-5"
+          className="btn mb-5 bg-neutral hover:text-accent hover:bg-neutral md:mr-5 max-w-xs"
           onClick={handleClear}
         >
           Clear
