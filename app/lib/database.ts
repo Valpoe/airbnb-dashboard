@@ -2,6 +2,7 @@
 
 import { sql } from '@vercel/postgres';
 import { Listing, Reservation } from './definitions';
+import { unstable_noStore as noStore } from 'next/cache';
 
 export async function fetchAllReservations() {
   try {
@@ -48,12 +49,14 @@ export async function fetchReservationsByDateRange(
 }
 
 export async function fetchListings() {
+  noStore();
   try {
     const result = await sql<Listing>`
     SELECT * FROM listings
   `;
     const data = result.rows;
     console.log(data);
+    console.log('rows:', result.rows.length);
     return data;
   } catch (error) {
     console.log('Database error: ', error);
