@@ -53,7 +53,7 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
 
   // Calculate the sum of host fee
   const sumHostFee = filteredData.reduce(
-    (sum, row) => sum + (parseFloat(row['Host service fee']) || 0),
+    (sum, row) => sum + (parseFloat(row['Service fee']) || 0),
     0
   );
 
@@ -146,7 +146,7 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
                 </td>
               </tr>
               <tr>
-                <td>Airbnb host fee</td>
+                <td>Airbnb service fee</td>
                 <td>EUR</td>
                 <td>{sumHostFee.toFixed(2)}</td>
               </tr>

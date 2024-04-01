@@ -14,7 +14,7 @@ const columns = [
   'Listing',
   'Currency',
   'Amount',
-  'Host fee',
+  'Service fee',
   // 'Gross earnings',
   'Earnings year'
 ];

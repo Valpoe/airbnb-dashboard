@@ -45,7 +45,7 @@ export default function Dashboard() {
       Listing: resolutionPayoutDescription,
       Currency: 'EUR',
       Amount: resolutionPayoutAmount,
-      'Host service fee': ''
+      'Service fee': ''
     };
 
     setCsvData((prevData) => [...prevData, newResolutionPayout]);

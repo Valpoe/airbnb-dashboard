@@ -61,5 +61,5 @@ export const monthlyReportColumns = [
   'Listing',
   'Currency',
   'Amount',
-  'Host Fee'
+  'Service fee'
 ];
