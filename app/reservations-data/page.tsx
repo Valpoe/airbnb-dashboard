@@ -14,7 +14,7 @@ import ReservationsTable from '@/app/ui/reservations-data/table';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 
-export default function ReservationDataPage() {
+export default function ReservationData() {
   const [dropDownOpen, setDropDownOpen] = useState(false);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [selectedButton, setselectedButton] = useState('statistics');

@@ -6,7 +6,7 @@ import { useRef, useState } from 'react';
 import ReactToPrint from 'react-to-print';
 import { monthlyReportColumns } from '@/app/lib/definitions';
 
-export default function Dashboard() {
+export default function MonthlyReport() {
   const [csvData, setCsvData] = useState<any[]>([]);
   const contentRef = useRef(null);
   const [resolutionPayoutChecked, setResolutionPayoutChecked] = useState(false);
