@@ -33,6 +33,7 @@ export default function Navbar({ user }: { user: any }) {
             <div className="flex h-16 justify-between">
               <div className="flex">
                 <div className="flex flex-shrink-0 items-center">
+                  <Link href="/monthly-report">
                   <svg
                     width="32"
                     height="32"
@@ -54,6 +55,7 @@ export default function Navbar({ user }: { user: any }) {
                       fill="black"
                     />
                   </svg>
+                  </Link>
                 </div>
                 <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                   {navigation.map((item) => (

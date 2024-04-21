@@ -91,6 +91,7 @@ export default function LineChart({
 
   const options = {
     responsive: true,
+    pointStyle: false,
     plugins: {
       legend: {
         position: 'top' as const
