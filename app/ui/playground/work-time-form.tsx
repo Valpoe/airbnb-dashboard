@@ -23,7 +23,7 @@ export default function WorkTimeForm() {
     }
   };
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-2 md:space-y-2">
       <label className="form-control w-full max-w-xs">
         <div className="label">
           <span className="label-text">Employee</span>
