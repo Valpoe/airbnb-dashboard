@@ -1,7 +1,6 @@
 'use client';
 
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
-import { SignInOptions, signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 
