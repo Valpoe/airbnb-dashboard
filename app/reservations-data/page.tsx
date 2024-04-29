@@ -119,8 +119,10 @@ export default function ReservationData() {
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <div className="container mx-auto">
         <h1 className="text-xl mb-5">Reservations data</h1>
-        <div className="flex flex-row mb-5 gap-4">
-          <DatePicker onDateChange={handleDateChange} />
+        <div className="grid grid-cols-1 md:flex md:flex-row flex-wrap justify-items-center justify-center gap-3 mb-5">
+          <div>
+            <DatePicker onDateChange={handleDateChange} />
+          </div>
           <details className="dropdown">
             <summary
               className="btn w-48 h-14 bg-neutral hover:bg-neutral hover:text-accent"
@@ -149,10 +151,12 @@ export default function ReservationData() {
               ))}
             </ul>
           </details>
-          <DataButtons
-            selectedButton={selectedButton}
-            setselectedButton={setselectedButton}
-          />
+          <div className="grid grid-cols-2 md:grid-cols-1 md:flex md:flex-row justify-items-center justify-center gap-3">
+            <DataButtons
+              selectedButton={selectedButton}
+              setselectedButton={setselectedButton}
+            />
+          </div>
         </div>
         {renderChartComponent()}
       </div>

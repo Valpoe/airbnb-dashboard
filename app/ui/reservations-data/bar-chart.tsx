@@ -120,12 +120,12 @@ export default function BarChart({
   };
 
   return (
-    <div>
-      <div className="flex flex-row mb-5 gap-4 justify-center">
+    <div className="flex flex-wrap justify-center">
+      <div className="grid grid-cols-2 md:grid-cols-1 md:flex md:flex-row gap-3 mb-5">
         {Object.keys(dataTypes).map((dataType) => (
           <button
             key={dataType}
-            className={`btn w-36 inline-flex items-center bg-neutral ${
+            className={`btn w-36 bg-neutral ${
               selectedDataType === dataType
                 ? 'text-accent hover:bg-neutral'
                 : 'hover:text-accent bg-neutral hover:bg-neutral'
@@ -136,6 +136,7 @@ export default function BarChart({
           </button>
         ))}
       </div>
+
       <Bar options={options} data={data} />
     </div>
   );

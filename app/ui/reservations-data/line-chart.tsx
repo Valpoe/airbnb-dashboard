@@ -122,8 +122,8 @@ export default function LineChart({
   };
 
   return (
-    <div>
-      <div className="flex flex-row mb-5 gap-4 justify-center">
+    <div className="flex flex-wrap justify-center">
+      <div className="grid grid-cols-2 md:grid-cols-1 md:flex md:flex-row gap-3 mb-5">
         {Object.keys(dataTypes).map((dataType) => (
           <button
             key={dataType}

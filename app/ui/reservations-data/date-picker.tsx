@@ -19,7 +19,7 @@ export default function DatePicker({ onDateChange }: DatePickerProps) {
   return (
     <Datepicker
       primaryColor="orange"
-      inputClassName="h-14 bg-neutral text-neutral-content w-full w- py-3 px-3 focus:outline-none focus:shadow-outline"
+      inputClassName="h-14 bg-neutral text-neutral-content py-3 px-3 focus:outline-none focus:shadow-outline min-w-[250px]"
       displayFormat={'DD/MM/YYYY'}
       placeholder="Select a date range"
       startFrom={new Date('2022-01-01')}
