@@ -24,11 +24,27 @@ export const createBarChart = (
   const lc = lightningChart({
     license: licenseKey,
     licenseInformation: {
-      appTitle: 'LightningChart JS',
-      company: 'LightningChart Ltd.'
+      appTitle: 'Data Dashboard',
+      company: 'Housti'
     }
   });
 
   const chart = lc.BarChart({ container, theme: darkTheme });
+  return chart;
+};
+
+export const createDataGrid = (
+  licenseKey: string,
+  container: 'chart-container'
+) => {
+  const lc = lightningChart({
+    license: licenseKey,
+    licenseInformation: {
+      appTitle: 'Data Dashboard',
+      company: 'Housti'
+    }
+  });
+
+  const chart = lc.DataGrid({ container, theme: darkTheme });
   return chart;
 };
