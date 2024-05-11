@@ -19,7 +19,8 @@ import {
   ColorHEX,
   emptyLine,
   lightningChart,
-  Themes
+  Themes,
+  FontSettings
 } from '@arction/lcjs';
 import { createChart } from '@/app/components/create-chart';
 
@@ -53,6 +54,14 @@ export default function LineChart({
       const lc = createChart(licenseKey, 'chart-container');
       lc.getDefaultAxisX().setTickStrategy(AxisTickStrategies.DateTime);
       lc.setTitle('');
+      // lc.setTitleFont(
+      //   new FontSettings({
+      //     family: 'Nunito Sans',
+      //     size: 14,
+      //     weight: 700,
+      //     style: 'normal'
+      //   })
+      // );
       setChart(lc);
       return () => {
         if (lc) {
