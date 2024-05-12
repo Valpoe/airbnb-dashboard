@@ -12,9 +12,10 @@ import {
   emptyLine,
   lightningChart,
   Themes,
-  FontSettings
+  FontSettings,
+  DataGrid
 } from '@arction/lcjs';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { createDataGrid } from '../../components/create-chart';
 
 interface ReservationsTableProps {
@@ -38,15 +39,17 @@ const columns = [
 export default function ReservationsTable({
   reservations
 }: ReservationsTableProps) {
-  const [chart, setChart] = useState<any>(undefined);
-  const [chartData, setChartData] = useState<any>(undefined);
+  // const containerRef = useRef(null);
+  // const chartRef = useRef<DataGrid | null>(null);
+  const [chart, setChart] = useState<DataGrid | undefined>(undefined);
 
   useEffect(() => {
     const licenseKey = process.env.NEXT_PUBLIC_LC_KEY;
-
     if (licenseKey) {
       const lc = createDataGrid(licenseKey, 'chart-container');
-      lc.setCellsBorders({}).setCellContent(0, 0, 'Date');
+      lc.setTitle('');
+      setChart(lc);
+
       return () => {
         if (lc) {
           lc.dispose();
@@ -60,29 +63,35 @@ export default function ReservationsTable({
   }, []);
 
   useEffect(() => {
-    if (chart) {
+    if (chart && reservations) {
+      const headers = [
+        'Date',
+        'Event Type',
+        'Nights',
+        'Guest',
+        'Listing',
+        'Currency',
+        'Amount',
+        'Host Fee',
+        'Earnings Year'
+      ];
+
       const data = reservations.map((row) => [
         formatDate(row.payout_date),
         row.event_type,
-        // formatDate(row.booking_date),
         row.nights,
         row.guest,
         row.listing,
         row.currency,
         row.amount,
         row.host_fee,
-        // row.gross_earnings,
         row.earnings_year
       ]);
-      setChartData(data);
+
+      const tableData = [headers, ...data];
+      chart.setTableContent(tableData);
     }
   }, [reservations, chart]);
-
-  useEffect(() => {
-    if (chartData) {
-      chart?.setData(chartData);
-    }
-  }, [chartData, chart]);
 
   return (
     <div className="relative overflow-x-auto max-h-[680px] p-5">
