@@ -63,3 +63,15 @@ export const monthlyReportColumns = [
   'Amount',
   'Service fee'
 ];
+
+export const reservationsTableColumns = [
+  'Date',
+  'Event Type',
+  'Nights',
+  'Guest',
+  'Listing',
+  'Currency',
+  'Amount',
+  'Host Fee',
+  'Earnings Year'
+];

@@ -1,4 +1,4 @@
-import { Reservation } from '@/app/lib/definitions';
+import { Reservation, reservationsTableColumns } from '@/app/lib/definitions';
 import { formatDate } from '@/app/lib/utils';
 import {
   UIBackground,
@@ -21,20 +21,6 @@ import { createDataGrid } from '../../components/create-chart';
 interface ReservationsTableProps {
   reservations: Reservation[];
 }
-
-const columns = [
-  'Date',
-  'Type',
-  // 'Booking date',
-  'Nights',
-  'Guest',
-  'Listing',
-  'Currency',
-  'Amount',
-  'Service fee',
-  // 'Gross earnings',
-  'Earnings year'
-];
 
 export default function ReservationsTable({
   reservations
@@ -100,7 +86,7 @@ export default function ReservationsTable({
       <table className="table border border-neutral text-neutral">
         <thead className="text-neutral text-base">
           <tr>
-            {columns.map((column, columnIndex) => (
+            {reservationsTableColumns.map((column, columnIndex) => (
               <th key={columnIndex}>{column}</th>
             ))}
           </tr>
