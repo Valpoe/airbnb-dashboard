@@ -39,66 +39,64 @@ const columns = [
 export default function ReservationsTable({
   reservations
 }: ReservationsTableProps) {
-  // const containerRef = useRef(null);
-  // const chartRef = useRef<DataGrid | null>(null);
-  const [chart, setChart] = useState<DataGrid | undefined>(undefined);
+  // const [chart, setChart] = useState<DataGrid | undefined>(undefined);
 
-  useEffect(() => {
-    const licenseKey = process.env.NEXT_PUBLIC_LC_KEY;
-    if (licenseKey) {
-      const lc = createDataGrid(licenseKey, 'chart-container');
-      lc.setTitle('');
-      setChart(lc);
+  // useEffect(() => {
+  //   const licenseKey = process.env.NEXT_PUBLIC_LC_KEY;
+  //   if (licenseKey) {
+  //     const lc = createDataGrid(licenseKey, 'chart-container');
+  //     lc.setTitle('');
+  //     setChart(lc);
 
-      return () => {
-        if (lc) {
-          lc.dispose();
-        }
-      };
-    } else {
-      console.error(
-        'LightningChart license key is missing or container is null'
-      );
-    }
-  }, []);
+  //     return () => {
+  //       if (lc) {
+  //         lc.dispose();
+  //       }
+  //     };
+  //   } else {
+  //     console.error(
+  //       'LightningChart license key is missing or container is null'
+  //     );
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    if (chart && reservations) {
-      const headers = [
-        'Date',
-        'Event Type',
-        'Nights',
-        'Guest',
-        'Listing',
-        'Currency',
-        'Amount',
-        'Host Fee',
-        'Earnings Year'
-      ];
+  // useEffect(() => {
+  //   if (chart && reservations) {
+  //     const headers = [
+  //       'Date',
+  //       'Event Type',
+  //       'Nights',
+  //       'Guest',
+  //       'Listing',
+  //       'Currency',
+  //       'Amount',
+  //       'Host Fee',
+  //       'Earnings Year'
+  //     ];
 
-      const data = reservations.map((row) => [
-        formatDate(row.payout_date),
-        row.event_type,
-        row.nights,
-        row.guest,
-        row.listing,
-        row.currency,
-        row.amount,
-        row.host_fee,
-        row.earnings_year
-      ]);
+  //     const data = reservations.map((row) => [
+  //       formatDate(row.payout_date),
+  //       row.event_type,
+  //       row.nights,
+  //       row.guest,
+  //       row.listing,
+  //       row.currency,
+  //       row.amount,
+  //       row.host_fee,
+  //       row.earnings_year
+  //     ]);
 
-      const tableData = [headers, ...data];
-      chart.setTableContent(tableData);
-    }
-  }, [reservations, chart]);
+  //     const tableData = [headers, ...data];
+  //     chart.setTableContent(tableData);
+  //   }
+  // }, [reservations, chart]);
 
   return (
-    <div className="relative overflow-x-auto max-h-[680px] p-5">
-      <div
+    <div className="relative overflow-x-auto max-h-[680px] p-5 bg-neutral-content">
+      {/* <div
         id="chart-container"
         style={{ width: '100%', height: '600px' }}
-      ></div>
+      ></div> */}
       <table className="table border border-neutral text-neutral">
         <thead className="text-neutral text-base">
           <tr>
