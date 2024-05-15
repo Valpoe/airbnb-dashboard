@@ -13,7 +13,11 @@ export const createChart = (
     }
   });
 
-  const chart = lc.ChartXY({ container, theme: darkTheme });
+  const chart = lc.ChartXY({
+    container,
+    theme: darkTheme,
+    defaultAxisX: { type: 'linear-highPrecision' }
+  });
   return chart;
 };
 

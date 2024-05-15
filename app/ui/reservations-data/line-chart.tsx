@@ -20,9 +20,17 @@ import {
   emptyLine,
   lightningChart,
   Themes,
-  FontSettings
+  FontSettings,
+  emptyTick,
+  Axis,
+  AxisScrollStrategies,
+  LegendBoxBuilders,
+  UIOrigins,
+  UIDraggingModes,
+  LegendBox
 } from '@arction/lcjs';
 import { createChart } from '@/app/components/create-chart';
+import { type } from 'os';
 
 export default function LineChart({
   reservations,
@@ -47,21 +55,88 @@ export default function LineChart({
     setSelectedDataType(dataType);
   };
 
+  // function formatCursor(event: MouseEvent) {
+  //   const nearestDataPoints = this.seriesArray.map(item => item.solveNearestFromScreen(event));
+
+  //   this.seriesArray.forEach(lineSeries => {
+  //     lineSeries.setCursorResultTableFormatter((tableBuilder, series, x, y, dataPoint) => {
+  //       if (!(series && y && dataPoint)) return tableBuilder;
+
+  //       tableBuilder.addRow('Time:', '', lineSeries.axisX.formatValue(x));
+
+  //       nearestDataPoints.forEach((dp, i) => {
+  //         if (dp && this.seriesArray[i]) {
+  //           const currentVariable = this.seriesArray[i].getName();
+  //           const ds = this.dataSource.find(d => d.name === currentVariable);
+  //           const weight = this.highlight === currentVariable ? 'bold' : 'normal';
+  //           tableBuilder.addRow(
+  //             { text: `${currentVariable}:`, font: { weight } },
+  //             { text: '', font: { weight } },
+  //             {
+  //               text: `${dp.location.y.toFixed(this.decimalPrecision)} ${
+  //                 ds && 'unit' in ds && ds.unit !== undefined ? ds.unit : ''
+  //               }`,
+  //               font: { weight }
+  //             }
+  //           );
+  //         }
+  //       });
+
+  //       return tableBuilder;
+  //     });
+  //   });
+  // }
+
   useEffect(() => {
     const licenseKey = process.env.NEXT_PUBLIC_LC_KEY;
 
     if (licenseKey) {
       const lc = createChart(licenseKey, 'chart-container');
-      lc.getDefaultAxisX().setTickStrategy(AxisTickStrategies.DateTime);
       lc.setTitle('');
-      // lc.setTitleFont(
-      //   new FontSettings({
-      //     family: 'Nunito Sans',
-      //     size: 14,
-      //     weight: 700,
-      //     style: 'normal'
-      //   })
-      // );
+      lc.getDefaultAxisX()
+        .setScrollStrategy(AxisScrollStrategies.fitting)
+        .fit()
+        .setTickStrategy(AxisTickStrategies.DateTime, (ticks) =>
+          ticks
+            .setFormattingMinute(
+              {},
+              {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              },
+              {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              }
+            )
+            .setFormattingHour(
+              {},
+              { hour: '2-digit', minute: '2-digit', hour12: false },
+              { hour: '2-digit', minute: '2-digit', hour12: false }
+            )
+            .setFormattingDay(
+              {},
+              { day: 'numeric', weekday: 'short' },
+              { hour: '2-digit', minute: '2-digit', hour12: false }
+            )
+            .setCursorFormatter((x) =>
+              new Date(x).toLocaleDateString(undefined, {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+              })
+            )
+            .setGreatTickStyle(emptyTick)
+        );
+      lc.getDefaultAxisY().setTickStrategy(AxisTickStrategies.Numeric);
+
+      // lc.onSeriesBackgroundMouseMove((_: unknown, event: MouseEvent) => {
+      //   formatCursor(event);
+      // });
       setChart(lc);
       return () => {
         if (lc) {
@@ -132,8 +207,19 @@ export default function LineChart({
       const lineSeries = chart
         .addLineSeries({ dataPattern: { pattern: 'ProgressiveX' } })
         .setStrokeStyle((strokeStyle) => strokeStyle.setThickness(2));
-
       lineSeries.add(chartData);
+      chart
+        .addLegendBox(LegendBoxBuilders.VerticalLegendBox)
+        .setPosition({ x: 100, y: 100 })
+        .setMargin(1)
+        .setTitle('Apartments')
+        .setOrigin(UIOrigins.RightTop)
+        .setDraggingMode(UIDraggingModes.draggable)
+        .setBackground((background) =>
+          background.setFillStyle(chart.getTheme().uiBackgroundFillStyle)
+        )
+        .setAutoDispose({ type: 'max-height', maxHeight: 0.5 })
+        .add(chart);
     }
   }, [chart, chartData]);
 
