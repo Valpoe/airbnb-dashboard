@@ -27,7 +27,8 @@ import {
   LegendBoxBuilders,
   UIOrigins,
   UIDraggingModes,
-  LegendBox
+  LegendBox,
+  Point
 } from '@arction/lcjs';
 import { createChart } from '@/app/components/create-chart';
 import { type } from 'os';
@@ -133,10 +134,14 @@ export default function LineChart({
             .setGreatTickStyle(emptyTick)
         );
       lc.getDefaultAxisY().setTickStrategy(AxisTickStrategies.Numeric);
+      lc.addLegendBox(LegendBoxBuilders.VerticalLegendBox)
+        .setPosition({ x: 100, y: 100 })
+        .setMargin(1)
+        .setTitle(`Listings`)
+        .setOrigin(UIOrigins.RightTop)
+        .setDraggingMode(UIDraggingModes.draggable)
+        .setAutoDispose({ type: 'max-height', maxHeight: 0.5 });
 
-      // lc.onSeriesBackgroundMouseMove((_: unknown, event: MouseEvent) => {
-      //   formatCursor(event);
-      // });
       setChart(lc);
       return () => {
         if (lc) {
@@ -151,77 +156,100 @@ export default function LineChart({
   }, []);
 
   useEffect(() => {
-    const getStatisticsForSelectedListings = () => {
-      const datasets = selectedListings.map((selectedListingId) => {
-        const listingReservations = reservations
-          .filter((reservation) => reservation.listing_id === selectedListingId)
-          .sort(
-            (a, b) =>
-              new Date(a.payout_date).getTime() -
-              new Date(b.payout_date).getTime()
-          );
+    const chartData = selectedListings.flatMap((selectedListingId) => {
+      const listingReservations = reservations
+        .filter((reservation) => reservation.listing_id === selectedListingId)
+        .sort(
+          (a, b) =>
+            new Date(a.payout_date).getTime() -
+            new Date(b.payout_date).getTime()
+        );
 
-        let cumulativeAmount = 0;
-        const data = listingReservations.map((reservation) => {
-          let totalValue;
-          if (dataTypes[selectedDataType].label === 'Reservations') {
-            totalValue = 1;
-          } else if (dataTypes[selectedDataType].label === 'Occupancy Rate') {
-            const totalNights = reservation.nights;
-            totalValue =
-              (totalNights /
-                calculateAmountOfDays(dateRange.startDate, dateRange.endDate)) *
-              100;
-          } else {
-            totalValue = reservation[dataTypes[selectedDataType].property];
-          }
-
-          cumulativeAmount += typeof totalValue === 'number' ? totalValue : 0;
-          return {
-            x: new Date(reservation.payout_date).getTime(),
-            y: cumulativeAmount
-          };
-        });
-
-        return data;
+      let cumulativeAmount = 0;
+      return listingReservations.map((reservation) => {
+        let totalValue;
+        if (dataTypes[selectedDataType].label === 'Reservations') {
+          totalValue = 1;
+        } else if (dataTypes[selectedDataType].label === 'Occupancy Rate') {
+          const totalNights = reservation.nights;
+          totalValue =
+            (totalNights /
+              calculateAmountOfDays(dateRange.startDate, dateRange.endDate)) *
+            100;
+        } else {
+          totalValue = reservation[dataTypes[selectedDataType].property];
+        }
+        cumulativeAmount += typeof totalValue === 'number' ? totalValue : 0;
+        return {
+          x: new Date(reservation.payout_date).getTime(),
+          y: cumulativeAmount
+        };
       });
+    });
 
-      setChartData(datasets.flat());
-    };
-
-    getStatisticsForSelectedListings();
+    setChartData(chartData);
   }, [reservations, listings, selectedListings, dateRange, selectedDataType]);
 
   useEffect(() => {
     if (chart && chartData) {
+      // Clear existing series and legend boxes
       chart.getSeries().forEach((series) => series.dispose());
-      chart.getDefaultAxisY().setTitle(dataTypes[selectedDataType].label);
+      chart.getLegendBoxes().forEach((legendBox) => legendBox.dispose());
 
+      // Set axis title and interval
+      chart.getDefaultAxisY().setTitle(dataTypes[selectedDataType].label);
       const startMillis = new Date(dateRange.startDate).getTime();
       const endMillis = new Date(dateRange.endDate).getTime();
       chart
         .getDefaultAxisX()
-        .setTitle('Date Range')
         .setInterval({ start: startMillis, end: endMillis });
 
-      const lineSeries = chart
-        .addLineSeries({ dataPattern: { pattern: 'ProgressiveX' } })
-        .setStrokeStyle((strokeStyle) => strokeStyle.setThickness(2));
-      lineSeries.add(chartData);
-      chart
+      // Group data by listing
+      const groupedData = chartData.reduce((acc: any, curr: any) => {
+        const listing_id = (
+          reservations.find(
+            (reservation) =>
+              new Date(reservation.payout_date).getTime() === curr.x
+          ) as Reservation
+        ).listing_id;
+
+        if (!acc[listing_id]) {
+          acc[listing_id] = [];
+        }
+
+        acc[listing_id].push({ x: curr.x, y: curr.y });
+        return acc;
+      }, {});
+
+      // Create a single legend box
+      const legendBox = chart
         .addLegendBox(LegendBoxBuilders.VerticalLegendBox)
         .setPosition({ x: 100, y: 100 })
         .setMargin(1)
-        .setTitle('Apartments')
+        .setTitle(`Listings`)
         .setOrigin(UIOrigins.RightTop)
         .setDraggingMode(UIDraggingModes.draggable)
         .setBackground((background) =>
           background.setFillStyle(chart.getTheme().uiBackgroundFillStyle)
         )
-        .setAutoDispose({ type: 'max-height', maxHeight: 0.5 })
-        .add(chart);
+        .setAutoDispose({ type: 'max-height', maxHeight: 0.5 });
+
+      // Create a line series for each listing and add it to the legend box
+      Object.entries(groupedData).forEach(([listing_id, data]) => {
+        const lineSeries = chart.addLineSeries({
+          dataPattern: { pattern: 'ProgressiveX' }
+        });
+
+        lineSeries.add(data as Point[]);
+
+        const listing = listings.find((l) => l.id === parseInt(listing_id));
+        const internal_name = listing?.internal_name || '';
+
+        // Add a separate entry for each line series
+        legendBox.add(lineSeries).setEntries((e) => e.setText(internal_name));
+      });
     }
-  }, [chart, chartData]);
+  }, [chart, chartData, listings, reservations]);
 
   return (
     <div className="flex flex-wrap justify-center">
