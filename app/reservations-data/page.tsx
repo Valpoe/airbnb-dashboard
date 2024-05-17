@@ -119,7 +119,7 @@ export default function ReservationData() {
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <div className="container mx-auto">
         <h1 className="text-xl mb-5">Reservations data</h1>
-        <div className="grid grid-cols-1 md:flex md:flex-row flex-wrap justify-items-center justify-center gap-3 mb-5">
+        <div className="grid grid-cols-1 md:flex md:flex-row flex-wrap justify-items-start items-start gap-3 mb-5">
           <div>
             <DatePicker onDateChange={handleDateChange} />
           </div>
@@ -151,7 +151,7 @@ export default function ReservationData() {
               ))}
             </ul>
           </details>
-          <div className="grid grid-cols-2 md:grid-cols-1 md:flex md:flex-row justify-items-center justify-center gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-1 md:flex md:flex-row gap-3">
             <DataButtons
               selectedButton={selectedButton}
               setselectedButton={setselectedButton}
