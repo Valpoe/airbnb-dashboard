@@ -31,7 +31,6 @@ import {
   Point
 } from '@arction/lcjs';
 import { createChart } from '@/app/components/create-chart';
-import { type } from 'os';
 
 export default function LineChart({
   reservations,
@@ -47,8 +46,7 @@ export default function LineChart({
   const [chart, setChart] = useState<ChartXY<UIBackground> | undefined>(
     undefined
   );
-  const [chartData, setChartData] = useState<any>(undefined);
-  console.log('ChartData', chartData);
+  const [legendBox, setLegendBox] = useState<LegendBox | undefined>(undefined);
   const [selectedDataType, setSelectedDataType] =
     useState<DataTypeKey>('amount');
 
@@ -56,37 +54,39 @@ export default function LineChart({
     setSelectedDataType(dataType);
   };
 
-  // function formatCursor(event: MouseEvent) {
-  //   const nearestDataPoints = this.seriesArray.map(item => item.solveNearestFromScreen(event));
+  const generateChartData = () => {
+    return selectedListings.flatMap((selectedListingId) => {
+      const listingReservations = reservations
+        .filter((reservation) => reservation.listing_id === selectedListingId)
+        .sort(
+          (a, b) =>
+            new Date(a.payout_date).getTime() -
+            new Date(b.payout_date).getTime()
+        );
 
-  //   this.seriesArray.forEach(lineSeries => {
-  //     lineSeries.setCursorResultTableFormatter((tableBuilder, series, x, y, dataPoint) => {
-  //       if (!(series && y && dataPoint)) return tableBuilder;
-
-  //       tableBuilder.addRow('Time:', '', lineSeries.axisX.formatValue(x));
-
-  //       nearestDataPoints.forEach((dp, i) => {
-  //         if (dp && this.seriesArray[i]) {
-  //           const currentVariable = this.seriesArray[i].getName();
-  //           const ds = this.dataSource.find(d => d.name === currentVariable);
-  //           const weight = this.highlight === currentVariable ? 'bold' : 'normal';
-  //           tableBuilder.addRow(
-  //             { text: `${currentVariable}:`, font: { weight } },
-  //             { text: '', font: { weight } },
-  //             {
-  //               text: `${dp.location.y.toFixed(this.decimalPrecision)} ${
-  //                 ds && 'unit' in ds && ds.unit !== undefined ? ds.unit : ''
-  //               }`,
-  //               font: { weight }
-  //             }
-  //           );
-  //         }
-  //       });
-
-  //       return tableBuilder;
-  //     });
-  //   });
-  // }
+      let cumulativeAmount = 0;
+      return listingReservations.map((reservation) => {
+        let totalValue;
+        if (dataTypes[selectedDataType].label === 'Reservations') {
+          totalValue = 1;
+        } else if (dataTypes[selectedDataType].label === 'Occupancy Rate') {
+          const totalNights = reservation.nights;
+          totalValue =
+            (totalNights /
+              calculateAmountOfDays(dateRange.startDate, dateRange.endDate)) *
+            100;
+        } else {
+          totalValue = reservation[dataTypes[selectedDataType].property];
+        }
+        cumulativeAmount += typeof totalValue === 'number' ? totalValue : 0;
+        return {
+          x: new Date(reservation.payout_date).getTime(),
+          y: cumulativeAmount,
+          listing_id: reservation.listing_id
+        };
+      });
+    });
+  };
 
   useEffect(() => {
     const licenseKey = process.env.NEXT_PUBLIC_LC_KEY;
@@ -137,9 +137,12 @@ export default function LineChart({
       lc.addLegendBox(LegendBoxBuilders.VerticalLegendBox)
         .setPosition({ x: 100, y: 100 })
         .setMargin(1)
-        .setTitle(`Listings`)
-        .setOrigin(UIOrigins.RightTop)
+        .setTitle('Listings')
+        .setOrigin(UIOrigins.LeftTop)
         .setDraggingMode(UIDraggingModes.draggable)
+        .setBackground((background) =>
+          background.setFillStyle(lc.getTheme().uiBackgroundFillStyle)
+        )
         .setAutoDispose({ type: 'max-height', maxHeight: 0.5 });
 
       setChart(lc);
@@ -156,42 +159,43 @@ export default function LineChart({
   }, []);
 
   useEffect(() => {
-    const chartData = selectedListings.flatMap((selectedListingId) => {
-      const listingReservations = reservations
-        .filter((reservation) => reservation.listing_id === selectedListingId)
-        .sort(
-          (a, b) =>
-            new Date(a.payout_date).getTime() -
-            new Date(b.payout_date).getTime()
-        );
+    const generateChartData = () => {
+      return selectedListings.flatMap((selectedListingId) => {
+        const listingReservations = reservations
+          .filter((reservation) => reservation.listing_id === selectedListingId)
+          .sort(
+            (a, b) =>
+              new Date(a.payout_date).getTime() -
+              new Date(b.payout_date).getTime()
+          );
 
-      let cumulativeAmount = 0;
-      return listingReservations.map((reservation) => {
-        let totalValue;
-        if (dataTypes[selectedDataType].label === 'Reservations') {
-          totalValue = 1;
-        } else if (dataTypes[selectedDataType].label === 'Occupancy Rate') {
-          const totalNights = reservation.nights;
-          totalValue =
-            (totalNights /
-              calculateAmountOfDays(dateRange.startDate, dateRange.endDate)) *
-            100;
-        } else {
-          totalValue = reservation[dataTypes[selectedDataType].property];
-        }
-        cumulativeAmount += typeof totalValue === 'number' ? totalValue : 0;
-        return {
-          x: new Date(reservation.payout_date).getTime(),
-          y: cumulativeAmount
-        };
+        let cumulativeAmount = 0;
+        return listingReservations.map((reservation) => {
+          let totalValue;
+          if (dataTypes[selectedDataType].label === 'Reservations') {
+            totalValue = 1;
+          } else if (dataTypes[selectedDataType].label === 'Occupancy Rate') {
+            const totalNights = reservation.nights;
+            totalValue =
+              (totalNights /
+                calculateAmountOfDays(dateRange.startDate, dateRange.endDate)) *
+              100;
+          } else {
+            totalValue = reservation[dataTypes[selectedDataType].property];
+          }
+          cumulativeAmount += typeof totalValue === 'number' ? totalValue : 0;
+          return {
+            x: new Date(reservation.payout_date).getTime(),
+            y: cumulativeAmount,
+            listing_id: reservation.listing_id
+          };
+        });
       });
-    });
+    };
 
-    setChartData(chartData);
-  }, [reservations, listings, selectedListings, dateRange, selectedDataType]);
+    const dataSets = generateChartData();
 
-  useEffect(() => {
-    if (chart && chartData) {
+    if (chart) {
       // Clear existing series and legend boxes
       chart.getSeries().forEach((series) => series.dispose());
       chart.getLegendBoxes().forEach((legendBox) => legendBox.dispose());
@@ -204,30 +208,28 @@ export default function LineChart({
         .getDefaultAxisX()
         .setInterval({ start: startMillis, end: endMillis });
 
-      // Group data by listing
-      const groupedData = chartData.reduce((acc: any, curr: any) => {
-        const listing_id = (
-          reservations.find(
-            (reservation) =>
-              new Date(reservation.payout_date).getTime() === curr.x
-          ) as Reservation
-        ).listing_id;
+      // Define the type for the grouped data
+      const groupedData = dataSets.reduce(
+        (acc, curr) => {
+          const listing_id = curr.listing_id;
 
-        if (!acc[listing_id]) {
-          acc[listing_id] = [];
-        }
+          if (!acc[listing_id]) {
+            acc[listing_id] = [];
+          }
 
-        acc[listing_id].push({ x: curr.x, y: curr.y });
-        return acc;
-      }, {});
+          acc[listing_id].push({ x: curr.x, y: curr.y });
+          return acc;
+        },
+        {} as { [key: number]: { x: number; y: number }[] }
+      );
 
       // Create a single legend box
       const legendBox = chart
         .addLegendBox(LegendBoxBuilders.VerticalLegendBox)
         .setPosition({ x: 100, y: 100 })
         .setMargin(1)
-        .setTitle(`Listings`)
-        .setOrigin(UIOrigins.RightTop)
+        .setTitle('Listings')
+        .setOrigin(UIOrigins.LeftTop)
         .setDraggingMode(UIDraggingModes.draggable)
         .setBackground((background) =>
           background.setFillStyle(chart.getTheme().uiBackgroundFillStyle)
@@ -240,7 +242,7 @@ export default function LineChart({
           dataPattern: { pattern: 'ProgressiveX' }
         });
 
-        lineSeries.add(data as Point[]);
+        lineSeries.add(data);
 
         const listing = listings.find((l) => l.id === parseInt(listing_id));
         const internal_name = listing?.internal_name || '';
@@ -249,7 +251,14 @@ export default function LineChart({
         legendBox.add(lineSeries).setEntries((e) => e.setText(internal_name));
       });
     }
-  }, [chart, chartData, listings, reservations]);
+  }, [
+    chart,
+    listings,
+    reservations,
+    dateRange,
+    selectedDataType,
+    selectedListings
+  ]);
 
   return (
     <div className="flex flex-wrap justify-center">
