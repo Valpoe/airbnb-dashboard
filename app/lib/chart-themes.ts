@@ -1,11 +1,5 @@
-import {
-  ColorHEX,
-  ColorRGBA,
-  GlowEffect,
-  isSolidFill,
-  SolidFill
-} from '@arction/lcjs';
-import { makeFlatTheme } from '@arction/lcjs-themes';
+import { ColorHEX, isSolidFill } from '@arction/lcjs';
+import { makeCustomTheme } from '@arction/lcjs-themes';
 import type { Theme } from '@arction/lcjs';
 
 export const dataColorsLight = [
@@ -53,9 +47,10 @@ export const dataColors = {
   11: { light: '#a89519', dark: '#e0c931' }
 };
 
-const light = makeFlatTheme({
+const light = makeCustomTheme({
   isDark: false,
-  fontFamily: "'GT-Eesti-Light', sans-serif",
+  gradients: false,
+  fontFamily: 'Segoe UI, -apple-system, Verdana, Helvetica',
   backgroundColor: ColorHEX('#ffffff00'),
   textColor: ColorHEX('#121212'),
   dataColors: dataColorsLight,
@@ -75,9 +70,10 @@ const lightTheme: Theme = {
   )
 };
 
-const dark = makeFlatTheme({
+const dark = makeCustomTheme({
   isDark: true,
-  fontFamily: "'GT-Eesti-Light', sans-serif",
+  gradients: false,
+  fontFamily: 'Segoe UI, -apple-system, Verdana, Helvetica',
   backgroundColor: ColorHEX('#12121200'),
   textColor: ColorHEX('#ffffff'),
   dataColors: dataColorsDark,
