@@ -1,6 +1,5 @@
 'use client';
 import {
-  fetchAllReservations,
   fetchListings,
   fetchListingsByDateRangeAndListings
 } from '@/app/lib/database';
@@ -29,10 +28,8 @@ export default function ReservationData() {
     const fetchInitialData = async () => {
       try {
         const fetchedListings = await fetchListings();
-        const reservations = await fetchAllReservations();
         setListings(fetchedListings);
         setSelectedListings(fetchedListings.map((listing) => listing.id));
-        setReservations(reservations);
       } catch (error) {
         console.error('Error fetching initial data: ', error);
       }

@@ -4,9 +4,7 @@ import {
   Reservation,
   dataTypes
 } from '@/app/lib/definitions';
-import { calculateAmountOfDays, getRandomColor } from '@/app/lib/utils';
-import 'chart.js/auto';
-import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm';
+import { calculateAmountOfDays } from '@/app/lib/utils';
 import { useState, useEffect } from 'react';
 import {
   UIBackground,
@@ -143,7 +141,7 @@ export default function LineChart({
         .setBackground((background) =>
           background.setFillStyle(lc.getTheme().uiBackgroundFillStyle)
         )
-        .setAutoDispose({ type: 'max-height', maxHeight: 0.5 });
+        .setAutoDispose({ type: 'max-height', maxHeight: 0.75 });
 
       setChart(lc);
       return () => {
