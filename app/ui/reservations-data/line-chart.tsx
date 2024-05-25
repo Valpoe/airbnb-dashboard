@@ -29,6 +29,7 @@ import {
   Point
 } from '@arction/lcjs';
 import { createChart } from '@/app/components/create-chart';
+import { set } from 'zod';
 
 export default function LineChart({
   reservations,
@@ -53,7 +54,7 @@ export default function LineChart({
   };
 
   const generateChartData = () => {
-    return selectedListings.flatMap((selectedListingId) => {
+    return selectedListings.map((selectedListingId) => {
       const listingReservations = reservations
         .filter((reservation) => reservation.listing_id === selectedListingId)
         .sort(
@@ -63,26 +64,32 @@ export default function LineChart({
         );
 
       let cumulativeAmount = 0;
-      return listingReservations.map((reservation) => {
-        let totalValue;
+
+      const data = listingReservations.map((reservation) => {
+        let totalAmount;
+
         if (dataTypes[selectedDataType].label === 'Reservations') {
-          totalValue = 1;
+          totalAmount = 1;
         } else if (dataTypes[selectedDataType].label === 'Occupancy Rate') {
           const totalNights = reservation.nights;
-          totalValue =
-            (totalNights /
-              calculateAmountOfDays(dateRange.startDate, dateRange.endDate)) *
-            100;
+          const totalDays = calculateAmountOfDays(
+            dateRange.startDate,
+            dateRange.endDate
+          );
+          totalAmount = (totalNights / totalDays) * 100;
         } else {
-          totalValue = reservation[dataTypes[selectedDataType].property];
+          totalAmount = reservation[dataTypes[selectedDataType].property];
         }
-        cumulativeAmount += typeof totalValue === 'number' ? totalValue : 0;
+
+        cumulativeAmount += typeof totalAmount === 'number' ? totalAmount : 0;
+
         return {
           x: new Date(reservation.payout_date).getTime(),
           y: cumulativeAmount,
-          listing_id: reservation.listing_id
+          listing_id: selectedListingId
         };
       });
+      return data;
     });
   };
 
@@ -132,16 +139,19 @@ export default function LineChart({
             .setGreatTickStyle(emptyTick)
         );
       lc.getDefaultAxisY().setTickStrategy(AxisTickStrategies.Numeric);
-      lc.addLegendBox(LegendBoxBuilders.VerticalLegendBox)
+      const legend = lc
+        .addLegendBox(LegendBoxBuilders.VerticalLegendBox)
         .setPosition({ x: 100, y: 100 })
         .setMargin(1)
         .setTitle('Listings')
-        .setOrigin(UIOrigins.LeftTop)
+        .setOrigin(UIOrigins.RightTop)
         .setDraggingMode(UIDraggingModes.draggable)
         .setBackground((background) =>
           background.setFillStyle(lc.getTheme().uiBackgroundFillStyle)
         )
-        .setAutoDispose({ type: 'max-height', maxHeight: 0.75 });
+        .setAutoDispose({ type: 'max-height', maxHeight: 0.5 });
+
+      setLegendBox(legend);
 
       setChart(lc);
       return () => {
@@ -157,46 +167,10 @@ export default function LineChart({
   }, []);
 
   useEffect(() => {
-    const generateChartData = () => {
-      return selectedListings.flatMap((selectedListingId) => {
-        const listingReservations = reservations
-          .filter((reservation) => reservation.listing_id === selectedListingId)
-          .sort(
-            (a, b) =>
-              new Date(a.payout_date).getTime() -
-              new Date(b.payout_date).getTime()
-          );
-
-        let cumulativeAmount = 0;
-        return listingReservations.map((reservation) => {
-          let totalValue;
-          if (dataTypes[selectedDataType].label === 'Reservations') {
-            totalValue = 1;
-          } else if (dataTypes[selectedDataType].label === 'Occupancy Rate') {
-            const totalNights = reservation.nights;
-            totalValue =
-              (totalNights /
-                calculateAmountOfDays(dateRange.startDate, dateRange.endDate)) *
-              100;
-          } else {
-            totalValue = reservation[dataTypes[selectedDataType].property];
-          }
-          cumulativeAmount += typeof totalValue === 'number' ? totalValue : 0;
-          return {
-            x: new Date(reservation.payout_date).getTime(),
-            y: cumulativeAmount,
-            listing_id: reservation.listing_id
-          };
-        });
-      });
-    };
-
-    const dataSets = generateChartData();
-
     if (chart) {
       // Clear existing series and legend boxes
       chart.getSeries().forEach((series) => series.dispose());
-      chart.getLegendBoxes().forEach((legendBox) => legendBox.dispose());
+      // chart.getLegendBoxes().forEach((legendBox) => legendBox.dispose());
 
       // Set axis title and interval
       chart.getDefaultAxisY().setTitle(dataTypes[selectedDataType].label);
@@ -206,47 +180,27 @@ export default function LineChart({
         .getDefaultAxisX()
         .setInterval({ start: startMillis, end: endMillis });
 
-      // Define the type for the grouped data
-      const groupedData = dataSets.reduce(
-        (acc, curr) => {
-          const listing_id = curr.listing_id;
+      const dataSets = generateChartData();
 
-          if (!acc[listing_id]) {
-            acc[listing_id] = [];
+      dataSets.forEach((dataSet, index) => {
+        const listing = listings.find(
+          (listing) => listing.id === selectedListings[index]
+        );
+
+        if (listing) {
+          const series = chart
+            .addLineSeries({
+              dataPattern: {
+                pattern: 'ProgressiveX'
+              }
+            })
+            .setName(listing.internal_name);
+
+          series.add(dataSet);
+          if (legendBox) {
+            legendBox.add(series);
           }
-
-          acc[listing_id].push({ x: curr.x, y: curr.y });
-          return acc;
-        },
-        {} as { [key: number]: { x: number; y: number }[] }
-      );
-
-      // Create a single legend box
-      const legendBox = chart
-        .addLegendBox(LegendBoxBuilders.VerticalLegendBox)
-        .setPosition({ x: 100, y: 100 })
-        .setMargin(1)
-        .setTitle('Listings')
-        .setOrigin(UIOrigins.LeftTop)
-        .setDraggingMode(UIDraggingModes.draggable)
-        .setBackground((background) =>
-          background.setFillStyle(chart.getTheme().uiBackgroundFillStyle)
-        )
-        .setAutoDispose({ type: 'max-height', maxHeight: 0.5 });
-
-      // Create a line series for each listing and add it to the legend box
-      Object.entries(groupedData).forEach(([listing_id, data]) => {
-        const lineSeries = chart.addLineSeries({
-          dataPattern: { pattern: 'ProgressiveX' }
-        });
-
-        lineSeries.add(data);
-
-        const listing = listings.find((l) => l.id === parseInt(listing_id));
-        const internal_name = listing?.internal_name || '';
-
-        // Add a separate entry for each line series
-        legendBox.add(lineSeries).setEntries((e) => e.setText(internal_name));
+        }
       });
     }
   }, [
@@ -279,7 +233,6 @@ export default function LineChart({
         id="chart-container"
         style={{ width: '100%', height: '600px' }}
       ></div>
-      {/* <Line options={options} data={data} /> */}
     </div>
   );
 }

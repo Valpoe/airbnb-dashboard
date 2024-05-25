@@ -8,6 +8,7 @@ export async function fetchAllReservations() {
   try {
     const result = await sql<Reservation>`
     SELECT * FROM airbnb_data
+    ORDER BY payout_date DESC
   `;
     const data = result.rows;
     return data;
@@ -75,6 +76,7 @@ export async function fetchListingsByDateRangeAndListings(
     WHERE payout_date >= ${startDate} 
       AND payout_date <= ${endDate} 
       AND listing_id = ANY(${formattedListings})
+    ORDER BY payout_date DESC
   `;
     const data = result.rows;
     return data;
