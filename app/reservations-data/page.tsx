@@ -25,7 +25,7 @@ export default function ReservationData() {
   const [selectedListings, setSelectedListings] = useState<number[]>([]);
 
   useEffect(() => {
-    const fetchInitialData = async () => {
+    const fetchAndSetListings = async () => {
       try {
         const fetchedListings = await fetchListings();
         setListings(fetchedListings);
@@ -35,7 +35,7 @@ export default function ReservationData() {
       }
     };
 
-    fetchInitialData();
+    fetchAndSetListings();
   }, []);
 
   useEffect(() => {

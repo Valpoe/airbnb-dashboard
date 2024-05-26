@@ -10,26 +10,14 @@ import {
   UIBackground,
   ChartXY,
   AxisTickStrategies,
-  DashedLine,
-  SolidFill,
-  ColorRGBA,
-  SolidLine,
-  ColorHEX,
-  emptyLine,
-  lightningChart,
-  Themes,
-  FontSettings,
   emptyTick,
-  Axis,
   AxisScrollStrategies,
   LegendBoxBuilders,
   UIOrigins,
   UIDraggingModes,
-  LegendBox,
-  Point
+  LegendBox
 } from '@arction/lcjs';
 import { createChart } from '@/app/components/create-chart';
-import { set } from 'zod';
 
 export default function LineChart({
   reservations,
