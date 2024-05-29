@@ -29,13 +29,9 @@ export default function BarChart({
 
   const getStatisticsForSelectedListings = () => {
     return selectedListings.map((selectedListingId) => {
-      const listingReservations = reservations
-        .filter((reservation) => reservation.listing_id === selectedListingId)
-        .sort(
-          (a, b) =>
-            new Date(a.payout_date).getTime() -
-            new Date(b.payout_date).getTime()
-        );
+      const listingReservations = reservations.filter(
+        (reservation) => reservation.listing_id === selectedListingId
+      );
 
       let totalValue;
 
