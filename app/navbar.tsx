@@ -13,7 +13,7 @@ import { Fragment } from 'react';
 
 const navigation = [
   { name: 'Monthly Report', href: '/monthly-report' },
-  { name: 'Reservations Data', href: '/reservations-data' },
+  { name: 'Reservations', href: '/reservations-data' },
   { name: 'Playground', href: '/playground' }
 ];
 

@@ -5,7 +5,7 @@ import {
   dataTypes
 } from '@/app/lib/definitions';
 import { calculateAmountOfDays } from '@/app/lib/utils';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   UIBackground,
   ChartXY,
@@ -41,7 +41,7 @@ export default function LineChart({
     setSelectedDataType(dataType);
   };
 
-  const generateChartData = () => {
+  const generateChartData = useCallback(() => {
     return selectedListings.map((selectedListingId) => {
       const listingReservations = reservations
         .filter((reservation) => reservation.listing_id === selectedListingId)
@@ -79,7 +79,13 @@ export default function LineChart({
       });
       return data;
     });
-  };
+  }, [selectedDataType, reservations, selectedListings, dateRange]);
+
+  const clearChart = useCallback(() => {
+    if (chart) {
+      chart.getSeries().forEach((series) => series.dispose());
+    }
+  }, [chart]);
 
   useEffect(() => {
     const licenseKey = process.env.NEXT_PUBLIC_LC_KEY;
@@ -155,10 +161,8 @@ export default function LineChart({
   }, []);
 
   useEffect(() => {
-    if (chart) {
-      // Clear existing series and legend boxes
-      chart.getSeries().forEach((series) => series.dispose());
-      // chart.getLegendBoxes().forEach((legendBox) => legendBox.dispose());
+    if (chart && legendBox) {
+      clearChart();
 
       // Set axis title and interval
       chart.getDefaultAxisY().setTitle(dataTypes[selectedDataType].label);
@@ -185,18 +189,18 @@ export default function LineChart({
             .setName(listing.internal_name);
 
           series.add(dataSet);
-          if (legendBox) {
-            legendBox.add(series);
-          }
+          legendBox.add(series);
         }
       });
     }
   }, [
     chart,
-    listings,
-    reservations,
-    dateRange,
+    legendBox,
     selectedDataType,
+    generateChartData,
+    clearChart,
+    dateRange,
+    listings,
     selectedListings
   ]);
 
