@@ -1,0 +1,43 @@
+@import '@/app/styles/_mixins.scss';
+@import '@/app/styles/_variables.scss';
+
+.mainContainer {
+  @include main-container;
+}
+
+.headerText {
+  @include header-text;
+}
+
+.columnBadges {
+  display: flex;
+  flex-wrap: wrap;
+  list-style-position: inside;
+  list-style-type: disc;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+.downloadButton {
+  background-color: $secondary-70;
+  margin-bottom: 1.25rem;
+  max-width: 20rem;
+
+  &:hover {
+    background-color: $secondary-70;
+    color: $accent;
+  }
+
+  @media (min-width: 768px) {
+    margin-right: 1rem;
+  }
+}

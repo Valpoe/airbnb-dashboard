@@ -1,5 +1,5 @@
 import '@/app/ui/globals.css';
-
+import '@/app/styles/globals.scss';
 import AuthProvider from '@/app/context/auth-provider';
 import Nav from '@/app/nav';
 import { Analytics } from '@vercel/analytics/react';

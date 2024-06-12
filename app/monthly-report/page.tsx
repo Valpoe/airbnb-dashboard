@@ -1,10 +1,12 @@
 'use client';
+import styles from './monthly-report.module.scss';
 import FileUploadButton from '@/app/ui/monthly-report/file-upload-button';
 import '@/app/ui/monthly-report/print-table.css';
 import DataTable from '@/app/ui/monthly-report/table';
 import { useRef, useState } from 'react';
 import ReactToPrint from 'react-to-print';
 import { monthlyReportColumns } from '@/app/lib/definitions';
+import cn from 'classnames';
 
 export default function MonthlyReport() {
   const [csvData, setCsvData] = useState<any[]>([]);
@@ -57,23 +59,25 @@ export default function MonthlyReport() {
   };
 
   return (
-    <main className="p-4 md:p-10 mx-auto max-w-7xl">
+    <main className={styles.mainContainer}>
       <div>
-        <h1 className="text-xl mb-5">Upload Airbnb csv file with fields:</h1>
-        <ul className="flex flex-wrap list-inside list-disc gap-2 mb-5">
+        <h1 className={styles.headerText}>
+          Upload Airbnb csv file with fields:
+        </h1>
+        <ul className={styles.columnBadges}>
           {monthlyReportColumns.map((column, index) => (
             <li key={index}>
               <span className="badge badge-lg badge-primary">{column}</span>
             </li>
           ))}
         </ul>
-        <div className="flex flex-col md:flex-row">
+        <div className={styles.inputContainer}>
           <FileUploadButton onDataUpload={handleDataUpload} />
           {csvData.length > 0 && (
             <>
               <ReactToPrint
                 trigger={() => (
-                  <button className="btn mb-5 bg-neutral hover:text-accent md:mr-5 hover:bg-neutral max-w-xs">
+                  <button className={cn('btn', styles.downloadButton)}>
                     Download
                   </button>
                 )}
