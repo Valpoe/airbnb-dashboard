@@ -1,5 +1,7 @@
+import cn from 'classnames';
 import Papa, { ParseResult } from 'papaparse';
 import { useRef } from 'react';
+import styles from './styles.module.scss';
 
 interface FileUploadButtonProps {
   onDataUpload: (data: any[]) => void;
@@ -50,15 +52,12 @@ export default function FileUploadButton({
     <>
       <input
         type="file"
-        className="file-input file-input-bordered w-full max-w-xs mb-5 md:mr-5"
+        className={cn('file-input', 'file-input-bordered', styles.fileInput)}
         onChange={handleFile}
         ref={fileInputRef}
       />
       {fileInputRef.current && fileInputRef.current.value && (
-        <button
-          className="btn mb-5 bg-neutral hover:text-accent hover:bg-neutral md:mr-5 max-w-xs"
-          onClick={handleClear}
-        >
+        <button className={cn('btn', styles.clearButton)} onClick={handleClear}>
           Clear
         </button>
       )}

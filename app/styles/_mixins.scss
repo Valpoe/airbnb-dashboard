@@ -13,3 +13,14 @@
   line-height: 1.75rem;
   margin-bottom: 1rem;
 }
+
+@mixin regular-button {
+  background-color: $secondary-70;
+  margin-bottom: 1.25rem;
+  max-width: 20rem;
+
+  &:hover {
+    background-color: $secondary-70;
+    color: $accent;
+  }
+}

@@ -1,12 +1,12 @@
 'use client';
-import styles from './monthly-report.module.scss';
-import FileUploadButton from '@/app/ui/monthly-report/file-upload-button';
-import '@/app/ui/monthly-report/print-table.css';
-import DataTable from '@/app/ui/monthly-report/table';
+import { monthlyReportColumns } from '@/app/lib/definitions';
+import FileUploadButton from '@/app/monthly-report/report-table/file-upload-button';
+import DataTable from '@/app/monthly-report/report-table/table';
+import '@/app/monthly-report/report-table/table.css';
+import cn from 'classnames';
 import { useRef, useState } from 'react';
 import ReactToPrint from 'react-to-print';
-import { monthlyReportColumns } from '@/app/lib/definitions';
-import cn from 'classnames';
+import styles from './monthly-report.module.scss';
 
 export default function MonthlyReport() {
   const [csvData, setCsvData] = useState<any[]>([]);
@@ -84,9 +84,16 @@ export default function MonthlyReport() {
                 content={() => contentRef.current}
                 documentTitle="Airbnb Report"
               />
-              <div className="flex">
-                <label className="label cursor-pointer mb-5 mr-5">
-                  <span className="label-text mr-2">Resolution Payout</span>
+              <div className={styles.resolutionPayoutContainer}>
+                <label className={cn('label', styles.resolutionPayoutCheckbox)}>
+                  <span
+                    className={cn(
+                      'label-text',
+                      styles.resolutionPayoutCheckboxLabel
+                    )}
+                  >
+                    Resolution Payout
+                  </span>
                   <input
                     type="checkbox"
                     className="checkbox checkbox-primary"
@@ -99,19 +106,29 @@ export default function MonthlyReport() {
                     <input
                       type="number"
                       placeholder="Amount"
-                      className="input input-bordered input-primary w-24 max-w-xs mr-5"
+                      className={cn(
+                        'input',
+                        'input-bordered',
+                        'input-primary',
+                        styles.resolutionPayoutInput
+                      )}
                       value={resolutionPayoutAmount}
                       onChange={handleResolutionPayoutAmountChange}
                     />
                     <input
                       type="text"
                       placeholder="Selite"
-                      className="input input-bordered input-primary max-w-xs mr-5"
+                      className={cn(
+                        'input',
+                        'input-bordered',
+                        'input-primary',
+                        styles.resolutionPayoutDescription
+                      )}
                       value={resolutionPayoutDescription}
                       onChange={handleResolutionPayoutDescriptionChange}
                     />
                     <button
-                      className="btn mb-5 bg-neutral hover:text-accent mr-5 hover:bg-neutral"
+                      className={cn('btn', styles.resolutionPayoutAddButton)}
                       onClick={handleAddResolutionPayout}
                     >
                       Add

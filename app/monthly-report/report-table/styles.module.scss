@@ -1,0 +1,19 @@
+@import '@/app/styles/_mixins.scss';
+@import '@/app/styles/_variables.scss';
+
+.fileInput {
+  width: 100%;
+  max-width: 20rem;
+  margin-bottom: 1.25rem;
+  @media (min-width: 768px) {
+    margin-right: 1.25rem /* 20px */;
+  }
+}
+
+.clearButton {
+  @include regular-button;
+
+  @media (min-width: 768px) {
+    margin-right: 1.25rem;
+  }
+}

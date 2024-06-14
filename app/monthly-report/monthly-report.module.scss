@@ -28,16 +28,44 @@
 }
 
 .downloadButton {
+  @include regular-button;
+
+  @media (min-width: 768px) {
+    margin-right: 1.25rem;
+  }
+}
+
+.resolutionPayoutContainer {
+  display: flex;
+}
+
+.resolutionPayoutCheckbox {
+  cursor: pointer;
+  margin-bottom: 1.25rem;
+  margin-right: 1.25rem;
+}
+
+.resolutionPayoutCheckboxLabel {
+  margin-right: 0.5rem;
+}
+
+.resolutionPayoutInput {
+  width: 6rem;
+  max-width: 20rem;
+  margin-right: 1.25rem;
+}
+
+.resolutionPayoutDescription {
+  max-width: 20rem;
+  margin-right: 1.25rem;
+}
+
+.resolutionPayoutAddButton {
   background-color: $secondary-70;
   margin-bottom: 1.25rem;
-  max-width: 20rem;
 
   &:hover {
     background-color: $secondary-70;
     color: $accent;
-  }
-
-  @media (min-width: 768px) {
-    margin-right: 1rem;
   }
 }
