@@ -1,5 +1,5 @@
-import { darkTheme, lightTheme } from '@/app/styles/chart-themes';
-import { lightningChart, Themes } from '@arction/lcjs';
+import { darkTheme } from '@/app/styles/chart-themes';
+import { lightningChart } from '@arction/lcjs';
 
 export const createChart = (
   licenseKey: string,
