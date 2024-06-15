@@ -1,0 +1,76 @@
+@import '@/app/styles/_variables.scss';
+@import '@/app/styles/_mixins.scss';
+
+.disclosure {
+  background-color: rgb(8 47 73);
+  position: sticky;
+  top: 0px;
+  z-index: 10;
+}
+
+.mainContainer {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 80rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  @media (min-width: 640px) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.secondContainer {
+  display: flex;
+  height: 4rem;
+  justify-content: space-between;
+}
+
+.thirdContainer {
+  display: flex;
+}
+
+.fourthContainer {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.navLinkContainer {
+  display: none;
+  @media (min-width: 640px) {
+    margin-top: -1px;
+    margin-bottom: -1px;
+    margin-left: 1.5rem;
+    display: flex;
+    gap: 2rem;
+  }
+}
+
+.activeLink {
+  color: $accent;
+  border-color: $secondary-15;
+}
+
+.inactiveLink {
+  border-color: transparent;
+  color: $secondary-15;
+  &:hover {
+    color: $secondary-30;
+    border-color: $secondary-30;
+  }
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  padding-top: 0.25rem;
+  border-bottom-width: 2px;
+  font-weight: 500;
+}

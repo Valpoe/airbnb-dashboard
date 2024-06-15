@@ -1,11 +1,13 @@
 'use client';
 
+import styles from '@/app/styles/root/navbar.module.scss';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import {
   Bars3Icon,
   UserCircleIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
+import cn from 'classnames';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -26,13 +28,13 @@ export default function Navbar({ user }: { user: any }) {
   const router = useRouter();
 
   return (
-    <Disclosure as="nav" className="bg-sky-950 shadow-sm sticky top-0 z-10">
+    <Disclosure as="nav" className={cn('shadow-sm', styles.disclosure)}>
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex h-16 justify-between">
-              <div className="flex">
-                <div className="flex flex-shrink-0 items-center">
+          <div className={styles.mainContainer}>
+            <div className={styles.secondContainer}>
+              <div className={styles.thirdContainer}>
+                <div className={styles.fourthContainer}>
                   <Link href="/monthly-report">
                     <svg
                       width="32"
@@ -57,16 +59,16 @@ export default function Navbar({ user }: { user: any }) {
                     </svg>
                   </Link>
                 </div>
-                <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
+                <div className={styles.navLinkContainer}>
                   {navigation.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={classNames(
+                      className={cn(
                         pathname === item.href
-                          ? 'border-gray-300 text-accent'
-                          : 'border-transparent text-primary-content hover:text-secondary hover:border-slate-500',
-                        'inline-flex items-center px-1 pt-1 border-b-2 text-md font-medium'
+                          ? styles.activeLink
+                          : styles.inactiveLink,
+                        styles.navLink
                       )}
                       aria-current={pathname === item.href ? 'page' : undefined}
                     >

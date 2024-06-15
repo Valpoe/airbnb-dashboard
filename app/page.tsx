@@ -1,5 +1,7 @@
 import LoginForm from '@/app/components/login-form/login-form';
+import styles from '@/app/styles/root/page.module.scss';
 import loginBackground from '@/public/login-background.png';
+import cn from 'classnames';
 import { getServerSession } from 'next-auth';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
@@ -11,7 +13,7 @@ export default async function Page() {
   if (session) redirect('/monthly-report');
 
   return (
-    <main className="flex items-center justify-center h-screen">
+    <main className={styles.mainContainer}>
       <Image
         src={loginBackground}
         alt="Login Background"
@@ -19,11 +21,9 @@ export default async function Page() {
         style={{ objectFit: 'cover' }}
         priority
       />
-      <div className="card w-96 bg-neutral text-neutral-content">
-        <div className="card-body items-center text-center">
-          <h4 className="mb-5 mt-1 pb-1 text-xl font-semibold">
-            Sign in to your account
-          </h4>
+      <div className={cn('card', styles.card)}>
+        <div className={cn('card-body', styles.cardBody)}>
+          <h4 className={styles.cardTitle}>Sign in to your account</h4>
           <LoginForm />
         </div>
       </div>

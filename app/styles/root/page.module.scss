@@ -1,0 +1,28 @@
+@import '@/app/styles/_variables.scss';
+
+.mainContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.card {
+  width: 24rem;
+  background-color: $secondary-90;
+  color: $secondary-15;
+}
+
+.cardBody {
+  align-items: center;
+  text-align: center;
+}
+
+.cardTitle {
+  margin-bottom: 1.25rem;
+  margin-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+}

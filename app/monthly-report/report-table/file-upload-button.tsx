@@ -57,7 +57,10 @@ export default function FileUploadButton({
         ref={fileInputRef}
       />
       {fileInputRef.current && fileInputRef.current.value && (
-        <button className={cn('btn', styles.clearButton)} onClick={handleClear}>
+        <button
+          className={cn('btn', 'btn-primary', styles.clearButton)}
+          onClick={handleClear}
+        >
           Clear
         </button>
       )}

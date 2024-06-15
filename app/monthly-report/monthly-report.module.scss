@@ -61,11 +61,5 @@
 }
 
 .resolutionPayoutAddButton {
-  background-color: $secondary-70;
-  margin-bottom: 1.25rem;
-
-  &:hover {
-    background-color: $secondary-70;
-    color: $accent;
-  }
+  @include regular-button;
 }
