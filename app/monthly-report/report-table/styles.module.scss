@@ -6,7 +6,7 @@
   max-width: 20rem;
   margin-bottom: 1.25rem;
   @media (min-width: 768px) {
-    margin-right: 1.25rem /* 20px */;
+    margin-right: 1.25rem;
   }
 }
 
@@ -16,4 +16,84 @@
   @media (min-width: 768px) {
     margin-right: 1.25rem;
   }
+}
+
+.tableContainer {
+  overflow-x: auto;
+  padding-top: 1.25rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  background-color: $secondary-15;
+}
+
+.table {
+  border-width: 1px;
+  border-color: $secondary-90;
+  margin-bottom: 1.25rem;
+  color: $primary;
+  margin-left: auto;
+  margin-right: auto;
+  width: auto;
+}
+
+.tableTitle {
+  padding: 1.25rem;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  text-align: center;
+  color: $primary;
+}
+
+.pageBreak {
+  padding: 1.25rem;
+}
+
+.summaryContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.summaryTable {
+  border-width: 1px;
+  border-color: $secondary-90;
+  margin-bottom: 5rem;
+  color: $primary;
+  width: auto;
+}
+
+.summaryTableHeaders {
+  color: $primary;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.footerContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: 1.25rem;
+  border-top-width: 2px;
+  border-color: $primary;
+  padding-top: 2rem;
+}
+
+.footerContent {
+  display: flex;
+  color: $primary;
+}
+
+.footerIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.5rem;
+  margin-top: 0.125rem;
+}
+
+.footerText {
+  margin-right: 1rem;
+  color: $primary;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
 }

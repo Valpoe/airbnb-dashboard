@@ -1,9 +1,11 @@
 'use client';
-
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
+import cn from 'classnames';
 import { SignInOptions, signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
+import LoginButton from './login-button';
+import styles from './styles.module.scss';
 
 export default function LoginForm() {
   const router = useRouter();
@@ -53,9 +55,9 @@ export default function LoginForm() {
     }
   };
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+    <form onSubmit={handleSubmit} className={styles.loginForm}>
       <input
-        className="input input-bordered w-full max-w-xs"
+        className={cn('input', 'input-bordered', styles.inputField)}
         name="username"
         type="text"
         placeholder="Enter username"
@@ -63,7 +65,7 @@ export default function LoginForm() {
         maxLength={20}
       />
       <input
-        className="input input-bordered w-full max-w-xs"
+        className={cn('input', 'input-bordered', styles.inputField)}
         name="password"
         type="password"
         placeholder="Enter password"
@@ -74,29 +76,10 @@ export default function LoginForm() {
       <LoginButton loading={loading} />
       {error && (
         <div role="alert" className="alert alert-error">
-          <ExclamationCircleIcon className="w-6 h-6 mr-2" />
+          <ExclamationCircleIcon className={styles.icon} />
           <span>{error}</span>
         </div>
       )}
     </form>
-  );
-}
-
-function LoginButton({ loading }: { loading: boolean }) {
-  return (
-    <button className="btn btn-primary" type="submit" disabled={loading}>
-      {loading ? (
-        <span className="loading loading-spinner"></span>
-      ) : (
-        <div className="flex items-center">
-          <span>
-            SIGN IN{' '}
-            <span className="text-lg" aria-hidden="true">
-              &rarr;
-            </span>
-          </span>
-        </div>
-      )}
-    </button>
   );
 }

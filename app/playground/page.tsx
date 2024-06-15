@@ -1,6 +1,5 @@
-import DataTabs from '@/app/ui/playground/data-tabs';
+import WorkTimeForm from '@/app/playground/work-time-form/work-time-form';
 import { Metadata } from 'next';
-import WorkTimeForm from '@/app/ui/playground/work-time-form';
 import styles from './playground.module.scss';
 
 export const metadata: Metadata = {
@@ -16,7 +15,6 @@ export default async function IndexPage() {
           This is a playground page. You can use it to test out new components
           and ideas.
         </p>
-        {/* <DataTabs /> */}
         <WorkTimeForm />
       </div>
     </main>

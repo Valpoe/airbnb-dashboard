@@ -4,12 +4,12 @@ import {
   fetchListingsByDateRangeAndListings
 } from '@/app/lib/database';
 import { Listing, Reservation } from '@/app/lib/definitions';
-import BarChart from '@/app/ui/reservations-data/bar-chart';
-import DataButtons from '@/app/ui/reservations-data/data-buttons';
-import DatePicker from '@/app/ui/reservations-data/date-picker';
-import LineChart from '@/app/ui/reservations-data/line-chart';
-import Statistics from '@/app/ui/reservations-data/statistics';
-import ReservationsTable from '@/app/ui/reservations-data/table';
+import BarChart from '@/app/reservations-data/data-visualization/bar-chart';
+import DataButtons from '@/app/reservations-data/data-visualization/data-buttons';
+import DatePicker from '@/app/reservations-data/data-visualization/date-picker';
+import LineChart from '@/app/reservations-data/data-visualization/line-chart';
+import Statistics from '@/app/reservations-data/data-visualization/statistics';
+import ReservationsTable from '@/app/reservations-data/data-visualization/table';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 

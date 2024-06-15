@@ -1,0 +1,58 @@
+@import '@/app/styles/_variables.scss';
+
+.mainContainer {
+  display: grid;
+  min-height: 100%;
+  place-items: center;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+  text-align: center;
+
+  @media (min-width: 640px) {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.error {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: $secondary-15;
+}
+
+.pageNotFound {
+  margin-top: 1rem;
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  letter-spacing: -0.025em;
+  color: $alert;
+  @media (min-width: 640px) {
+    font-size: 3rem;
+    line-height: 1;
+  }
+}
+
+.errorText {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 700;
+  line-height: 1.75rem;
+  color: $secondary-15;
+}
+
+.buttonContainer {
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 1.5rem;
+}

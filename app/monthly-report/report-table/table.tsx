@@ -4,7 +4,9 @@ import {
   GlobeAltIcon,
   PhoneIcon
 } from '@heroicons/react/24/outline';
+import cn from 'classnames';
 import React from 'react';
+import styles from './styles.module.scss';
 
 interface DataTableProps {
   data: any[];
@@ -60,17 +62,9 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
   const commissionAmount = parseFloat((sumAmount * 0.4).toFixed(2));
 
   return (
-    <div
-      className="overflow-x-auto pt-5 pl-5 pr-5 bg-neutral-content"
-      ref={contentRef}
-    >
-      <table
-        className="table border border-neutral mb-5 text-neutral mx-auto"
-        style={{ width: 'auto' }}
-      >
-        <caption className="p-5 text-xl font-semibold text-center text-neutral">
-          Airbnb Report
-        </caption>
+    <div className={styles.tableContainer} ref={contentRef}>
+      <table className={cn('table', styles.table)}>
+        <caption className={styles.tableTitle}>Airbnb Report</caption>
         <thead className="text-neutral text-base">
           <tr>
             {columns.map((column, columnIndex) => (
@@ -88,16 +82,11 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
           ))}
         </tbody>
       </table>
-      <div className="p-5 page-break">
-        <div className="flex flex-col items-center">
-          <table
-            className="table border border-neutral mb-20 text-neutral"
-            style={{ width: 'auto' }}
-          >
-            <caption className="p-5 text-xl font-semibold text-center text-neutral">
-              Summary
-            </caption>
-            <thead className="text-neutral text-base">
+      <div className={cn('page-break', styles.pageBreak)}>
+        <div className={styles.summaryContainer}>
+          <table className={cn('table', styles.summaryTable)}>
+            <caption className={styles.tableTitle}>Summary</caption>
+            <thead className={styles.summaryTableHeaders}>
               <tr>
                 <th>Event</th>
                 <th>Type</th>
@@ -153,18 +142,18 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
             </tbody>
           </table>
         </div>
-        <div className="flex justify-center mt-auto mb-5 border-t-2 border-neutral pt-8">
-          <div className="flex text-neutral">
-            <EnvelopeIcon className="w-6 h-6 mr-2 mt-0.5" />
-            <span className="mr-4 text-neutral text-xl">info@housti.fi</span>
+        <div className={styles.footerContainer}>
+          <div className={styles.footerContent}>
+            <EnvelopeIcon className={styles.footerIcon} />
+            <span className={styles.footerText}>info@housti.fi</span>
           </div>
-          <div className="flex text-neutral">
-            <GlobeAltIcon className="w-6 h-6 mr-2 mt-0.5" />
-            <span className="mr-4 text-neutral text-xl">www.housti.fi</span>
+          <div className={styles.footerContent}>
+            <GlobeAltIcon className={styles.footerIcon} />
+            <span className={styles.footerText}>www.housti.fi</span>
           </div>
-          <div className="flex text-neutral">
-            <PhoneIcon className="w-6 h-6 mr-2 mt-0.5" />
-            <span className="text-neutral text-lg">+358 44 986 4928</span>
+          <div className={styles.footerContent}>
+            <PhoneIcon className={styles.footerIcon} />
+            <span className={styles.footerText}>+358 44 986 4928</span>
           </div>
         </div>
       </div>

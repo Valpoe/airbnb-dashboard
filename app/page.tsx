@@ -1,7 +1,7 @@
-import LoginForm from '@/app/ui/login-form';
-import Image from 'next/image';
+import LoginForm from '@/app/components/login-form/login-form';
 import loginBackground from '@/public/login-background.png';
 import { getServerSession } from 'next-auth';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { authOptions } from './lib/auth';
 
