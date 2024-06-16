@@ -11,7 +11,9 @@ import LineChart from '@/app/reservations-data/data-visualization/line-chart';
 import Statistics from '@/app/reservations-data/data-visualization/statistics';
 import ReservationsTable from '@/app/reservations-data/data-visualization/table';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import cn from 'classnames';
 import { useEffect, useState } from 'react';
+import styles from './reservation-data.module.scss';
 
 export default function ReservationData() {
   const [dropDownOpen, setDropDownOpen] = useState(false);
@@ -113,42 +115,42 @@ export default function ReservationData() {
   };
 
   return (
-    <main className="p-4 md:p-10 mx-auto max-w-7xl">
-      <div className="container mx-auto">
-        <h1 className="text-xl mb-5">Reservations data</h1>
-        <div className="grid grid-cols-1 md:flex md:flex-row flex-wrap justify-items-start items-start gap-3 mb-5">
+    <main className={styles.mainContainer}>
+      <div className={styles.secondContainer}>
+        <h1 className={styles.headerText}>Reservations data</h1>
+        <div className={styles.gridContainer}>
           <div>
             <DatePicker onDateChange={handleDateChange} />
           </div>
           <details className="dropdown">
             <summary
-              className="btn w-48 h-14 bg-neutral hover:bg-neutral hover:text-accent"
+              className={cn('btn', styles.dropdown)}
               onClick={() => setDropDownOpen(!dropDownOpen)}
             >
               Select listings
               {dropDownOpen ? (
-                <ChevronUpIcon className="w-5 h-5 ml-2" />
+                <ChevronUpIcon className={styles.chevronIcon} />
               ) : (
-                <ChevronDownIcon className="w-5 h-5 ml-2" />
+                <ChevronDownIcon className={styles.chevronIcon} />
               )}
             </summary>
-            <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 w-80 rounded-box">
+            <ul className={cn('menu', 'dropdown-content', styles.dropdownMenu)}>
               {listings.map((listing, id) => (
                 <li key={id}>
-                  <label className="flex items-center">
+                  <label className={styles.dropdownMenuItems}>
                     <input
                       type="checkbox"
                       className="checkbox"
                       onChange={() => handleListingChange(listing.id)}
                       checked={selectedListings.includes(listing.id)}
                     />
-                    <span className="ml-2">{listing.internal_name}</span>
+                    <span>{listing.internal_name}</span>
                   </label>
                 </li>
               ))}
             </ul>
           </details>
-          <div className="grid grid-cols-2 md:grid-cols-1 md:flex md:flex-row gap-3">
+          <div className={styles.dataButtonsContainer}>
             <DataButtons
               selectedButton={selectedButton}
               setselectedButton={setselectedButton}

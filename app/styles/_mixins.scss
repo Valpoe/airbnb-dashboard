@@ -15,12 +15,11 @@
 }
 
 @mixin regular-button {
-  background-color: $secondary-70;
-  margin-bottom: 1.25rem;
+  background-color: $neutral;
   max-width: 20rem;
 
   &:hover {
-    background-color: $secondary-70;
+    background-color: $neutral;
     color: $accent;
   }
 }
