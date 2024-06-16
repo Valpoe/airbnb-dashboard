@@ -4,6 +4,8 @@ import {
   DocumentMagnifyingGlassIcon,
   TableCellsIcon
 } from '@heroicons/react/24/outline';
+import cn from 'classnames';
+import styles from './styles.module.scss';
 
 export default function DataButtons({
   selectedButton,
@@ -17,13 +19,13 @@ export default function DataButtons({
   const getIconForButtonType = (buttonType: string) => {
     switch (buttonType) {
       case 'statistics':
-        return <DocumentMagnifyingGlassIcon className="w-6 h-6" />;
+        return <DocumentMagnifyingGlassIcon className={styles.icon} />;
       case 'table':
-        return <TableCellsIcon className="w-6 h-6" />;
+        return <TableCellsIcon className={styles.icon} />;
       case 'line-chart':
-        return <ArrowTrendingUpIcon className="w-6 h-6" />;
+        return <ArrowTrendingUpIcon className={styles.icon} />;
       case 'bar-chart':
-        return <ChartBarIcon className="w-6 h-6" />;
+        return <ChartBarIcon className={styles.icon} />;
       default:
         return null;
     }
@@ -34,9 +36,11 @@ export default function DataButtons({
       {dataContent.map((buttonType, index) => (
         <button
           key={index}
-          className={`btn w-36 h-14 inline-flex items-center bg-neutral hover:text-accent hover:bg-neutral ${
-            selectedButton === buttonType ? 'text-accent' : ''
-          }`}
+          className={cn(
+            'btn',
+            styles.dataButton,
+            selectedButton === buttonType ? styles.activeButton : ''
+          )}
           onClick={() => setselectedButton(buttonType)}
         >
           {buttonType.charAt(0).toUpperCase() +

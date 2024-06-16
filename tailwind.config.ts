@@ -9,7 +9,14 @@ export default {
     './node_modules/react-tailwindcss-datepicker/dist/index.esm.js'
   ],
   daisyui: {
-    themes: ['business'],
+    themes: [
+      {
+        business: {
+          ...require('daisyui/src/theming/themes')['business'],
+          primary: '#2e6c7b'
+        }
+      }
+    ],
     logs: false,
     prefix: ''
   },

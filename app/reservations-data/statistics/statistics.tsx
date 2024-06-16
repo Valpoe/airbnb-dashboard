@@ -1,5 +1,7 @@
 import { Listing, Reservation } from '@/app/lib/definitions';
 import { calculateAmountOfDays } from '@/app/lib/utils';
+import cn from 'classnames';
+import styles from './statistics.module.scss';
 
 interface StatisticsProps {
   reservations: Reservation[];
@@ -110,10 +112,19 @@ export default function Statistics({
   const listingStatistics = getStatisticsForSelectedListings();
 
   return (
-    <div className="flex flex-col">
+    <div className={styles.mainContainer}>
       {/* Total Values Row */}
-      <span className="badge badge-lg badge-primary p-3">Total</span>
-      <div className="flex stats shadow mb-2">
+      <span
+        className={cn(
+          'badge',
+          'badge-lg',
+          'badge-primary',
+          styles.statisticTitle
+        )}
+      >
+        Total
+      </span>
+      <div className={cn('stats', styles.contentContainer)}>
         <div className="stat">
           <div className="stat-title">Total Nights</div>
           <div className="stat-value">{totalValues.totalNights}</div>
@@ -143,10 +154,17 @@ export default function Statistics({
       {/* Listing Statistics Rows */}
       {listingStatistics.map((listingStat) => (
         <div key={listingStat.listingId}>
-          <span className="badge badge-lg badge-primary p-3">
+          <span
+            className={cn(
+              'badge',
+              'badge-lg',
+              'badge-primary',
+              styles.statisticTitle
+            )}
+          >
             {listingStat.internalName}
           </span>
-          <div className="flex stats shadow mb-2">
+          <div className={cn('stats', styles.contentContainer)}>
             <div className="stat">
               <div className="stat-title">Nights</div>
               <div className="stat-value">{listingStat.totalNights}</div>

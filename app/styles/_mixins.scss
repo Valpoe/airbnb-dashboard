@@ -23,3 +23,35 @@
     color: $accent;
   }
 }
+
+@mixin active-data-button {
+  color: $accent;
+  &:hover {
+    background-color: $neutral;
+  }
+}
+
+@mixin inactive-data-button {
+  &:hover {
+    color: $accent;
+    background-color: $neutral;
+  }
+}
+
+@mixin chart-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@mixin data-button-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    display: flex;
+    flex-direction: row;
+  }
+}

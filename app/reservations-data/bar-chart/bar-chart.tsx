@@ -6,8 +6,10 @@ import {
 } from '@/app/lib/definitions';
 import { calculateAmountOfDays, getRandomColor } from '@/app/lib/utils';
 import 'chart.js/auto';
+import cn from 'classnames';
 import { useState } from 'react';
 import { Bar } from 'react-chartjs-2';
+import styles from './bar-chart.module.scss';
 
 export default function BarChart({
   reservations,
@@ -116,16 +118,18 @@ export default function BarChart({
   };
 
   return (
-    <div className="flex flex-wrap justify-center">
-      <div className="grid grid-cols-2 md:grid-cols-1 md:flex md:flex-row gap-3 mb-5">
+    <div className={styles.mainContainer}>
+      <div className={styles.gridContainer}>
         {Object.keys(dataTypes).map((dataType) => (
           <button
             key={dataType}
-            className={`btn w-36 bg-neutral ${
+            className={cn(
+              'btn',
+              styles.dataTypeButtons,
               selectedDataType === dataType
-                ? 'text-accent hover:bg-neutral'
-                : 'hover:text-accent bg-neutral hover:bg-neutral'
-            }`}
+                ? styles.activeButton
+                : styles.inactiveButton
+            )}
             onClick={() => toggleDataType(dataType as DataTypeKey)}
           >
             {dataTypes[dataType].label}

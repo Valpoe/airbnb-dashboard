@@ -1,0 +1,23 @@
+@import '@/app/styles/variables.scss';
+@import '@/app/styles/mixins.scss';
+
+.mainContainer {
+  @include chart-container;
+}
+
+.gridContainer {
+  @include data-button-container;
+}
+
+.dataTypeButtons {
+  width: 9rem;
+  background-color: $neutral;
+}
+
+.activeButton {
+  @include active-data-button;
+}
+
+.inactiveButton {
+  @include inactive-data-button;
+}

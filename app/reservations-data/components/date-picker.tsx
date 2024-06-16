@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
+import styles from './styles.module.scss';
 
 interface DatePickerProps {
   onDateChange: (startDate: string, endDate: string) => void;
@@ -19,7 +20,7 @@ export default function DatePicker({ onDateChange }: DatePickerProps) {
   return (
     <Datepicker
       primaryColor="orange"
-      inputClassName="h-14 bg-neutral text-neutral-content py-3 px-3 focus:outline-none focus:shadow-outline min-w-[250px]"
+      inputClassName={styles.datePicker}
       displayFormat={'DD/MM/YYYY'}
       placeholder="Select a date range"
       startFrom={new Date('2022-01-01')}

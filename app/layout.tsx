@@ -1,4 +1,5 @@
 import AuthProvider from '@/app/context/auth-provider';
+import Loading from '@/app/loading';
 import Nav from '@/app/nav';
 import '@/app/styles/globals.css';
 import '@/app/styles/globals.scss';
@@ -31,7 +32,7 @@ export default async function RootLayout({
           <Suspense>
             <Nav />
           </Suspense>
-          {children}
+          <Suspense fallback={<Loading />}>{children}</Suspense>
         </AuthProvider>
         <Analytics />
         <SpeedInsights />

@@ -1,3 +1,4 @@
+import { createChart } from '@/app/components/create-chart';
 import {
   DataTypeKey,
   Listing,
@@ -5,19 +6,20 @@ import {
   dataTypes
 } from '@/app/lib/definitions';
 import { calculateAmountOfDays } from '@/app/lib/utils';
-import { useState, useEffect, useCallback } from 'react';
 import {
-  UIBackground,
-  ChartXY,
-  AxisTickStrategies,
-  emptyTick,
   AxisScrollStrategies,
+  AxisTickStrategies,
+  ChartXY,
+  LegendBox,
   LegendBoxBuilders,
-  UIOrigins,
+  UIBackground,
   UIDraggingModes,
-  LegendBox
+  UIOrigins,
+  emptyTick
 } from '@arction/lcjs';
-import { createChart } from '@/app/components/create-chart';
+import cn from 'classnames';
+import { useCallback, useEffect, useState } from 'react';
+import styles from './line-chart.module.scss';
 
 export default function LineChart({
   reservations,
@@ -205,16 +207,18 @@ export default function LineChart({
   ]);
 
   return (
-    <div className="flex flex-wrap justify-center">
-      <div className="grid grid-cols-2 md:grid-cols-1 md:flex md:flex-row gap-3 mb-5">
+    <div className={styles.mainContainer}>
+      <div className={styles.gridContainer}>
         {Object.keys(dataTypes).map((dataType) => (
           <button
             key={dataType}
-            className={`btn w-36 inline-flex items-center bg-neutral ${
+            className={cn(
+              'btn',
+              styles.dataTypeButtons,
               selectedDataType === dataType
-                ? 'text-accent hover:bg-neutral'
-                : 'hover:text-accent bg-neutral hover:bg-neutral'
-            }`}
+                ? styles.activeButton
+                : styles.inactiveButton
+            )}
             onClick={() => toggleDataType(dataType as DataTypeKey)}
           >
             {dataTypes[dataType].label}

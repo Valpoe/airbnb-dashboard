@@ -1,0 +1,16 @@
+@import '@/app/styles/variables.scss';
+@import '@/app/styles/mixins.scss';
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.statisticTitle {
+  padding: 0.75rem;
+}
+
+.contentContainer {
+  display: flex;
+  margin-bottom: 0.5rem;
+}

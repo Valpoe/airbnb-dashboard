@@ -1,0 +1,26 @@
+@import '@/app/styles/variables.scss';
+
+.mainContainer {
+  position: relative;
+  overflow-x: auto;
+  max-height: 680px;
+  padding: 1.25rem;
+  background-color: $secondary-15;
+}
+
+.table {
+  border-width: 1px;
+  border-color: $primary;
+  color: $primary;
+}
+
+.tableHeader {
+  background-color: $secondary-30;
+  color: $primary;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.tableBody {
+  overflow-y: auto;
+}
