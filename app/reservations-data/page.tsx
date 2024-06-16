@@ -12,10 +12,11 @@ import Statistics from '@/app/reservations-data/statistics/statistics';
 import ReservationsTable from '@/app/reservations-data/table/table';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import cn from 'classnames';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './reservation-data.module.scss';
 
 export default function ReservationData() {
+  const menuRef = useRef<HTMLDetailsElement>(null);
   const [dropDownOpen, setDropDownOpen] = useState(false);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [selectedButton, setselectedButton] = useState('statistics');
@@ -114,6 +115,22 @@ export default function ReservationData() {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setDropDownOpen(false);
+        if (menuRef.current) {
+          menuRef.current.removeAttribute('open');
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [menuRef]);
+
   return (
     <main className={styles.mainContainer}>
       <div className={styles.secondContainer}>
@@ -122,11 +139,12 @@ export default function ReservationData() {
           <div>
             <DatePicker onDateChange={handleDateChange} />
           </div>
-          <details className="dropdown">
-            <summary
-              className={cn('btn', styles.dropdown)}
-              onClick={() => setDropDownOpen(!dropDownOpen)}
-            >
+          <details
+            className="dropdown"
+            ref={menuRef}
+            onClick={() => setDropDownOpen(!dropDownOpen)}
+          >
+            <summary className={cn('btn', styles.dropdown)}>
               Select listings
               {dropDownOpen ? (
                 <ChevronUpIcon className={styles.chevronIcon} />

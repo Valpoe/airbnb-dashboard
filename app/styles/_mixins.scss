@@ -20,12 +20,12 @@
 
   &:hover {
     background-color: $neutral;
-    color: $tertiary-accent;
+    color: $accent;
   }
 }
 
 @mixin active-data-button {
-  color: $tertiary-accent;
+  color: $accent;
   &:hover {
     background-color: $neutral;
   }
@@ -33,7 +33,7 @@
 
 @mixin inactive-data-button {
   &:hover {
-    color: $tertiary-accent;
+    color: $accent;
     background-color: $neutral;
   }
 }

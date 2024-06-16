@@ -18,3 +18,10 @@ export function getRandomColor() {
   }
   return color;
 }
+
+export const formatAmount = (amount: number) => {
+  if (amount >= 1000) {
+    return (amount / 1000).toFixed(2) + 'K';
+  }
+  return amount.toFixed(2);
+};

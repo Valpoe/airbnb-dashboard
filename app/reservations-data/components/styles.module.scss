@@ -3,9 +3,10 @@
 
 // Date Picker
 .datePicker {
-  height: 3.5rem; // 14 * 0.25rem
+  height: 3.5rem;
   background-color: $neutral;
   padding: 0.75rem;
+  color: $secondary-15;
   &:focus {
     outline: none;
     box-shadow: 0 0 0 1px $accent;

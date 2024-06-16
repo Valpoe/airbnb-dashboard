@@ -1,5 +1,6 @@
 import { Listing, Reservation } from '@/app/lib/definitions';
-import { calculateAmountOfDays } from '@/app/lib/utils';
+import { calculateAmountOfDays, formatAmount } from '@/app/lib/utils';
+import { CurrencyEuroIcon } from '@heroicons/react/24/solid';
 import cn from 'classnames';
 import styles from './statistics.module.scss';
 
@@ -17,7 +18,6 @@ export default function Statistics({
   dateRange
 }: StatisticsProps) {
   const getTotalValuesForSelectedListings = () => {
-    // Filter reservations based on selected listings
     const selectedReservations = reservations.filter((reservation) =>
       selectedListings.includes(reservation.listing_id)
     );
@@ -31,17 +31,18 @@ export default function Statistics({
       (row) => row.event_type === 'Reservation'
     ).length;
 
-    const totalAmount = selectedReservations
-      .reduce((acc, cur) => acc + cur.amount, 0)
-      .toFixed(2);
-
-    const totalGrossEarnings = selectedReservations
-      .reduce((acc, cur) => acc + cur.gross_earnings, 0)
-      .toFixed(2);
-
-    const totalHostFee = selectedReservations
-      .reduce((acc, cur) => acc + cur.host_fee, 0)
-      .toFixed(2);
+    const totalAmount = selectedReservations.reduce(
+      (acc, cur) => acc + cur.amount,
+      0
+    );
+    const totalGrossEarnings = selectedReservations.reduce(
+      (acc, cur) => acc + cur.gross_earnings,
+      0
+    );
+    const totalHostFee = selectedReservations.reduce(
+      (acc, cur) => acc + cur.host_fee,
+      0
+    );
 
     const totalOccupancyRate = (
       ((totalNights /
@@ -75,17 +76,18 @@ export default function Statistics({
         (row) => row.event_type === 'Reservation'
       ).length;
 
-      const totalAmount = listingReservations
-        .reduce((acc, cur) => acc + cur.amount, 0)
-        .toFixed(2);
-
-      const totalGrossEarnings = listingReservations
-        .reduce((acc, cur) => acc + cur.gross_earnings, 0)
-        .toFixed(2);
-
-      const totalHostFee = listingReservations
-        .reduce((acc, cur) => acc + cur.host_fee, 0)
-        .toFixed(2);
+      const totalAmount = listingReservations.reduce(
+        (acc, cur) => acc + cur.amount,
+        0
+      );
+      const totalGrossEarnings = listingReservations.reduce(
+        (acc, cur) => acc + cur.gross_earnings,
+        0
+      );
+      const totalHostFee = listingReservations.reduce(
+        (acc, cur) => acc + cur.host_fee,
+        0
+      );
 
       const occupancyRate = (
         (totalNights /
@@ -138,16 +140,31 @@ export default function Statistics({
           <div className="stat-value">{totalValues.totalOccupancyRate}%</div>
         </div>
         <div className="stat">
+          <div className={cn('stat-figure', styles.iconColor)}>
+            <CurrencyEuroIcon className={styles.icon} aria-hidden="true" />
+          </div>
           <div className="stat-title">Total Amount</div>
-          <div className="stat-value">{totalValues.totalAmount}</div>
+          <div className="stat-value">
+            {formatAmount(totalValues.totalAmount)}
+          </div>
         </div>
         <div className="stat">
+          <div className={cn('stat-figure', styles.iconColor)}>
+            <CurrencyEuroIcon className={styles.icon} aria-hidden="true" />
+          </div>
           <div className="stat-title">Total Gross Earnings</div>
-          <div className="stat-value">{totalValues.totalGrossEarnings}</div>
+          <div className="stat-value">
+            {formatAmount(totalValues.totalGrossEarnings)}
+          </div>
         </div>
         <div className="stat">
+          <div className={cn('stat-figure', styles.iconColor)}>
+            <CurrencyEuroIcon className={styles.icon} aria-hidden="true" />
+          </div>
           <div className="stat-title">Total Host Fee</div>
-          <div className="stat-value">{totalValues.totalHostFee}</div>
+          <div className="stat-value">
+            {formatAmount(totalValues.totalHostFee)}
+          </div>
         </div>
       </div>
 
@@ -178,16 +195,31 @@ export default function Statistics({
               <div className="stat-value">{listingStat.occupancyRate}%</div>
             </div>
             <div className="stat">
+              <div className={cn('stat-figure', styles.iconColor)}>
+                <CurrencyEuroIcon className={styles.icon} aria-hidden="true" />
+              </div>
               <div className="stat-title">Amount</div>
-              <div className="stat-value">{listingStat.totalAmount}</div>
+              <div className="stat-value">
+                {formatAmount(listingStat.totalAmount)}
+              </div>
             </div>
             <div className="stat">
+              <div className={cn('stat-figure', styles.iconColor)}>
+                <CurrencyEuroIcon className={styles.icon} aria-hidden="true" />
+              </div>
               <div className="stat-title">Gross Earnings</div>
-              <div className="stat-value">{listingStat.totalGrossEarnings}</div>
+              <div className="stat-value">
+                {formatAmount(listingStat.totalGrossEarnings)}
+              </div>
             </div>
             <div className="stat">
+              <div className={cn('stat-figure', styles.iconColor)}>
+                <CurrencyEuroIcon className={styles.icon} aria-hidden="true" />
+              </div>
               <div className="stat-title">Host Fee</div>
-              <div className="stat-value">{listingStat.totalHostFee}</div>
+              <div className="stat-value">
+                {formatAmount(listingStat.totalHostFee)}
+              </div>
             </div>
           </div>
         </div>

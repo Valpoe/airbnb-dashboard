@@ -1,7 +1,7 @@
 @import '@/app/styles/_variables.scss';
 @import '@/app/styles/_mixins.scss';
 
-.disclosure {
+.navContainer {
   background-color: rgb(8 47 73);
   position: sticky;
   top: 0px;
@@ -103,7 +103,7 @@
   font-size: 0.875rem;
   line-height: 1.25rem;
   &:hover {
-    color: $accent;
+    color: $secondary-30;
   }
 }
 
@@ -140,10 +140,6 @@
   }
 }
 
-.signOutButtonActive {
-  background-color: $secondary-30;
-}
-
 .signOutButton {
   display: flex;
   width: 100%;
@@ -151,12 +147,15 @@
   padding-right: 1rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  font-size: 0.875rem;
+  font-size: 1rem;
   line-height: 1.25rem;
   color: $primary;
+  &:hover {
+    color: $alert;
+  }
 }
 
-.mobileDisclosureContainer {
+.mobileNavContainer {
   display: flex;
   align-items: center;
   @media (min-width: 640px) {
@@ -164,7 +163,7 @@
   }
 }
 
-.disclosureButton {
+.mobileButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -172,7 +171,7 @@
   padding: 0.5rem;
   color: $primary;
   &:hover {
-    color: $accent;
+    color: $secondary-30;
     background-color: $secondary-15;
   }
 }
@@ -183,7 +182,7 @@
   width: 1.5rem;
 }
 
-.disclosurePanel {
+.mobileLinksContainer {
   @media (min-width: 640px) {
     display: none;
   }

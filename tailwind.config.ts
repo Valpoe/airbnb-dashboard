@@ -1,6 +1,5 @@
 import type { Config } from 'tailwindcss';
 const daisyui = require('daisyui');
-const headlessui = require('@headlessui/react');
 
 export default {
   content: [
@@ -20,5 +19,5 @@ export default {
     logs: false,
     prefix: ''
   },
-  plugins: [daisyui, headlessui]
+  plugins: [daisyui]
 } satisfies Config;
