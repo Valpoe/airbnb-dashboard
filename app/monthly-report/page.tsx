@@ -77,9 +77,7 @@ export default function MonthlyReport() {
             <>
               <ReactToPrint
                 trigger={() => (
-                  <button
-                    className={cn('btn', 'btn-primary', styles.downloadButton)}
-                  >
+                  <button className={cn('btn', styles.downloadButton)}>
                     Download
                   </button>
                 )}
@@ -130,11 +128,7 @@ export default function MonthlyReport() {
                       onChange={handleResolutionPayoutDescriptionChange}
                     />
                     <button
-                      className={cn(
-                        'btn',
-                        'btn-primary',
-                        styles.resolutionPayoutAddButton
-                      )}
+                      className={cn('btn', styles.resolutionPayoutAddButton)}
                       onClick={handleAddResolutionPayout}
                     >
                       Add

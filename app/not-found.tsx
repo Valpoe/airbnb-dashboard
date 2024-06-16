@@ -1,4 +1,5 @@
 import styles from '@/app/styles/root/not-found.module.scss';
+import cn from 'classnames';
 import Link from 'next/link';
 
 export default function NotFound() {
@@ -11,10 +12,7 @@ export default function NotFound() {
           Sorry, we couldn’t find the page you’re looking for.
         </p>
         <div className={styles.buttonContainer}>
-          <Link
-            href="/reservations-data"
-            className="btn btn-active btn-primary"
-          >
+          <Link href="/reservations-data" className={cn('btn', styles.button)}>
             Go back <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
