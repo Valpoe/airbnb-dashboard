@@ -19,10 +19,6 @@ const navigation = [
   { name: 'Playground', href: '/playground' }
 ];
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
-
 export default function Navbar({ user }: { user: any }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -77,17 +73,20 @@ export default function Navbar({ user }: { user: any }) {
                   ))}
                 </div>
               </div>
-              <div className="hidden sm:ml-6 sm:flex sm:items-center">
+              <div className={styles.userContainer}>
                 <div className="avatar placeholder">
-                  <div className="text-primary-content bg-primary mask-square h-8 w-20">
-                    <span className="text-base">{user.name}</span>
+                  <div className={styles.userName}>
+                    <span>{user.name}</span>
                   </div>
                 </div>
-                <Menu as="div" className="relative ml-3">
+                <Menu as="div" className={styles.menu}>
                   <div>
-                    <Menu.Button className="flex rounded-full text-sm hover:text-accent">
-                      <span className="sr-only">Open user menu</span>
-                      <UserCircleIcon className="h-8 w-8" aria-hidden="true" />
+                    <Menu.Button className={styles.menuButton}>
+                      <span className={styles.srOnly}>Open user menu</span>
+                      <UserCircleIcon
+                        className={styles.userIcon}
+                        aria-hidden="true"
+                      />
                     </Menu.Button>
                   </div>
 
@@ -100,14 +99,14 @@ export default function Navbar({ user }: { user: any }) {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className={styles.menuItems}>
                       {user && (
                         <Menu.Item>
                           {({ active }) => (
                             <button
-                              className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'flex w-full px-4 py-2 text-sm text-gray-700'
+                              className={cn(
+                                active ? styles.signOutButtonActive : '',
+                                styles.signOutButton
                               )}
                               onClick={async () => {
                                 await signOut();
@@ -123,30 +122,36 @@ export default function Navbar({ user }: { user: any }) {
                   </Transition>
                 </Menu>
               </div>
-              <div className="flex items-center sm:hidden">
-                <Disclosure.Button className="inline-flex items-center justify-center square bg-gray-100 p-2 text-neutral hover:bg-gray-100 hover:text-accent">
-                  <span className="sr-only">Open main menu</span>
+              <div className={styles.mobileDisclosureContainer}>
+                <Disclosure.Button className={styles.disclosureButton}>
+                  <span className={styles.srOnly}>Open main menu</span>
                   {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                    <XMarkIcon
+                      className={styles.mobileIcon}
+                      aria-hidden="true"
+                    />
                   ) : (
-                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                    <Bars3Icon
+                      className={styles.mobileIcon}
+                      aria-hidden="true"
+                    />
                   )}
                 </Disclosure.Button>
               </div>
             </div>
           </div>
 
-          <Disclosure.Panel className="sm:hidden">
-            <div className="space-y-1 pt-2 pb-3">
+          <Disclosure.Panel className={styles.disclosurePanel}>
+            <div className={styles.mobileLinks}>
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={classNames(
+                  className={cn(
                     pathname === item.href
-                      ? 'bg-primary-content w-48 border-neutral text-neutral'
-                      : 'border-transparent w-48 text-primary-content hover:bg-primary-content hover:border-neutral hover:text-neutral',
-                    'block pl-3 pr-4 py-2 border-l-4 text-base font-medium'
+                      ? styles.mobileLinkActive
+                      : styles.mobileLinkInactive,
+                    styles.mobileLink
                   )}
                   aria-current={pathname === item.href ? 'page' : undefined}
                 >
@@ -154,27 +159,30 @@ export default function Navbar({ user }: { user: any }) {
                 </Link>
               ))}
             </div>
-            <div className="border-t-2 border-primary-content pt-4 pb-3">
+            <div className={styles.border}>
               <>
-                <div className="flex items-center px-4">
-                  <div className="flex-shrink-0">
-                    <UserCircleIcon className="h-8 w-8" aria-hidden="true" />
+                <div className={styles.mobileContentContainer}>
+                  <div className={styles.userIconContainer}>
+                    <UserCircleIcon
+                      className={styles.userIcon}
+                      aria-hidden="true"
+                    />
                   </div>
-                  <div className="ml-3">
+                  <div>
                     <div className="avatar placeholder">
-                      <div className="text-primary-content bg-primary mask-square h-8 w-20">
-                        <span className="text-base">{user.name}</span>
+                      <div className={styles.userName}>
+                        <span>{user.name}</span>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="mt-3 space-y-1">
+                <div className={styles.mobileSignOutContainer}>
                   <button
                     onClick={async () => {
                       await signOut();
                       router.push('/');
                     }}
-                    className="block px-4 py-2 text-base font-medium text-primary-content hover:bg-primary-content hover:text-neutral ml-1"
+                    className={styles.mobileSignOutButton}
                   >
                     Sign out
                   </button>

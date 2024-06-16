@@ -74,3 +74,198 @@
   border-bottom-width: 2px;
   font-weight: 500;
 }
+
+.userContainer {
+  display: none;
+  @media (min-width: 640px) {
+    margin-left: 1.5rem;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.userName {
+  color: $secondary-15;
+  background-color: $secondary-70;
+  mask-image: url("data:image/svg+xml,%3csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='M0 0h200v200H0z' fill-rule='evenodd'/%3e%3c/svg%3e");
+  height: 2rem;
+  width: 5rem;
+}
+
+.menu {
+  position: relative;
+  margin-left: 0.75rem;
+}
+
+.menuButton {
+  display: flex;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  &:hover {
+    color: $accent;
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.userIcon {
+  height: 2rem;
+  width: 2rem;
+}
+
+.menuItems {
+  position: absolute;
+  right: 0px;
+  z-index: 10;
+  margin-top: 0.5rem;
+  width: 12rem;
+  transform-origin: top right;
+  background-color: $secondary-15;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  &:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+}
+
+.signOutButtonActive {
+  background-color: $secondary-30;
+}
+
+.signOutButton {
+  display: flex;
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: $primary;
+}
+
+.mobileDisclosureContainer {
+  display: flex;
+  align-items: center;
+  @media (min-width: 640px) {
+    display: none;
+  }
+}
+
+.disclosureButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $secondary-15 !important;
+  padding: 0.5rem;
+  color: $primary;
+  &:hover {
+    color: $accent;
+    background-color: $secondary-15;
+  }
+}
+
+.mobileIcon {
+  display: block;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.disclosurePanel {
+  @media (min-width: 640px) {
+    display: none;
+  }
+}
+
+.mobileLinks {
+  & > * + * {
+    margin-top: 0.25rem;
+  }
+  padding-top: 0.5rem;
+  padding-bottom: 0.75rem;
+}
+
+.mobileLinkActive {
+  background-color: $secondary-15;
+  width: 12rem;
+  color: $primary;
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-n, oklch(var(--n) / var(--tw-border-opacity)));
+}
+
+.mobileLinkInactive {
+  border-color: transparent;
+  width: 12rem;
+  color: $secondary-15;
+  &:hover {
+    color: $primary;
+    background-color: $secondary-15;
+    --tw-border-opacity: 1;
+    border-color: var(--fallback-n, oklch(var(--n) / var(--tw-border-opacity)));
+  }
+}
+
+.mobileLink {
+  display: block;
+  padding-left: 0.75rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-left-width: 4px;
+  font-weight: 500;
+}
+
+.border {
+  border-top-width: 2px;
+  border-color: $secondary-30;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.mobileContentContainer {
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.userIconContainer {
+  flex-shrink: 0;
+  margin-right: 0.75rem;
+}
+
+.mobileSignOutContainer {
+  margin-top: 0.75rem;
+  & > * + * {
+    margin-top: 0.25rem;
+  }
+}
+
+.mobileSignOutButton {
+  display: block;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  margin-left: 0.25rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  color: $secondary-15;
+  &:hover {
+    background-color: $secondary-15;
+    color: $primary;
+  }
+}
