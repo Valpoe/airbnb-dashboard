@@ -1,10 +1,11 @@
+import { chartjsGlobals } from '@/app/lib/chartjs-globals';
 import {
   DataTypeKey,
   Listing,
   Reservation,
   dataTypes
 } from '@/app/lib/definitions';
-import { calculateAmountOfDays, getRandomColor } from '@/app/lib/utils';
+import { calculateAmountOfDays, getDataColors } from '@/app/lib/utils';
 import 'chart.js/auto';
 import cn from 'classnames';
 import { useState } from 'react';
@@ -22,6 +23,8 @@ export default function BarChart({
   selectedListings: number[];
   dateRange: { startDate: string; endDate: string };
 }) {
+  chartjsGlobals.setGlobalChartOptions();
+
   const [selectedDataType, setSelectedDataType] =
     useState<DataTypeKey>('amount');
 
@@ -74,7 +77,9 @@ export default function BarChart({
         label: listings.find((listing) => listing.id === selectedListingId)
           ?.internal_name,
         totalValue,
-        backgroundColor: getRandomColor()
+        backgroundColor: getDataColors(
+          selectedListings.indexOf(selectedListingId)
+        )
       };
     });
   };
@@ -93,13 +98,12 @@ export default function BarChart({
   };
 
   const options = {
-    responsive: true,
     plugins: {
       legend: {
-        position: 'top' as const
-      },
-      title: {
-        display: false
+        position: 'top' as const,
+        labels: {
+          boxWidth: 20
+        }
       }
     },
     scales: {
