@@ -1,5 +1,4 @@
 import { createChart } from '@/app/components/create-chart';
-import { getStaticProps } from '@/app/lib/actions';
 import {
   DataTypeKey,
   Listing,
