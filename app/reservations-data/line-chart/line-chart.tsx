@@ -1,31 +1,44 @@
-import { chartjsGlobals } from '@/app/lib/chartjs-globals';
+import { createChart } from '@/app/components/create-chart';
+import { getStaticProps } from '@/app/lib/actions';
 import {
   DataTypeKey,
   Listing,
   Reservation,
   dataTypes
 } from '@/app/lib/definitions';
-import { calculateAmountOfDays, getDataColors } from '@/app/lib/utils';
-import 'chart.js/auto';
-import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm';
+import { calculateAmountOfDays } from '@/app/lib/utils';
+import {
+  AxisScrollStrategies,
+  AxisTickStrategies,
+  ChartXY,
+  LegendBox,
+  LegendBoxBuilders,
+  UIBackground,
+  UIDraggingModes,
+  UIOrigins,
+  emptyTick
+} from '@arction/lcjs';
 import cn from 'classnames';
-import dayjs from 'dayjs';
-import { useState } from 'react';
-import { Line } from 'react-chartjs-2';
+import { useCallback, useEffect, useState } from 'react';
 import styles from './line-chart.module.scss';
 
 export default function LineChart({
   reservations,
   listings,
   selectedListings,
-  dateRange
+  dateRange,
+  license
 }: {
   reservations: Reservation[];
   listings: Listing[];
   selectedListings: number[];
   dateRange: { startDate: string; endDate: string };
+  license: string;
 }) {
-  chartjsGlobals.setGlobalChartOptions();
+  const [chart, setChart] = useState<ChartXY<UIBackground> | undefined>(
+    undefined
+  );
+  const [legendBox, setLegendBox] = useState<LegendBox | undefined>(undefined);
   const [selectedDataType, setSelectedDataType] =
     useState<DataTypeKey>('amount');
 
@@ -33,7 +46,7 @@ export default function LineChart({
     setSelectedDataType(dataType);
   };
 
-  const getStatisticsForSelectedListings = () => {
+  const generateChartData = useCallback(() => {
     return selectedListings.map((selectedListingId) => {
       const listingReservations = reservations
         .filter((reservation) => reservation.listing_id === selectedListingId)
@@ -46,87 +59,153 @@ export default function LineChart({
       let cumulativeAmount = 0;
 
       const data = listingReservations.map((reservation) => {
-        let totalValue;
+        let totalAmount;
 
         if (dataTypes[selectedDataType].label === 'Reservations') {
-          // For 'Reservations' type, calculate the count of rows
-          totalValue = 1;
+          totalAmount = 1;
         } else if (dataTypes[selectedDataType].label === 'Occupancy Rate') {
-          // For 'Occupancy Rate' type, calculate the occupancy rate
           const totalNights = reservation.nights;
-          totalValue =
-            (totalNights /
-              calculateAmountOfDays(dateRange.startDate, dateRange.endDate)) *
-            100;
+          const totalDays = calculateAmountOfDays(
+            dateRange.startDate,
+            dateRange.endDate
+          );
+          totalAmount = (totalNights / totalDays) * 100;
         } else {
-          totalValue = reservation[dataTypes[selectedDataType].property];
+          totalAmount = reservation[dataTypes[selectedDataType].property];
         }
 
-        cumulativeAmount += typeof totalValue === 'number' ? totalValue : 0;
+        cumulativeAmount += typeof totalAmount === 'number' ? totalAmount : 0;
 
         return {
-          x: dayjs(reservation.payout_date).format('YYYY-MM-DD'),
-          y: cumulativeAmount
+          x: new Date(reservation.payout_date).getTime(),
+          y: cumulativeAmount,
+          listing_id: selectedListingId
         };
       });
-
-      const startDate = new Date(listingReservations[0]?.payout_date);
-      const endDate = new Date(
-        listingReservations[listingReservations.length - 1]?.payout_date
-      );
-
-      return {
-        label: listings.find((listing) => listing.id === selectedListingId)
-          ?.internal_name,
-        data,
-        fill: false,
-        borderColor: getDataColors(selectedListings.indexOf(selectedListingId)),
-        startDate,
-        endDate
-      };
+      return data;
     });
-  };
+  }, [selectedDataType, reservations, selectedListings, dateRange]);
 
-  const datasets = getStatisticsForSelectedListings();
-
-  const data = {
-    datasets
-  };
-
-  const options = {
-    responsive: true,
-    pointStyle: false,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-        labels: {
-          boxWidth: 20
-        }
-      }
-    },
-    scales: {
-      x: {
-        type: 'time' as const,
-        time: {
-          unit: 'day' as const,
-          displayFormats: {
-            day: 'MMM D'
-          },
-          tooltipFormat: 'MMMM D, YYYY'
-        },
-        title: {
-          display: true,
-          text: 'Date Range'
-        }
-      },
-      y: {
-        title: {
-          display: true,
-          text: dataTypes[selectedDataType].label
-        }
-      }
+  const clearChart = useCallback(() => {
+    if (chart) {
+      chart.getSeries().forEach((series) => series.dispose());
     }
-  };
+  }, [chart]);
+
+  useEffect(() => {
+    if (license) {
+      const lc = createChart(license, 'chart-container');
+      lc.setTitle('');
+      lc.getDefaultAxisX()
+        .setScrollStrategy(AxisScrollStrategies.fitting)
+        .fit()
+        .setTickStrategy(AxisTickStrategies.DateTime, (ticks) =>
+          ticks
+            .setFormattingMinute(
+              {},
+              {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              },
+              {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              }
+            )
+            .setFormattingHour(
+              {},
+              { hour: '2-digit', minute: '2-digit', hour12: false },
+              { hour: '2-digit', minute: '2-digit', hour12: false }
+            )
+            .setFormattingDay(
+              {},
+              { day: 'numeric', weekday: 'short' },
+              { hour: '2-digit', minute: '2-digit', hour12: false }
+            )
+            .setCursorFormatter((x) =>
+              new Date(x).toLocaleDateString(undefined, {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+              })
+            )
+            .setGreatTickStyle(emptyTick)
+        );
+      lc.getDefaultAxisY().setTickStrategy(AxisTickStrategies.Numeric);
+      const legend = lc
+        .addLegendBox(LegendBoxBuilders.VerticalLegendBox)
+        .setPosition({ x: 100, y: 100 })
+        .setMargin(1)
+        .setTitle('Listings')
+        .setOrigin(UIOrigins.RightTop)
+        .setDraggingMode(UIDraggingModes.draggable)
+        .setBackground((background) =>
+          background.setFillStyle(lc.getTheme().uiBackgroundFillStyle)
+        )
+        .setAutoDispose({ type: 'max-height', maxHeight: 0.5 });
+
+      setLegendBox(legend);
+
+      setChart(lc);
+      return () => {
+        if (lc) {
+          lc.dispose();
+        }
+      };
+    } else {
+      console.error(
+        'LightningChart license key is missing or container is null'
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    if (chart && legendBox) {
+      clearChart();
+
+      // Set axis title and interval
+      chart.getDefaultAxisY().setTitle(dataTypes[selectedDataType].label);
+      const startMillis = new Date(dateRange.startDate).getTime();
+      const endMillis = new Date(dateRange.endDate).getTime();
+      chart
+        .getDefaultAxisX()
+        .setInterval({ start: startMillis, end: endMillis });
+
+      const dataSets = generateChartData();
+
+      dataSets.forEach((dataSet, index) => {
+        const listing = listings.find(
+          (listing) => listing.id === selectedListings[index]
+        );
+
+        if (listing) {
+          const series = chart
+            .addLineSeries({
+              dataPattern: {
+                pattern: 'ProgressiveX'
+              }
+            })
+            .setName(listing.internal_name);
+
+          series.add(dataSet);
+          legendBox.add(series);
+        }
+      });
+    }
+  }, [
+    chart,
+    legendBox,
+    selectedDataType,
+    generateChartData,
+    clearChart,
+    dateRange,
+    listings,
+    selectedListings
+  ]);
 
   return (
     <div className={styles.mainContainer}>
@@ -147,7 +226,10 @@ export default function LineChart({
           </button>
         ))}
       </div>
-      <Line options={options} data={data} />
+      <div
+        id="chart-container"
+        style={{ width: '100%', height: '600px' }}
+      ></div>
     </div>
   );
 }

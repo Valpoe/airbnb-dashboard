@@ -4,6 +4,7 @@ import {
   fetchListingsByDateRangeAndListings
 } from '@/app/lib/database';
 import { Listing, Reservation } from '@/app/lib/definitions';
+import { getLicense } from '@/app/lib/get-license';
 import BarChart from '@/app/reservations-data/bar-chart/bar-chart';
 import DataButtons from '@/app/reservations-data/components/data-buttons';
 import DatePicker from '@/app/reservations-data/components/date-picker';
@@ -12,7 +13,7 @@ import Statistics from '@/app/reservations-data/statistics/statistics';
 import ReservationsTable from '@/app/reservations-data/table/table';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import cn from 'classnames';
-import { useEffect, useRef, useState } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 import styles from './reservation-data.module.scss';
 
 export default function ReservationData() {
@@ -26,6 +27,7 @@ export default function ReservationData() {
   });
   const [listings, setListings] = useState<Listing[]>([]);
   const [selectedListings, setSelectedListings] = useState<number[]>([]);
+  const license = use(getLicense());
 
   useEffect(() => {
     const fetchAndSetListings = async () => {
@@ -92,6 +94,7 @@ export default function ReservationData() {
             listings={listings}
             selectedListings={selectedListings}
             dateRange={dateRange}
+            license={license}
           />
         );
       case 'bar-chart':
