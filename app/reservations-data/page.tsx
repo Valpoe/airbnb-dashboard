@@ -4,7 +4,6 @@ import {
   fetchListingsByDateRangeAndListings
 } from '@/app/lib/database';
 import { Listing, Reservation } from '@/app/lib/definitions';
-import { getLicense } from '@/app/lib/get-license';
 import BarChart from '@/app/reservations-data/bar-chart/bar-chart';
 import DataButtons from '@/app/reservations-data/components/data-buttons';
 import DatePicker from '@/app/reservations-data/components/date-picker';
@@ -27,7 +26,6 @@ export default function ReservationData() {
   });
   const [listings, setListings] = useState<Listing[]>([]);
   const [selectedListings, setSelectedListings] = useState<number[]>([]);
-  const license = use(getLicense());
 
   useEffect(() => {
     const fetchAndSetListings = async () => {
@@ -94,7 +92,6 @@ export default function ReservationData() {
             listings={listings}
             selectedListings={selectedListings}
             dateRange={dateRange}
-            license={license}
           />
         );
       case 'bar-chart':

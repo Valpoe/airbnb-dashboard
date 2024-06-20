@@ -1,3 +1,13 @@
+type LicenseInfo = {
+  appTitle: string;
+  company: string;
+};
+
+export type LicenseData = {
+  license: string;
+  licenseInformation: LicenseInfo;
+};
+
 export type User = {
   id: string;
   name: string;

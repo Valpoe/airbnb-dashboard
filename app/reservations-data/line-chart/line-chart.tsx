@@ -25,14 +25,12 @@ export default function LineChart({
   reservations,
   listings,
   selectedListings,
-  dateRange,
-  license
+  dateRange
 }: {
   reservations: Reservation[];
   listings: Listing[];
   selectedListings: number[];
   dateRange: { startDate: string; endDate: string };
-  license: string;
 }) {
   const [chart, setChart] = useState<ChartXY<UIBackground> | undefined>(
     undefined
@@ -92,74 +90,85 @@ export default function LineChart({
   }, [chart]);
 
   useEffect(() => {
-    if (license) {
-      const lc = createChart(license, 'chart-container');
-      lc.setTitle('');
-      lc.getDefaultAxisX()
-        .setScrollStrategy(AxisScrollStrategies.fitting)
-        .fit()
-        .setTickStrategy(AxisTickStrategies.DateTime, (ticks) =>
-          ticks
-            .setFormattingMinute(
-              {},
-              {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-              },
-              {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-              }
-            )
-            .setFormattingHour(
-              {},
-              { hour: '2-digit', minute: '2-digit', hour12: false },
-              { hour: '2-digit', minute: '2-digit', hour12: false }
-            )
-            .setFormattingDay(
-              {},
-              { day: 'numeric', weekday: 'short' },
-              { hour: '2-digit', minute: '2-digit', hour12: false }
-            )
-            .setCursorFormatter((x) =>
-              new Date(x).toLocaleDateString(undefined, {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-              })
-            )
-            .setGreatTickStyle(emptyTick)
-        );
-      lc.getDefaultAxisY().setTickStrategy(AxisTickStrategies.Numeric);
-      const legend = lc
-        .addLegendBox(LegendBoxBuilders.VerticalLegendBox)
-        .setPosition({ x: 100, y: 100 })
-        .setMargin(1)
-        .setTitle('Listings')
-        .setOrigin(UIOrigins.RightTop)
-        .setDraggingMode(UIDraggingModes.draggable)
-        .setBackground((background) =>
-          background.setFillStyle(lc.getTheme().uiBackgroundFillStyle)
-        )
-        .setAutoDispose({ type: 'max-height', maxHeight: 0.5 });
+    const initChart = async () => {
+      try {
+        const chart = await createChart('chart-container');
+        console.log('License data:', chart);
 
-      setLegendBox(legend);
+        chart.setTitle('');
 
-      setChart(lc);
-      return () => {
-        if (lc) {
-          lc.dispose();
+        const axisX = chart.getDefaultAxisX();
+        axisX
+          .setScrollStrategy(AxisScrollStrategies.fitting)
+          .fit()
+          .setTickStrategy(AxisTickStrategies.DateTime, (ticks) =>
+            ticks
+              .setFormattingMinute(
+                {},
+                {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: false
+                },
+                {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: false
+                }
+              )
+              .setFormattingHour(
+                {},
+                { hour: '2-digit', minute: '2-digit', hour12: false },
+                { hour: '2-digit', minute: '2-digit', hour12: false }
+              )
+              .setFormattingDay(
+                {},
+                { day: 'numeric', weekday: 'short' },
+                { hour: '2-digit', minute: '2-digit', hour12: false }
+              )
+              .setCursorFormatter((x) =>
+                new Date(x).toLocaleDateString(undefined, {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit'
+                })
+              )
+              .setGreatTickStyle(emptyTick)
+          );
+
+        chart.getDefaultAxisY().setTickStrategy(AxisTickStrategies.Numeric);
+
+        const legend = chart
+          .addLegendBox(LegendBoxBuilders.VerticalLegendBox)
+          .setPosition({ x: 100, y: 100 })
+          .setMargin(1)
+          .setTitle('Listings')
+          .setOrigin(UIOrigins.RightTop)
+          .setDraggingMode(UIDraggingModes.draggable)
+          .setBackground((background) =>
+            background.setFillStyle(chart.getTheme().uiBackgroundFillStyle)
+          )
+          .setAutoDispose({ type: 'max-height', maxHeight: 0.5 });
+
+        setLegendBox(legend);
+        setChart(chart);
+      } catch (error) {
+        console.error('Error initializing chart:', error);
+      }
+    };
+
+    initChart();
+
+    return () => {
+      setChart((prevChart) => {
+        if (prevChart) {
+          prevChart.dispose();
         }
-      };
-    } else {
-      console.error(
-        'LightningChart license key is missing or container is null'
-      );
-    }
+        return undefined;
+      });
+    };
   }, []);
 
   useEffect(() => {
