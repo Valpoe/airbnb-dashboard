@@ -12,7 +12,7 @@ import Statistics from '@/app/reservations-data/statistics/statistics';
 import ReservationsTable from '@/app/reservations-data/table/table';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import cn from 'classnames';
-import { use, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './reservation-data.module.scss';
 
 export default function ReservationData() {

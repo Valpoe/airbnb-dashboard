@@ -6,6 +6,7 @@ import {
   dataTypes
 } from '@/app/lib/definitions';
 import { calculateAmountOfDays } from '@/app/lib/utils';
+import DataTypeButtons from '@/app/reservations-data/components/data-type-buttons';
 import {
   AxisScrollStrategies,
   AxisTickStrategies,
@@ -17,7 +18,6 @@ import {
   UIOrigins,
   emptyTick
 } from '@arction/lcjs';
-import cn from 'classnames';
 import { useCallback, useEffect, useState } from 'react';
 import styles from './line-chart.module.scss';
 
@@ -93,7 +93,6 @@ export default function LineChart({
     const initChart = async () => {
       try {
         const chart = await createChart('chart-container');
-        console.log('License data:', chart);
 
         chart.setTitle('');
 
@@ -218,21 +217,10 @@ export default function LineChart({
   return (
     <div className={styles.mainContainer}>
       <div className={styles.gridContainer}>
-        {Object.keys(dataTypes).map((dataType) => (
-          <button
-            key={dataType}
-            className={cn(
-              'btn',
-              styles.dataTypeButtons,
-              selectedDataType === dataType
-                ? styles.activeButton
-                : styles.inactiveButton
-            )}
-            onClick={() => toggleDataType(dataType as DataTypeKey)}
-          >
-            {dataTypes[dataType].label}
-          </button>
-        ))}
+        <DataTypeButtons
+          toggleDataType={toggleDataType}
+          selectedDataType={selectedDataType}
+        />
       </div>
       <div
         id="chart-container"

@@ -15,7 +15,6 @@
 }
 
 // Data Buttons
-
 .icon {
   width: 1.5rem;
   height: 1.5rem;
@@ -32,4 +31,18 @@
 
 .activeButton {
   @include active-data-button;
+}
+
+// Data Type Buttons
+.dataTypeButtons {
+  width: 9rem;
+  background-color: $neutral;
+}
+
+.activeButton {
+  @include active-data-button;
+}
+
+.inactiveButton {
+  @include inactive-data-button;
 }

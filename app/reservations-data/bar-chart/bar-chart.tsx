@@ -6,8 +6,8 @@ import {
   dataTypes
 } from '@/app/lib/definitions';
 import { calculateAmountOfDays, getDataColors } from '@/app/lib/utils';
+import DataTypeButtons from '@/app/reservations-data/components/data-type-buttons';
 import 'chart.js/auto';
-import cn from 'classnames';
 import { useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import styles from './bar-chart.module.scss';
@@ -124,23 +124,11 @@ export default function BarChart({
   return (
     <div className={styles.mainContainer}>
       <div className={styles.gridContainer}>
-        {Object.keys(dataTypes).map((dataType) => (
-          <button
-            key={dataType}
-            className={cn(
-              'btn',
-              styles.dataTypeButtons,
-              selectedDataType === dataType
-                ? styles.activeButton
-                : styles.inactiveButton
-            )}
-            onClick={() => toggleDataType(dataType as DataTypeKey)}
-          >
-            {dataTypes[dataType].label}
-          </button>
-        ))}
+        <DataTypeButtons
+          toggleDataType={toggleDataType}
+          selectedDataType={selectedDataType}
+        />
       </div>
-
       <Bar options={options} data={data} />
     </div>
   );
