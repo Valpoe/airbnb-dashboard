@@ -3,7 +3,7 @@ import {
   fetchListings,
   fetchListingsByDateRangeAndListings
 } from '@/app/lib/database';
-import { Listing, Reservation } from '@/app/lib/definitions';
+import { DataTypeKey, Listing, Reservation } from '@/app/lib/definitions';
 import BarChart from '@/app/reservations-data/bar-chart/bar-chart';
 import DataButtons from '@/app/reservations-data/components/data-buttons';
 import DatePicker from '@/app/reservations-data/components/date-picker';
@@ -26,6 +26,11 @@ export default function ReservationData() {
   });
   const [listings, setListings] = useState<Listing[]>([]);
   const [selectedListings, setSelectedListings] = useState<number[]>([]);
+  const [selectedDataType, setSelectedDataType] =
+    useState<DataTypeKey>('amount');
+  const toggleDataType = (dataType: DataTypeKey) => {
+    setSelectedDataType(dataType);
+  };
 
   useEffect(() => {
     const fetchAndSetListings = async () => {
@@ -92,6 +97,8 @@ export default function ReservationData() {
             listings={listings}
             selectedListings={selectedListings}
             dateRange={dateRange}
+            selectedDataType={selectedDataType}
+            toggleDataType={toggleDataType}
           />
         );
       case 'bar-chart':
@@ -101,6 +108,8 @@ export default function ReservationData() {
             listings={listings}
             selectedListings={selectedListings}
             dateRange={dateRange}
+            selectedDataType={selectedDataType}
+            toggleDataType={toggleDataType}
           />
         );
       default:

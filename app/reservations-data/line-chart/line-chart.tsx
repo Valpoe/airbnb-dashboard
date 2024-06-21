@@ -25,23 +25,21 @@ export default function LineChart({
   reservations,
   listings,
   selectedListings,
-  dateRange
+  dateRange,
+  selectedDataType,
+  toggleDataType
 }: {
   reservations: Reservation[];
   listings: Listing[];
   selectedListings: number[];
   dateRange: { startDate: string; endDate: string };
+  selectedDataType: DataTypeKey;
+  toggleDataType: (dataType: DataTypeKey) => void;
 }) {
   const [chart, setChart] = useState<ChartXY<UIBackground> | undefined>(
     undefined
   );
   const [legendBox, setLegendBox] = useState<LegendBox | undefined>(undefined);
-  const [selectedDataType, setSelectedDataType] =
-    useState<DataTypeKey>('amount');
-
-  const toggleDataType = (dataType: DataTypeKey) => {
-    setSelectedDataType(dataType);
-  };
 
   const generateChartData = useCallback(() => {
     return selectedListings.map((selectedListingId) => {
@@ -149,7 +147,7 @@ export default function LineChart({
           .setBackground((background) =>
             background.setFillStyle(chart.getTheme().uiBackgroundFillStyle)
           )
-          .setAutoDispose({ type: 'max-height', maxHeight: 0.5 });
+          .setAutoDispose({ type: 'max-height', maxHeight: 0.75 });
 
         setLegendBox(legend);
         setChart(chart);
