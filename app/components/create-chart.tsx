@@ -16,7 +16,7 @@ export const getLicense = async (): Promise<LicenseData> => {
   }
 };
 
-export const createChart = async (container: 'chart-container') => {
+export const createLineChart = async (container: string) => {
   const { license, licenseInformation } = await getLicense();
   const lc = lightningChart({
     license,
@@ -30,7 +30,7 @@ export const createChart = async (container: 'chart-container') => {
   return chart;
 };
 
-export const createBarChart = async (container: 'chart-container') => {
+export const createBarChart = async (container: string) => {
   const { license, licenseInformation } = await getLicense();
   const lc = lightningChart({
     license,

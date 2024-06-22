@@ -22,7 +22,7 @@ export default function ReservationData() {
   const [selectedButton, setselectedButton] = useState('statistics');
   const [dateRange, setDateRange] = useState({
     startDate: '2022-01-01',
-    endDate: new Date().toISOString()
+    endDate: '2023-12-31'
   });
   const [listings, setListings] = useState<Listing[]>([]);
   const [selectedListings, setSelectedListings] = useState<number[]>([]);
@@ -99,6 +99,7 @@ export default function ReservationData() {
             dateRange={dateRange}
             selectedDataType={selectedDataType}
             toggleDataType={toggleDataType}
+            id="line-chart-container"
           />
         );
       case 'bar-chart':
@@ -110,6 +111,7 @@ export default function ReservationData() {
             dateRange={dateRange}
             selectedDataType={selectedDataType}
             toggleDataType={toggleDataType}
+            id="bar-chart-container"
           />
         );
       default:

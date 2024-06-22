@@ -9,14 +9,12 @@ import { calculateAmountOfDays } from '@/app/lib/utils';
 import DataTypeButtons from '@/app/reservations-data/components/data-type-buttons';
 import {
   BarChart,
-  LegendBox,
   LegendBoxBuilders,
   UIDraggingModes,
   UIOrigins,
   emptyFill
 } from '@arction/lcjs';
-import 'chart.js/auto';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import styles from './bar-chart.module.scss';
 
 type BarChartDataSet = {
@@ -30,7 +28,8 @@ export default function LCBarChart({
   selectedListings,
   dateRange,
   selectedDataType,
-  toggleDataType
+  toggleDataType,
+  id
 }: {
   reservations: Reservation[];
   listings: Listing[];
@@ -38,11 +37,39 @@ export default function LCBarChart({
   dateRange: { startDate: string; endDate: string };
   selectedDataType: DataTypeKey;
   toggleDataType: (dataType: DataTypeKey) => void;
+  id: string;
 }) {
-  const [chart, setChart] = useState<BarChart | undefined>(undefined);
-  const [legendBox, setLegendBox] = useState<LegendBox | undefined>(undefined);
+  const chartRef = useRef<BarChart | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  console.log('chartRef', chartRef);
+  console.log('containerRef', containerRef);
+  console.log('selected data type', selectedDataType);
 
-  const getStatisticsForSelectedListings = (): BarChartDataSet[] => {
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) {
+      return;
+    }
+    const initChart = async () => {
+      try {
+        const chart = await createBarChart(id);
+        chartRef.current = chart;
+        chart.setTitle('');
+      } catch (error) {
+        console.error('Error initializing chart:', error);
+      }
+    };
+
+    initChart();
+    return () => {
+      if (chartRef.current) {
+        chartRef.current.dispose();
+        chartRef.current = null;
+      }
+    };
+  }, [id]);
+
+  const getChartData = useCallback((): BarChartDataSet[] => {
     return selectedListings.map((selectedListingId) => {
       const listingReservations = reservations.filter(
         (reservation) => reservation.listing_id === selectedListingId
@@ -89,53 +116,32 @@ export default function LCBarChart({
         value: totalValue
       };
     });
-  };
+  }, [selectedListings, listings, reservations, selectedDataType, dateRange]);
 
-  const statistics = getStatisticsForSelectedListings();
-
-  useEffect(() => {
-    const initChart = async () => {
-      try {
-        const chart = await createBarChart('chart-container');
-        chart.setTitle('');
-        const legend = chart
-          .addLegendBox(LegendBoxBuilders.VerticalLegendBox)
-          .setTitle('Listings')
-          .setPosition({ x: 100, y: 100 })
-          .setMargin(1)
-          .setOrigin(UIOrigins.RightTop)
-          .setDraggingMode(UIDraggingModes.draggable)
-          .setBackground((background) =>
-            background.setFillStyle(chart.getTheme().uiBackgroundFillStyle)
-          )
-          .setAutoDispose({ type: 'max-height', maxHeight: 0.75 });
-        setLegendBox(legend);
-        setChart(chart);
-      } catch (error) {
-        console.error('Error initializing chart:', error);
-      }
-    };
-
-    initChart();
-
-    return () => {
-      if (chart) {
-        chart.dispose();
-      }
-    };
-  }, []);
+  const chartDataSet = useMemo(() => getChartData(), [getChartData]);
 
   useEffect(() => {
+    const chart = chartRef.current;
     if (chart) {
+      chart.getLegendBoxes().forEach((legend) => legend.dispose());
       chart.valueAxis.setTitle(dataTypes[selectedDataType].label);
       chart.setCategoryLabels({ labelFillStyle: emptyFill });
-      chart.setData(statistics);
-      if (legendBox) {
-        legendBox.dispose();
-      }
-      legendBox?.add(chart);
+
+      const legend = chart
+        .addLegendBox(LegendBoxBuilders.VerticalLegendBox)
+        .setTitle('Listings')
+        .setPosition({ x: 100, y: 100 })
+        .setMargin(1)
+        .setOrigin(UIOrigins.RightTop)
+        .setDraggingMode(UIDraggingModes.draggable)
+        .setBackground((background) =>
+          background.setFillStyle(chart.getTheme().uiBackgroundFillStyle)
+        )
+        .setAutoDispose({ type: 'max-height', maxHeight: 0.75 });
+      chart.setData(chartDataSet);
+      legend.add(chart);
     }
-  }, [statistics]);
+  }, [chartDataSet, selectedDataType]);
 
   return (
     <div className={styles.mainContainer}>
@@ -146,7 +152,8 @@ export default function LCBarChart({
         />
       </div>
       <div
-        id="chart-container"
+        id={id}
+        ref={containerRef}
         style={{ width: '100%', height: '600px' }}
       ></div>
     </div>
