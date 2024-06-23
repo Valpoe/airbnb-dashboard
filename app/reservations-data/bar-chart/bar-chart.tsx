@@ -40,26 +40,22 @@ export default function LCBarChart({
   id: string;
 }) {
   const chartRef = useRef<BarChart | null>(null);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  console.log('chartRef', chartRef);
-  console.log('containerRef', containerRef);
-  console.log('selected data type', selectedDataType);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) {
       return;
     }
-    const initChart = async () => {
+    const initChart = () => {
       try {
-        const chart = await createBarChart(id);
+        const chart = createBarChart(container);
         chartRef.current = chart;
         chart.setTitle('');
       } catch (error) {
         console.error('Error initializing chart:', error);
       }
     };
-
     initChart();
     return () => {
       if (chartRef.current) {
@@ -141,7 +137,7 @@ export default function LCBarChart({
       chart.setData(chartDataSet);
       legend.add(chart);
     }
-  }, [chartDataSet, selectedDataType]);
+  }, [selectedDataType, chartDataSet]);
 
   return (
     <div className={styles.mainContainer}>

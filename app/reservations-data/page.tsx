@@ -4,10 +4,10 @@ import {
   fetchListingsByDateRangeAndListings
 } from '@/app/lib/database';
 import { DataTypeKey, Listing, Reservation } from '@/app/lib/definitions';
-import BarChart from '@/app/reservations-data/bar-chart/bar-chart';
+import LCBarChart from '@/app/reservations-data/bar-chart/bar-chart';
 import DataButtons from '@/app/reservations-data/components/data-buttons';
 import DatePicker from '@/app/reservations-data/components/date-picker';
-import LineChart from '@/app/reservations-data/line-chart/line-chart';
+import LCLineChart from '@/app/reservations-data/line-chart/line-chart';
 import Statistics from '@/app/reservations-data/statistics/statistics';
 import ReservationsTable from '@/app/reservations-data/table/table';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
@@ -92,7 +92,7 @@ export default function ReservationData() {
         return <ReservationsTable reservations={reservations} />;
       case 'line-chart':
         return (
-          <LineChart
+          <LCLineChart
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}
@@ -104,7 +104,7 @@ export default function ReservationData() {
         );
       case 'bar-chart':
         return (
-          <BarChart
+          <LCBarChart
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}

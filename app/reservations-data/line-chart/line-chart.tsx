@@ -18,7 +18,7 @@ import {
   UIOrigins,
   emptyTick
 } from '@arction/lcjs';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import styles from './line-chart.module.scss';
 
 type LineChartDataSet = {
@@ -27,7 +27,7 @@ type LineChartDataSet = {
   listing_id: number;
 };
 
-export default function LineChart({
+export default function LCLineChart({
   reservations,
   listings,
   selectedListings,
@@ -44,7 +44,7 @@ export default function LineChart({
   toggleDataType: (dataType: DataTypeKey) => void;
   id: string;
 }) {
-  const chartRef = useRef<{ chart: ChartXY | null }>({ chart: null });
+  const chartRef = useRef<ChartXY | null>(null);
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -52,10 +52,10 @@ export default function LineChart({
     if (!container) {
       return;
     }
-    const initChart = async () => {
+    const initChart = () => {
       try {
-        const chart = await createLineChart(id);
-        chartRef.current.chart = chart;
+        const chart = createLineChart(container);
+        chartRef.current = chart;
         chart.setTitle('');
 
         const axisX = chart.getDefaultAxisX();
@@ -103,13 +103,11 @@ export default function LineChart({
         console.error('Error initializing chart:', error);
       }
     };
-
     initChart();
-    const currentChart = chartRef.current;
     return () => {
-      if (currentChart.chart) {
-        currentChart.chart.dispose();
-        currentChart.chart = null;
+      if (chartRef.current) {
+        chartRef.current.dispose();
+        chartRef.current = null;
       }
     };
   }, [id]);
@@ -156,7 +154,7 @@ export default function LineChart({
   const chartDataSet = useMemo(() => getChartData(), [getChartData]);
 
   useEffect(() => {
-    const chart = chartRef.current.chart;
+    const chart = chartRef.current;
     if (chart) {
       chart.getSeries().forEach((series) => series.dispose());
       chart.getLegendBoxes().forEach((legend) => legend.dispose());
