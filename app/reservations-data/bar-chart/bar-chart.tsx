@@ -7,9 +7,12 @@ import {
 } from '@/app/lib/definitions';
 import { calculateAmountOfDays } from '@/app/lib/utils';
 import DataTypeButtons from '@/app/reservations-data/components/data-type-buttons';
+import { dataColorsDark } from '@/app/styles/chart-themes';
 import {
   BarChart,
+  BarChartSorting,
   LegendBoxBuilders,
+  SolidFill,
   UIDraggingModes,
   UIOrigins,
   emptyFill
@@ -52,6 +55,7 @@ export default function LCBarChart({
         const chart = createBarChart(container);
         chartRef.current = chart;
         chart.setTitle('');
+        chart.setSorting(BarChartSorting.None);
       } catch (error) {
         console.error('Error initializing chart:', error);
       }
@@ -122,9 +126,18 @@ export default function LCBarChart({
       chart.getLegendBoxes().forEach((legend) => legend.dispose());
       chart.valueAxis.setTitle(dataTypes[selectedDataType].label);
       chart.setCategoryLabels({ labelFillStyle: emptyFill });
+      chart.setData(chartDataSet);
 
+      // Bar chart legend entry colors don't work correctly normally, so we need to manually set them
+      let colorIndex = 0;
       const legend = chart
-        .addLegendBox(LegendBoxBuilders.VerticalLegendBox)
+        .addLegendBox(
+          LegendBoxBuilders.VerticalLegendBox.styleEntries((entry) => {
+            const color = dataColorsDark[colorIndex];
+            colorIndex = (colorIndex + 1) % dataColorsDark.length;
+            return entry.setButtonOnFillStyle(new SolidFill({ color }));
+          })
+        )
         .setTitle('Listings')
         .setPosition({ x: 100, y: 100 })
         .setMargin(1)
@@ -134,7 +147,6 @@ export default function LCBarChart({
           background.setFillStyle(chart.getTheme().uiBackgroundFillStyle)
         )
         .setAutoDispose({ type: 'max-height', maxHeight: 0.75 });
-      chart.setData(chartDataSet);
       legend.add(chart);
     }
   }, [selectedDataType, chartDataSet]);

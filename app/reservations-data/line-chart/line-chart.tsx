@@ -11,9 +11,7 @@ import {
   AxisScrollStrategies,
   AxisTickStrategies,
   ChartXY,
-  LegendBox,
   LegendBoxBuilders,
-  UIBackground,
   UIDraggingModes,
   UIOrigins,
   emptyTick
@@ -123,31 +121,50 @@ export default function LCLineChart({
         );
 
       let cumulativeAmount = 0;
+      let cumulativeNights = 0;
 
-      return listingReservations.map((reservation): LineChartDataSet => {
-        let totalAmount;
+      return listingReservations.map(
+        (reservation, index, array): LineChartDataSet => {
+          let yValue = 0;
 
-        if (dataTypes[selectedDataType].label === 'Reservations') {
-          totalAmount = 1;
-        } else if (dataTypes[selectedDataType].label === 'Occupancy Rate') {
-          const totalNights = reservation.nights;
-          const totalDays = calculateAmountOfDays(
-            dateRange.startDate,
-            dateRange.endDate
-          );
-          totalAmount = (totalNights / totalDays) * 100;
-        } else {
-          totalAmount = reservation[dataTypes[selectedDataType].property];
+          const currentReservations = array.slice(0, index + 1);
+
+          switch (selectedDataType) {
+            case 'amount':
+              cumulativeAmount += reservation.amount;
+              yValue = cumulativeAmount;
+              break;
+            case 'nights':
+              cumulativeNights += reservation.nights;
+              yValue = cumulativeNights;
+              break;
+            case 'reservations':
+              yValue = currentReservations.filter(
+                (row) => row.event_type === 'Reservation'
+              ).length;
+              break;
+            case 'occupancy_rate':
+              const totalNights = currentReservations.reduce(
+                (acc, cur) => acc + cur.nights,
+                0
+              );
+              const totalDays = calculateAmountOfDays(
+                dateRange.startDate,
+                dateRange.endDate
+              );
+              yValue = (totalNights / totalDays) * 100;
+              break;
+            default:
+              yValue = 0;
+          }
+
+          return {
+            x: new Date(reservation.payout_date).getTime(),
+            y: yValue,
+            listing_id: selectedListingId
+          };
         }
-
-        cumulativeAmount += typeof totalAmount === 'number' ? totalAmount : 0;
-
-        return {
-          x: new Date(reservation.payout_date).getTime(),
-          y: cumulativeAmount,
-          listing_id: selectedListingId
-        };
-      });
+      );
     });
   }, [selectedDataType, reservations, selectedListings, dateRange]);
 
@@ -156,15 +173,18 @@ export default function LCLineChart({
   useEffect(() => {
     const chart = chartRef.current;
     if (chart) {
-      chart.getSeries().forEach((series) => series.dispose());
       chart.getLegendBoxes().forEach((legend) => legend.dispose());
+      chart.getSeries().forEach((series) => series.dispose());
 
+      // Set up chart axes
       chart.getDefaultAxisY().setTitle(dataTypes[selectedDataType].label);
       const startMillis = new Date(dateRange.startDate).getTime();
       const endMillis = new Date(dateRange.endDate).getTime();
       chart
         .getDefaultAxisX()
         .setInterval({ start: startMillis, end: endMillis });
+
+      // Create legend
       const legend = chart
         .addLegendBox(LegendBoxBuilders.VerticalLegendBox)
         .setTitle('Listings')
@@ -188,24 +208,20 @@ export default function LCLineChart({
         },
         {} as Record<number, { x: number; y: number }[]>
       );
+      // Create a series for each listing
+      Object.entries(groupedData).forEach(([listingId, data]) => {
+        const listing = listings.find((l) => l.id === Number(listingId));
+        const seriesName = listing?.internal_name ?? `Listing ${listingId}`;
 
-      Object.entries(groupedData).forEach(([listingId, dataSet]) => {
-        const listing = listings.find(
-          (listing) => listing.id === parseInt(listingId)
-        );
+        const lineSeries = chart.addLineSeries({
+          dataPattern: { pattern: 'ProgressiveX' }
+        });
 
-        if (listing) {
-          const series = chart
-            .addLineSeries({
-              dataPattern: {
-                pattern: 'ProgressiveX'
-              }
-            })
-            .setName(listing.internal_name);
+        lineSeries.setName(seriesName);
+        lineSeries.add(data);
 
-          series.add(dataSet);
-          legend.add(chart);
-        }
+        // Add series to legend
+        legend.add(lineSeries);
       });
     }
   }, [chartDataSet, selectedDataType, dateRange, listings]);
