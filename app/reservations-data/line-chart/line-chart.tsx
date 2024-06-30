@@ -120,8 +120,10 @@ export default function LCLineChart({
             new Date(b.payout_date).getTime()
         );
 
-      let cumulativeAmount = 0;
-      let cumulativeNights = 0;
+      const totalDays = calculateAmountOfDays(
+        dateRange.startDate,
+        dateRange.endDate
+      );
 
       return listingReservations.map(
         (reservation, index, array): LineChartDataSet => {
@@ -131,12 +133,16 @@ export default function LCLineChart({
 
           switch (selectedDataType) {
             case 'amount':
-              cumulativeAmount += reservation.amount;
-              yValue = cumulativeAmount;
+              yValue = currentReservations.reduce(
+                (acc, cur) => acc + cur.amount,
+                0
+              );
               break;
             case 'nights':
-              cumulativeNights += reservation.nights;
-              yValue = cumulativeNights;
+              yValue = currentReservations.reduce(
+                (acc, cur) => acc + cur.nights,
+                0
+              );
               break;
             case 'reservations':
               yValue = currentReservations.filter(
@@ -147,10 +153,6 @@ export default function LCLineChart({
               const totalNights = currentReservations.reduce(
                 (acc, cur) => acc + cur.nights,
                 0
-              );
-              const totalDays = calculateAmountOfDays(
-                dateRange.startDate,
-                dateRange.endDate
               );
               yValue = (totalNights / totalDays) * 100;
               break;
@@ -208,6 +210,7 @@ export default function LCLineChart({
         },
         {} as Record<number, { x: number; y: number }[]>
       );
+
       // Create a series for each listing
       Object.entries(groupedData).forEach(([listingId, data]) => {
         const listing = listings.find((l) => l.id === Number(listingId));
@@ -220,7 +223,6 @@ export default function LCLineChart({
         lineSeries.setName(seriesName);
         lineSeries.add(data);
 
-        // Add series to legend
         legend.add(lineSeries);
       });
     }

@@ -93,6 +93,7 @@ export default function ReservationData() {
       case 'line-chart':
         return (
           <LCLineChart
+            key={`${selectedDataType}-${selectedListings.join('-')}`}
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}
@@ -105,6 +106,7 @@ export default function ReservationData() {
       case 'bar-chart':
         return (
           <LCBarChart
+            key={`${selectedDataType}-${selectedListings.join('-')}`}
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}
