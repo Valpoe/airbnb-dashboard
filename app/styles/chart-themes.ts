@@ -24,7 +24,7 @@ const dark = makeCustomTheme({
   backgroundColor: ColorHEX('#12121200'),
   textColor: ColorHEX('#ffffff'),
   dataColors: dataColorsDark,
-  axisColor: ColorHEX('#000000'),
+  axisColor: ColorHEX('#4d4d4d'),
   gridLineColor: ColorHEX('#4d4d4d'),
   uiBackgroundColor: ColorHEX('#262626'),
   uiBorderColor: ColorHEX('#e6e6e6'),

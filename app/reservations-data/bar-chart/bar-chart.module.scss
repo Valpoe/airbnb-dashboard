@@ -8,16 +8,3 @@
 .gridContainer {
   @include data-button-container;
 }
-
-.dataTypeButtons {
-  width: 9rem;
-  background-color: $neutral;
-}
-
-.activeButton {
-  @include active-data-button;
-}
-
-.inactiveButton {
-  @include inactive-data-button;
-}

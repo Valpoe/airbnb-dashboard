@@ -1,8 +1,8 @@
 'use server';
 
 import { sql } from '@vercel/postgres';
-import { Listing, Reservation } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
+import { Listing, Reservation } from './definitions';
 
 export async function fetchAllReservations() {
   try {
@@ -15,20 +15,6 @@ export async function fetchAllReservations() {
   } catch (error) {
     console.log('Database error: ', error);
     throw new Error('Error fetching reservations');
-  }
-}
-
-export async function slowFetch() {
-  try {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    const result = await sql<Listing>`
-    SELECT * FROM listings
-  `;
-    const data = result.rows;
-    return data;
-  } catch (error) {
-    console.log('Database error: ', error);
-    throw new Error('Error fetching listings');
   }
 }
 

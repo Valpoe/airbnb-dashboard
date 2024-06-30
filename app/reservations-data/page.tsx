@@ -3,11 +3,11 @@ import {
   fetchListings,
   fetchListingsByDateRangeAndListings
 } from '@/app/lib/database';
-import { Listing, Reservation } from '@/app/lib/definitions';
-import BarChart from '@/app/reservations-data/bar-chart/bar-chart';
+import { DataTypeKey, Listing, Reservation } from '@/app/lib/definitions';
+import LCBarChart from '@/app/reservations-data/bar-chart/bar-chart';
 import DataButtons from '@/app/reservations-data/components/data-buttons';
 import DatePicker from '@/app/reservations-data/components/date-picker';
-import LineChart from '@/app/reservations-data/line-chart/line-chart';
+import LCLineChart from '@/app/reservations-data/line-chart/line-chart';
 import Statistics from '@/app/reservations-data/statistics/statistics';
 import ReservationsTable from '@/app/reservations-data/table/table';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
@@ -22,10 +22,15 @@ export default function ReservationData() {
   const [selectedButton, setselectedButton] = useState('statistics');
   const [dateRange, setDateRange] = useState({
     startDate: '2022-01-01',
-    endDate: new Date().toISOString()
+    endDate: '2023-12-31'
   });
   const [listings, setListings] = useState<Listing[]>([]);
   const [selectedListings, setSelectedListings] = useState<number[]>([]);
+  const [selectedDataType, setSelectedDataType] =
+    useState<DataTypeKey>('amount');
+  const toggleDataType = (dataType: DataTypeKey) => {
+    setSelectedDataType(dataType);
+  };
 
   useEffect(() => {
     const fetchAndSetListings = async () => {
@@ -87,20 +92,28 @@ export default function ReservationData() {
         return <ReservationsTable reservations={reservations} />;
       case 'line-chart':
         return (
-          <LineChart
+          <LCLineChart
+            key={`${selectedDataType}-${selectedListings.join('-')}`}
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}
             dateRange={dateRange}
+            selectedDataType={selectedDataType}
+            toggleDataType={toggleDataType}
+            id="line-chart-container"
           />
         );
       case 'bar-chart':
         return (
-          <BarChart
+          <LCBarChart
+            key={`${selectedDataType}-${selectedListings.join('-')}`}
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}
             dateRange={dateRange}
+            selectedDataType={selectedDataType}
+            toggleDataType={toggleDataType}
+            id="bar-chart-container"
           />
         );
       default:

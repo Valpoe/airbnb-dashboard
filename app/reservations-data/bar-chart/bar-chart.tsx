@@ -1,38 +1,75 @@
-import { chartjsGlobals } from '@/app/lib/chartjs-globals';
+import { createBarChart } from '@/app/components/create-chart';
 import {
   DataTypeKey,
   Listing,
   Reservation,
   dataTypes
 } from '@/app/lib/definitions';
-import { calculateAmountOfDays, getDataColors } from '@/app/lib/utils';
-import 'chart.js/auto';
-import cn from 'classnames';
-import { useState } from 'react';
-import { Bar } from 'react-chartjs-2';
+import { calculateAmountOfDays } from '@/app/lib/utils';
+import DataTypeButtons from '@/app/reservations-data/components/data-type-buttons';
+import { dataColorsDark } from '@/app/styles/chart-themes';
+import {
+  BarChart,
+  BarChartSorting,
+  LegendBoxBuilders,
+  SolidFill,
+  UIDraggingModes,
+  UIOrigins,
+  emptyFill
+} from '@arction/lcjs';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import styles from './bar-chart.module.scss';
 
-export default function BarChart({
+type BarChartDataSet = {
+  category: string;
+  value: number;
+};
+
+export default function LCBarChart({
   reservations,
   listings,
   selectedListings,
-  dateRange
+  dateRange,
+  selectedDataType,
+  toggleDataType,
+  id
 }: {
   reservations: Reservation[];
   listings: Listing[];
   selectedListings: number[];
   dateRange: { startDate: string; endDate: string };
+  selectedDataType: DataTypeKey;
+  toggleDataType: (dataType: DataTypeKey) => void;
+  id: string;
 }) {
-  chartjsGlobals.setGlobalChartOptions();
+  const chartRef = useRef<BarChart | null>(null);
+  const containerRef = useRef(null);
 
-  const [selectedDataType, setSelectedDataType] =
-    useState<DataTypeKey>('amount');
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) {
+      return;
+    }
+    const initChart = () => {
+      try {
+        const chart = createBarChart(container);
+        chartRef.current = chart;
+        chart.setTitle('');
+        chart.setSorting(BarChartSorting.None);
+      } catch (error) {
+        console.error('Error initializing chart:', error);
+      }
+    };
+    initChart();
+    return () => {
+      if (chartRef.current) {
+        chartRef.current.dispose();
+        chartRef.current = null;
+      }
+    };
+  }, [id]);
 
-  const toggleDataType = (dataType: DataTypeKey) => {
-    setSelectedDataType(dataType);
-  };
-
-  const getStatisticsForSelectedListings = () => {
+  const getChartData = useCallback((): BarChartDataSet[] => {
     return selectedListings.map((selectedListingId) => {
       const listingReservations = reservations.filter(
         (reservation) => reservation.listing_id === selectedListingId
@@ -63,85 +100,70 @@ export default function BarChart({
             (acc, cur) => acc + cur.nights,
             0
           );
-          totalValue = (
+          totalValue =
             (totalNights /
               calculateAmountOfDays(dateRange.startDate, dateRange.endDate)) *
-            100
-          ).toFixed(2);
+            100;
           break;
         default:
           totalValue = 0;
       }
 
       return {
-        label: listings.find((listing) => listing.id === selectedListingId)
-          ?.internal_name,
-        totalValue,
-        backgroundColor: getDataColors(
-          selectedListings.indexOf(selectedListingId)
-        )
+        category:
+          listings.find((listing) => listing.id === selectedListingId)
+            ?.internal_name ?? '',
+        value: totalValue
       };
     });
-  };
+  }, [selectedListings, listings, reservations, selectedDataType, dateRange]);
 
-  const statistics = getStatisticsForSelectedListings();
+  const chartDataSet = useMemo(() => getChartData(), [getChartData]);
 
-  const labels = ['Listing'];
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (chart) {
+      chart.getLegendBoxes().forEach((legend) => legend.dispose());
+      chart.valueAxis.setTitle(dataTypes[selectedDataType].label);
+      chart.setCategoryLabels({ labelFillStyle: emptyFill });
+      chart.setData(chartDataSet);
 
-  const data = {
-    labels,
-    datasets: statistics.map((statistic) => ({
-      label: statistic.label,
-      data: [statistic.totalValue],
-      backgroundColor: statistic.backgroundColor
-    }))
-  };
-
-  const options = {
-    plugins: {
-      legend: {
-        position: 'top' as const,
-        labels: {
-          boxWidth: 20
-        }
-      }
-    },
-    scales: {
-      x: {
-        title: {
-          display: false
-        }
-      },
-      y: {
-        title: {
-          display: true,
-          text: dataTypes[selectedDataType].label
-        }
-      }
+      // Bar chart legend entry colors don't work correctly normally, so we need to manually set them
+      let colorIndex = 0;
+      const legend = chart
+        .addLegendBox(
+          LegendBoxBuilders.VerticalLegendBox.styleEntries((entry) => {
+            const color = dataColorsDark[colorIndex];
+            colorIndex = (colorIndex + 1) % dataColorsDark.length;
+            return entry.setButtonOnFillStyle(new SolidFill({ color }));
+          })
+        )
+        .setTitle('Listings')
+        .setPosition({ x: 100, y: 100 })
+        .setMargin(1)
+        .setOrigin(UIOrigins.RightTop)
+        .setDraggingMode(UIDraggingModes.draggable)
+        .setBackground((background) =>
+          background.setFillStyle(chart.getTheme().uiBackgroundFillStyle)
+        )
+        .setAutoDispose({ type: 'max-height', maxHeight: 0.75 });
+      legend.add(chart);
     }
-  };
+  }, [selectedDataType, chartDataSet]);
 
   return (
     <div className={styles.mainContainer}>
       <div className={styles.gridContainer}>
-        {Object.keys(dataTypes).map((dataType) => (
-          <button
-            key={dataType}
-            className={cn(
-              'btn',
-              styles.dataTypeButtons,
-              selectedDataType === dataType
-                ? styles.activeButton
-                : styles.inactiveButton
-            )}
-            onClick={() => toggleDataType(dataType as DataTypeKey)}
-          >
-            {dataTypes[dataType].label}
-          </button>
-        ))}
+        <DataTypeButtons
+          toggleDataType={toggleDataType}
+          selectedDataType={selectedDataType}
+        />
       </div>
-
-      <Bar options={options} data={data} />
+      <div
+        id={id}
+        ref={containerRef}
+        style={{ width: '100%', height: '600px' }}
+      ></div>
     </div>
   );
 }
