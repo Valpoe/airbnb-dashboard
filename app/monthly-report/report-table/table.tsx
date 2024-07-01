@@ -53,7 +53,7 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
     0
   );
 
-  // Calculate the sum of host fee
+  // Calculate the sum of service fees
   const sumHostFee = filteredData.reduce(
     (sum, row) => sum + (parseFloat(row['Service fee']) || 0),
     0
