@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const navigation = [
   { name: 'Monthly Report', href: '/monthly-report' },
-  { name: 'Reservations', href: '/reservations-data' },
+  { name: 'Analytics', href: '/analytics' },
   { name: 'Playground', href: '/playground' }
 ];
 

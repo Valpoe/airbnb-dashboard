@@ -1,19 +1,19 @@
 'use client';
+import LCBarChart from '@/app/analytics/bar-chart/bar-chart';
+import DataButtons from '@/app/analytics/components/data-buttons';
+import DatePicker from '@/app/analytics/components/date-picker';
+import LCLineChart from '@/app/analytics/line-chart/line-chart';
+import Statistics from '@/app/analytics/statistics/statistics';
+import ReservationsTable from '@/app/analytics/table/table';
 import {
   fetchListings,
   fetchListingsByDateRangeAndListings
 } from '@/app/lib/database';
 import { DataTypeKey, Listing, Reservation } from '@/app/lib/definitions';
-import LCBarChart from '@/app/reservations-data/bar-chart/bar-chart';
-import DataButtons from '@/app/reservations-data/components/data-buttons';
-import DatePicker from '@/app/reservations-data/components/date-picker';
-import LCLineChart from '@/app/reservations-data/line-chart/line-chart';
-import Statistics from '@/app/reservations-data/statistics/statistics';
-import ReservationsTable from '@/app/reservations-data/table/table';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import cn from 'classnames';
 import { useEffect, useRef, useState } from 'react';
-import styles from './reservation-data.module.scss';
+import styles from './analytics.module.scss';
 
 export default function ReservationData() {
   const menuRef = useRef<HTMLDetailsElement>(null);
