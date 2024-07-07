@@ -1,4 +1,4 @@
-import { formatDate } from '@/app/lib/utils';
+import { calculateDaysInMonth, formatDate, parseDate } from '@/app/lib/utils';
 import {
   EnvelopeIcon,
   GlobeAltIcon,
@@ -14,7 +14,9 @@ interface DataTableProps {
 }
 
 export default function DataTable({ data, contentRef }: DataTableProps) {
-  const filteredData = data.filter((row) => row.Type !== 'Payout');
+  const filteredData = data.filter(
+    (row) => row.Type !== 'Payout' && row.Type !== 'Pass Through Tot'
+  );
 
   if (data.length === 0) {
     return <p>No data available</p>;
@@ -42,24 +44,58 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
         formattedRow[column] = '';
       }
     }
-
     return formattedRow;
   });
 
   const columns = Object.keys(filteredData[0]);
-
   let sumAmount = filteredData.reduce(
     (sum, row) => sum + (parseFloat(row.Amount) || 0),
     0
   );
-
   // Calculate the sum of service fees
   const sumHostFee = filteredData.reduce(
     (sum, row) => sum + (parseFloat(row['Service fee']) || 0),
     0
   );
-
   const commissionAmount = parseFloat((sumAmount * 0.4).toFixed(2));
+  // Get the month we're calculating for
+  const firstReservationDate = parseDate(formattedData[0]['Start date']);
+  const calculationMonth = firstReservationDate.getMonth();
+  const calculationYear = firstReservationDate.getFullYear();
+  // Calculate total nights and occupancy for the month
+  let occupiedNightsInMonth = 0;
+  const monthStartDate = new Date(calculationYear, calculationMonth, 1);
+  const monthEndDate = new Date(calculationYear, calculationMonth + 1, 0);
+
+  formattedData.forEach((row, index) => {
+    const startDate = parseDate(row['Start date']);
+    const endDate = parseDate(row['End date']);
+
+    // Adjust dates to be within the month
+    const adjustedStartDate =
+      startDate < monthStartDate ? monthStartDate : startDate;
+    const adjustedEndDate = endDate > monthEndDate ? monthEndDate : endDate;
+
+    if (adjustedEndDate > monthStartDate && adjustedStartDate <= monthEndDate) {
+      let nights = Math.ceil(
+        (adjustedEndDate.getTime() - adjustedStartDate.getTime()) /
+          (1000 * 60 * 60 * 24)
+      );
+
+      // Include the night from the last day of previous month if applicable
+      if (startDate < monthStartDate) {
+        nights += 1;
+      }
+
+      occupiedNightsInMonth += nights;
+    }
+  });
+
+  const daysInMonth = calculateDaysInMonth(firstReservationDate);
+  // Calculate occupancy rate
+  const occupancyRate = ((occupiedNightsInMonth / daysInMonth) * 100).toFixed(
+    2
+  );
 
   return (
     <div className={styles.tableContainer} ref={contentRef}>
@@ -127,12 +163,12 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
               <tr>
                 <td>Number of nights booked</td>
                 <td>Amount</td>
-                <td>
-                  {filteredData.reduce(
-                    (sum, row) => sum + (parseInt(row.Nights) || 0),
-                    0
-                  )}
-                </td>
+                <td>{occupiedNightsInMonth}</td>
+              </tr>
+              <tr>
+                <td>Occupancy rate</td>
+                <td>%</td>
+                <td>{occupancyRate}</td>
               </tr>
               <tr>
                 <td>Airbnb service fee</td>

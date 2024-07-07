@@ -10,18 +10,18 @@ export const calculateAmountOfDays = (startDate: string, endDate: string) => {
   return days;
 };
 
-export function getRandomColor() {
-  const letters = '0123456789ABCDEF';
-  let color = '#';
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
-
 export const formatAmount = (amount: number) => {
   if (amount >= 1000) {
     return (amount / 1000).toFixed(2) + 'K';
   }
   return amount.toFixed(2);
+};
+
+export const calculateDaysInMonth = (date: Date): number => {
+  return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+};
+
+export const parseDate = (dateString: string): Date => {
+  const [day, month, year] = dateString.split('/').map(Number);
+  return new Date(year, month - 1, day);
 };
