@@ -48,26 +48,41 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
   });
 
   const columns = Object.keys(filteredData[0]);
-  let sumAmount = filteredData.reduce(
-    (sum, row) => sum + (parseFloat(row.Amount) || 0),
-    0
+
+  // Calculate Airbnb amount
+  const airbnbAmount = filteredData
+    .reduce((sum, row) => sum + (parseFloat(row.Amount) || 0), 0)
+    .toFixed(2);
+
+  // Calculate commission VAT 0%
+  const commissionVat0 = parseFloat(((airbnbAmount * 0.4) / 1.24).toFixed(2));
+
+  // Calculate commission VAT 24%
+  const commissionVat24 = parseFloat((airbnbAmount * 0.4).toFixed(2));
+
+  // Calculate commission amount
+  const commissionAmount = parseFloat((airbnbAmount * 0.4).toFixed(2));
+
+  // Calculate customer amount
+  const customerAmount = parseFloat(
+    (airbnbAmount - commissionAmount).toFixed(2)
   );
-  // Calculate the sum of service fees
-  const sumHostFee = filteredData.reduce(
-    (sum, row) => sum + (parseFloat(row['Service fee']) || 0),
-    0
-  );
-  const commissionAmount = parseFloat((sumAmount * 0.4).toFixed(2));
+
+  // Calculate reservations amount
+  const reservationsAmount = filteredData.filter(
+    (row) => row.Type === 'Reservation'
+  ).length;
+
   // Get the month we're calculating for
   const firstReservationDate = parseDate(formattedData[0]['Start date']);
   const calculationMonth = firstReservationDate.getMonth();
   const calculationYear = firstReservationDate.getFullYear();
+
   // Calculate total nights and occupancy for the month
   let occupiedNightsInMonth = 0;
   const monthStartDate = new Date(calculationYear, calculationMonth, 1);
   const monthEndDate = new Date(calculationYear, calculationMonth + 1, 0);
-
-  formattedData.forEach((row, index) => {
+  formattedData.forEach((row) => {
     const startDate = parseDate(row['Start date']);
     const endDate = parseDate(row['End date']);
 
@@ -92,10 +107,16 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
   });
 
   const daysInMonth = calculateDaysInMonth(firstReservationDate);
+
   // Calculate occupancy rate
   const occupancyRate = ((occupiedNightsInMonth / daysInMonth) * 100).toFixed(
     2
   );
+
+  // Calculate service fees
+  const serviceFees = filteredData
+    .reduce((sum, row) => sum + (parseFloat(row['Service fee']) || 0), 0)
+    .toFixed(2);
 
   return (
     <div className={styles.tableContainer} ref={contentRef}>
@@ -133,32 +154,27 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
               <tr>
                 <td>Airbnb amount (VAT 0%)</td>
                 <td>EUR</td>
-                <td>{sumAmount.toFixed(2)}</td>
+                <td>{airbnbAmount}</td>
               </tr>
               <tr>
                 <td>Commission (VAT 0%)</td>
                 <td>EUR</td>
-                <td>{((sumAmount * 0.4) / 1.24).toFixed(2)}</td>
+                <td>{commissionVat0}</td>
               </tr>
               <tr>
                 <td>Commission 40% (VAT 24%)</td>
                 <td>EUR</td>
-                <td>{(sumAmount * 0.4).toFixed(2)}</td>
+                <td>{commissionVat24}</td>
               </tr>
               <tr>
                 <td>The customer is paid</td>
                 <td>EUR</td>
-                <td>{(sumAmount - commissionAmount).toFixed(2)}</td>
+                <td>{customerAmount}</td>
               </tr>
               <tr>
                 <td>Number of reservations</td>
                 <td>Amount</td>
-                <td>
-                  {
-                    filteredData.filter((row) => row.Type === 'Reservation')
-                      .length
-                  }
-                </td>
+                <td>{reservationsAmount}</td>
               </tr>
               <tr>
                 <td>Number of nights booked</td>
@@ -173,7 +189,7 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
               <tr>
                 <td>Airbnb service fee</td>
                 <td>EUR</td>
-                <td>{sumHostFee.toFixed(2)}</td>
+                <td>{serviceFees}</td>
               </tr>
             </tbody>
           </table>
