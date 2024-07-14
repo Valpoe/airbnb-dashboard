@@ -1,3 +1,5 @@
+import { fetchListings } from '@/app/lib/database';
+import { Listing } from '@/app/lib/definitions';
 import { calculateDaysInMonth, formatDate, parseDate } from '@/app/lib/utils';
 import {
   EnvelopeIcon,
@@ -5,15 +7,35 @@ import {
   PhoneIcon
 } from '@heroicons/react/24/outline';
 import cn from 'classnames';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 
 interface DataTableProps {
   data: any[];
   contentRef: React.RefObject<HTMLDivElement>;
+  vatChecked: boolean;
 }
 
-export default function DataTable({ data, contentRef }: DataTableProps) {
+export default function DataTable({
+  data,
+  contentRef,
+  vatChecked
+}: DataTableProps) {
+  const [listings, setListings] = useState<Listing[]>([]);
+
+  useEffect(() => {
+    const fetchAndSetListings = async () => {
+      try {
+        const fetchedListings = await fetchListings();
+        setListings(fetchedListings);
+      } catch (error) {
+        console.error('Error fetching initial data: ', error);
+      }
+    };
+
+    fetchAndSetListings();
+  }, []);
+
   const filteredData = data.filter(
     (row) => row.Type !== 'Payout' && row.Type !== 'Pass Through Tot'
   );
@@ -49,10 +71,20 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
 
   const columns = Object.keys(filteredData[0]);
 
-  // Calculate Airbnb amount
-  const airbnbAmount = filteredData
+  // Get listing name
+  const listing = filteredData[0].Listing;
+  const listingName = listings.find((l) => l.listing === listing)
+    ?.internal_name;
+
+  // Calculate Airbnb amount VAT 10%
+  const airbnbAmountVat10 = filteredData
     .reduce((sum, row) => sum + (parseFloat(row.Amount) || 0), 0)
     .toFixed(2);
+
+  // Calculate Airbnb amount considering VAT 10% if checked
+  const airbnbAmount = vatChecked
+    ? (parseFloat(airbnbAmountVat10) / 1.1).toFixed(2)
+    : airbnbAmountVat10;
 
   // Calculate commission VAT 0%
   const commissionVat0 = parseFloat(((airbnbAmount * 0.4) / 1.24).toFixed(2));
@@ -83,26 +115,31 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
   const monthStartDate = new Date(calculationYear, calculationMonth, 1);
   const monthEndDate = new Date(calculationYear, calculationMonth + 1, 0);
   formattedData.forEach((row) => {
-    const startDate = parseDate(row['Start date']);
-    const endDate = parseDate(row['End date']);
+    if (row.Type === 'Reservation') {
+      const startDate = parseDate(row['Start date']);
+      const endDate = parseDate(row['End date']);
 
-    // Adjust dates to be within the month
-    const adjustedStartDate =
-      startDate < monthStartDate ? monthStartDate : startDate;
-    const adjustedEndDate = endDate > monthEndDate ? monthEndDate : endDate;
+      // Adjust dates to be within the month
+      const adjustedStartDate =
+        startDate < monthStartDate ? monthStartDate : startDate;
+      const adjustedEndDate = endDate > monthEndDate ? monthEndDate : endDate;
 
-    if (adjustedEndDate > monthStartDate && adjustedStartDate <= monthEndDate) {
-      let nights = Math.ceil(
-        (adjustedEndDate.getTime() - adjustedStartDate.getTime()) /
-          (1000 * 60 * 60 * 24)
-      );
+      if (
+        adjustedEndDate > monthStartDate &&
+        adjustedStartDate <= monthEndDate
+      ) {
+        let nights = Math.ceil(
+          (adjustedEndDate.getTime() - adjustedStartDate.getTime()) /
+            (1000 * 60 * 60 * 24)
+        );
 
-      // Include the night from the last day of previous month if applicable
-      if (startDate < monthStartDate) {
-        nights += 1;
+        // Include the night from the last day of previous month if applicable
+        if (startDate < monthStartDate) {
+          nights += 1;
+        }
+
+        occupiedNightsInMonth += nights;
       }
-
-      occupiedNightsInMonth += nights;
     }
   });
 
@@ -121,7 +158,9 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
   return (
     <div className={styles.tableContainer} ref={contentRef}>
       <table className={cn('table', styles.table)}>
-        <caption className={styles.tableTitle}>Airbnb Report</caption>
+        <caption className={styles.tableTitle}>
+          {listingName}, {calculationMonth + 1}/{calculationYear}
+        </caption>
         <thead className="text-neutral text-base">
           <tr>
             {columns.map((column, columnIndex) => (
@@ -151,6 +190,13 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
               </tr>
             </thead>
             <tbody>
+              {vatChecked && (
+                <tr>
+                  <td>Airbnb amount (VAT 10%)</td>
+                  <td>EUR</td>
+                  <td>{airbnbAmountVat10}</td>
+                </tr>
+              )}
               <tr>
                 <td>Airbnb amount (VAT 0%)</td>
                 <td>EUR</td>
@@ -172,6 +218,11 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
                 <td>{customerAmount}</td>
               </tr>
               <tr>
+                <td>Airbnb service fee</td>
+                <td>EUR</td>
+                <td>{serviceFees}</td>
+              </tr>
+              <tr>
                 <td>Number of reservations</td>
                 <td>Amount</td>
                 <td>{reservationsAmount}</td>
@@ -185,11 +236,6 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
                 <td>Occupancy rate</td>
                 <td>%</td>
                 <td>{occupancyRate}</td>
-              </tr>
-              <tr>
-                <td>Airbnb service fee</td>
-                <td>EUR</td>
-                <td>{serviceFees}</td>
               </tr>
             </tbody>
           </table>

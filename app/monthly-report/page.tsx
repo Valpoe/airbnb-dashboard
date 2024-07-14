@@ -11,6 +11,7 @@ import styles from './monthly-report.module.scss';
 export default function MonthlyReport() {
   const [csvData, setCsvData] = useState<any[]>([]);
   const contentRef = useRef(null);
+  const [vatChecked, setVatChecked] = useState(false);
   const [resolutionPayoutChecked, setResolutionPayoutChecked] = useState(false);
   const [resolutionPayoutAmount, setResolutionPayoutAmount] = useState(0);
   const [resolutionPayoutDescription, setResolutionPayoutDescription] =
@@ -18,6 +19,10 @@ export default function MonthlyReport() {
 
   const handleDataUpload = (data: any[]) => {
     setCsvData(data);
+  };
+
+  const handleVatChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setVatChecked(e.target.checked);
   };
 
   const handleResolutionPayoutChange = (
@@ -43,7 +48,7 @@ export default function MonthlyReport() {
       Date: new Date().toISOString(),
       Type: 'Resolution Payout',
       Nights: '',
-      Guest: 'Selite',
+      Guest: 'Description',
       Listing: resolutionPayoutDescription,
       Currency: 'EUR',
       Amount: resolutionPayoutAmount,
@@ -85,13 +90,19 @@ export default function MonthlyReport() {
                 documentTitle="Airbnb Report"
               />
               <div className={styles.resolutionPayoutContainer}>
-                <label className={cn('label', styles.resolutionPayoutCheckbox)}>
-                  <span
-                    className={cn(
-                      'label-text',
-                      styles.resolutionPayoutCheckboxLabel
-                    )}
-                  >
+                <label className={cn('label', styles.checkBox)}>
+                  <span className={cn('label-text', styles.checkBoxLabel)}>
+                    Include VAT 10%
+                  </span>
+                  <input
+                    type="checkbox"
+                    className="checkbox checkbox-primary"
+                    checked={vatChecked}
+                    onChange={handleVatChange}
+                  />
+                </label>
+                <label className={cn('label', styles.checkBox)}>
+                  <span className={cn('label-text', styles.checkBoxLabel)}>
                     Resolution Payout
                   </span>
                   <input
@@ -117,7 +128,7 @@ export default function MonthlyReport() {
                     />
                     <input
                       type="text"
-                      placeholder="Selite"
+                      placeholder="Description"
                       className={cn(
                         'input',
                         'input-bordered',
@@ -140,7 +151,11 @@ export default function MonthlyReport() {
           )}
         </div>
         {csvData.length > 0 && (
-          <DataTable data={csvData} contentRef={contentRef} />
+          <DataTable
+            data={csvData}
+            contentRef={contentRef}
+            vatChecked={vatChecked}
+          />
         )}
       </div>
     </main>

@@ -54,24 +54,24 @@ export const dataTypes: Record<string, DataType> = {
 export type DataTypeKey = keyof typeof dataTypes;
 
 export const monthlyReportColumns = [
-  'Date',
   'Type',
+  'Start date',
+  'End date',
   'Nights',
-  'Guests',
+  'Guest',
   'Listing',
-  'Currency',
   'Amount',
   'Service fee'
 ];
 
 export const reservationsTableColumns = [
-  'Date',
-  'Event Type',
+  'Payout date',
+  'Event type',
   'Nights',
   'Guest',
   'Listing',
   'Currency',
   'Amount',
-  'Host Fee',
-  'Earnings Year'
+  'Service fee',
+  'Earnings year'
 ];

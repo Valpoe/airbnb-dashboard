@@ -1,6 +1,8 @@
 @import '@/app/styles/_mixins.scss';
 @import '@/app/styles/_variables.scss';
 
+$resolutionPayoutContainerHeight: 48px;
+
 .mainContainer {
   @include main-container;
 }
@@ -21,6 +23,7 @@
 .inputContainer {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
 
   @media (min-width: 768px) {
     flex-direction: row;
@@ -29,23 +32,23 @@
 
 .downloadButton {
   @include regular-button;
-
-  @media (min-width: 768px) {
-    margin-right: 1.25rem;
-  }
+  margin-bottom: 1rem;
 }
 
 .resolutionPayoutContainer {
   display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-bottom: 1rem;
+  min-height: $resolutionPayoutContainerHeight;
 }
 
-.resolutionPayoutCheckbox {
+.checkBox {
   cursor: pointer;
-  margin-bottom: 1.25rem;
   margin-right: 1.25rem;
 }
 
-.resolutionPayoutCheckboxLabel {
+.checkBoxLabel {
   margin-right: 0.5rem;
 }
 
@@ -63,3 +66,20 @@
 .resolutionPayoutAddButton {
   @include regular-button;
 }
+
+// .vatContainer {
+//   display: flex;
+//   flex-wrap: wrap;
+//   width: 100%;
+//   margin-bottom: 1rem;
+//   min-height: $resolutionPayoutContainerHeight;
+// }
+
+// .vatCheckbox {
+//   cursor: pointer;
+//   margin-right: 1.25rem;
+// }
+
+// .vatCheckboxLabel {
+//   margin-right: 0.5rem;
+// }
