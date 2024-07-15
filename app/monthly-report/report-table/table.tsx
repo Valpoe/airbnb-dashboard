@@ -1,11 +1,6 @@
 import { fetchListings } from '@/app/lib/database';
 import { Listing } from '@/app/lib/definitions';
 import { calculateDaysInMonth, formatDate, parseDate } from '@/app/lib/utils';
-import {
-  EnvelopeIcon,
-  GlobeAltIcon,
-  PhoneIcon
-} from '@heroicons/react/24/outline';
 import cn from 'classnames';
 import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
@@ -239,20 +234,6 @@ export default function DataTable({
               </tr>
             </tbody>
           </table>
-        </div>
-        <div className={styles.footerContainer}>
-          <div className={styles.footerContent}>
-            <EnvelopeIcon className={styles.footerIcon} />
-            <span className={styles.footerText}>info@housti.fi</span>
-          </div>
-          <div className={styles.footerContent}>
-            <GlobeAltIcon className={styles.footerIcon} />
-            <span className={styles.footerText}>www.housti.fi</span>
-          </div>
-          <div className={styles.footerContent}>
-            <PhoneIcon className={styles.footerIcon} />
-            <span className={styles.footerText}>+358 44 986 4928</span>
-          </div>
         </div>
       </div>
     </div>

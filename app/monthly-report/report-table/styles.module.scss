@@ -6,7 +6,7 @@
   max-width: 20rem;
   margin-bottom: 1rem;
   @media (min-width: 768px) {
-    margin-right: 1.25rem;
+    margin-right: 1rem;
   }
 }
 
@@ -14,7 +14,7 @@
   @include regular-button;
   margin-bottom: 1rem;
   @media (min-width: 768px) {
-    margin-right: 1.25rem;
+    margin-right: 1rem;
   }
 }
 
@@ -29,7 +29,7 @@
 .table {
   border-width: 1px;
   border-color: $secondary-90;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
   color: $primary;
   margin-left: auto;
   margin-right: auto;
@@ -67,33 +67,4 @@
   color: $primary;
   font-size: 1rem;
   line-height: 1.5rem;
-}
-
-.footerContainer {
-  display: flex;
-  justify-content: center;
-  margin-top: auto;
-  margin-bottom: 1.25rem;
-  border-top-width: 2px;
-  border-color: $primary;
-  padding-top: 2rem;
-}
-
-.footerContent {
-  display: flex;
-  color: $primary;
-}
-
-.footerIcon {
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-right: 0.5rem;
-  margin-top: 0.125rem;
-}
-
-.footerText {
-  margin-right: 1rem;
-  color: $primary;
-  font-size: 1.25rem;
-  line-height: 1.75rem;
 }

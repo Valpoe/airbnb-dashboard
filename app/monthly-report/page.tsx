@@ -13,7 +13,9 @@ export default function MonthlyReport() {
   const contentRef = useRef(null);
   const [vatChecked, setVatChecked] = useState(false);
   const [resolutionPayoutChecked, setResolutionPayoutChecked] = useState(false);
-  const [resolutionPayoutAmount, setResolutionPayoutAmount] = useState(0);
+  const [resolutionPayoutAmount, setResolutionPayoutAmount] = useState<
+    number | undefined
+  >(0);
   const [resolutionPayoutDescription, setResolutionPayoutDescription] =
     useState('');
 
@@ -34,7 +36,7 @@ export default function MonthlyReport() {
   const handleResolutionPayoutAmountChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setResolutionPayoutAmount(parseFloat(e.target.value) || 0);
+    setResolutionPayoutAmount(parseFloat(e.target.value) || undefined);
   };
 
   const handleResolutionPayoutDescriptionChange = (
@@ -45,12 +47,12 @@ export default function MonthlyReport() {
 
   const handleAddResolutionPayout = () => {
     const newResolutionPayout = {
-      Date: new Date().toISOString(),
       Type: 'Resolution Payout',
+      'Start date': '',
+      'End date': '',
       Nights: '',
       Guest: 'Description',
       Listing: resolutionPayoutDescription,
-      Currency: 'EUR',
       Amount: resolutionPayoutAmount,
       'Service fee': ''
     };
@@ -58,7 +60,7 @@ export default function MonthlyReport() {
     setCsvData((prevData) => [...prevData, newResolutionPayout]);
 
     // Reset the resolution payout amount and checkbox
-    setResolutionPayoutAmount(0);
+    setResolutionPayoutAmount(undefined);
     setResolutionPayoutChecked(false);
     setResolutionPayoutDescription('');
   };

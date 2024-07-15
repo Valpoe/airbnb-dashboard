@@ -45,41 +45,24 @@ $resolutionPayoutContainerHeight: 48px;
 
 .checkBox {
   cursor: pointer;
-  margin-right: 1.25rem;
+  margin-right: 1rem;
 }
 
 .checkBoxLabel {
-  margin-right: 0.5rem;
+  margin-right: 1rem;
 }
 
 .resolutionPayoutInput {
-  width: 6rem;
+  width: 8rem;
   max-width: 20rem;
-  margin-right: 1.25rem;
+  margin-right: 1rem;
 }
 
 .resolutionPayoutDescription {
   max-width: 20rem;
-  margin-right: 1.25rem;
+  margin-right: 1rem;
 }
 
 .resolutionPayoutAddButton {
   @include regular-button;
 }
-
-// .vatContainer {
-//   display: flex;
-//   flex-wrap: wrap;
-//   width: 100%;
-//   margin-bottom: 1rem;
-//   min-height: $resolutionPayoutContainerHeight;
-// }
-
-// .vatCheckbox {
-//   cursor: pointer;
-//   margin-right: 1.25rem;
-// }
-
-// .vatCheckboxLabel {
-//   margin-right: 0.5rem;
-// }
