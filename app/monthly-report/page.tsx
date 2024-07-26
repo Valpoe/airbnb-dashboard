@@ -66,6 +66,7 @@ export default function MonthlyReport() {
     setResolutionPayoutChecked(false);
     setResolutionPayoutDescription('');
 
+    // Show toast message for 3 seconds
     setToastMessage('Resolution Payout added');
     setShowToast(true);
     setTimeout(() => {

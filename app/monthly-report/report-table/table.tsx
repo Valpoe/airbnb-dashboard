@@ -192,11 +192,16 @@ export default function DataTable({
     };
   });
 
+  // Filter summaries because of the adding of the resolution payout
+  const filteredSummaries = summaries.filter(({ listing }) =>
+    listings.some((l) => l.listing === listing)
+  );
+
   return (
     <div className={styles.tableContainer} ref={contentRef}>
       <table className={cn('table', styles.table)}>
         <caption className={styles.tableTitle}>
-          {summaries.length === 1
+          {filteredSummaries.length === 1
             ? `${
                 listings.find((l) => l.listing === summaries[0].listing)
                   ?.internal_name || ''
@@ -278,7 +283,7 @@ export default function DataTable({
                 <td>Amount</td>
                 <td>{overallSummary.occupiedNightsInMonth}</td>
               </tr>
-              {summaries.length === 1 && (
+              {filteredSummaries.length === 1 && (
                 <tr>
                   <td>Occupancy rate</td>
                   <td>%</td>
@@ -289,9 +294,9 @@ export default function DataTable({
           </table>
         </div>
       </div>
-      {summaries.length > 1 && (
+      {filteredSummaries.length > 1 && (
         <div>
-          {summaries.map(({ listing, summary }, index) => (
+          {filteredSummaries.map(({ listing, summary }, index) => (
             <div key={index} className={cn('page-break', styles.pageBreak)}>
               <div className={styles.summaryContainer}>
                 <table className={cn('table', styles.summaryTable)}>
