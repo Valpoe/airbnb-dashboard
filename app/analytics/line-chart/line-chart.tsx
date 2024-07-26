@@ -1,3 +1,4 @@
+import DataTypeButtons from '@/app/analytics/components/data-type-buttons';
 import { createLineChart } from '@/app/components/create-chart';
 import {
   DataTypeKey,
@@ -6,7 +7,6 @@ import {
   dataTypes
 } from '@/app/lib/definitions';
 import { calculateAmountOfDays } from '@/app/lib/utils';
-import DataTypeButtons from '@/app/reservations-data/components/data-type-buttons';
 import {
   AxisScrollStrategies,
   AxisTickStrategies,

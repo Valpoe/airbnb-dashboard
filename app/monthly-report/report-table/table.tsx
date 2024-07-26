@@ -1,19 +1,40 @@
-import { formatDate } from '@/app/lib/utils';
+import { fetchListings } from '@/app/lib/database';
 import {
-  EnvelopeIcon,
-  GlobeAltIcon,
-  PhoneIcon
-} from '@heroicons/react/24/outline';
+  Listing,
+  MonthlyReportListingData,
+  MonthlyReportSummary
+} from '@/app/lib/definitions';
+import { calculateDaysInMonth, formatDate, parseDate } from '@/app/lib/utils';
 import cn from 'classnames';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 
 interface DataTableProps {
   data: any[];
   contentRef: React.RefObject<HTMLDivElement>;
+  vatChecked: boolean;
 }
 
-export default function DataTable({ data, contentRef }: DataTableProps) {
+export default function DataTable({
+  data,
+  contentRef,
+  vatChecked
+}: DataTableProps) {
+  const [listings, setListings] = useState<Listing[]>([]);
+
+  useEffect(() => {
+    const fetchAndSetListings = async () => {
+      try {
+        const fetchedListings = await fetchListings();
+        setListings(fetchedListings);
+      } catch (error) {
+        console.error('Error fetching initial data: ', error);
+      }
+    };
+
+    fetchAndSetListings();
+  }, []);
+
   const filteredData = data.filter((row) => row.Type !== 'Payout');
 
   if (data.length === 0) {
@@ -42,29 +63,155 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
         formattedRow[column] = '';
       }
     }
-
     return formattedRow;
   });
 
   const columns = Object.keys(filteredData[0]);
 
-  let sumAmount = filteredData.reduce(
-    (sum, row) => sum + (parseFloat(row.Amount) || 0),
-    0
-  );
+  // Group data by listing
+  const groupedData = formattedData.reduce((acc, row) => {
+    if (!acc[row.Listing]) {
+      acc[row.Listing] = [];
+    }
+    acc[row.Listing].push(row);
+    return acc;
+  }, {});
 
-  // Calculate the sum of host fee
-  const sumHostFee = filteredData.reduce(
-    (sum, row) => sum + (parseFloat(row['Service fee']) || 0),
-    0
-  );
+  // Helper function to calculate summary for each listing
+  const calculateSummary = (
+    listingData: MonthlyReportListingData[],
+    vatChecked: boolean
+  ): MonthlyReportSummary => {
+    // Calculate Airbnb amount VAT 10%
+    const airbnbAmountVat10 = listingData
+      .reduce((sum, row) => sum + (parseFloat(row.Amount) || 0), 0)
+      .toFixed(2);
 
-  const commissionAmount = parseFloat((sumAmount * 0.4).toFixed(2));
+    // Calculate Airbnb amount considering VAT 10% if checked
+    const airbnbAmount = vatChecked
+      ? (parseFloat(airbnbAmountVat10) / 1.1).toFixed(2)
+      : airbnbAmountVat10;
+
+    // Calculate commission VAT 0%
+    const commissionVat0 = parseFloat(
+      ((parseFloat(airbnbAmount) * 0.4) / 1.24).toFixed(2)
+    );
+
+    // Calculate commission VAT 24%
+    const commissionVat24 = parseFloat(
+      (parseFloat(airbnbAmount) * 0.4).toFixed(2)
+    );
+
+    // Calculate commission amount
+    const commissionAmount = parseFloat(
+      (parseFloat(airbnbAmount) * 0.4).toFixed(2)
+    );
+
+    // Calculate customer amount
+    const customerAmount = parseFloat(
+      (parseFloat(airbnbAmount) - commissionAmount).toFixed(2)
+    );
+
+    // Calculate reservations amount
+    const reservationsAmount = listingData.filter(
+      (row) => row.Type === 'Reservation'
+    ).length;
+
+    // Get the month we're calculating for
+    const firstReservationDate = parseDate(listingData[0]['Start date']);
+    const calculationMonth = firstReservationDate.getMonth();
+    const calculationYear = firstReservationDate.getFullYear();
+
+    // Calculate total nights and occupancy for the month
+    let occupiedNightsInMonth = 0;
+    const monthStartDate = new Date(calculationYear, calculationMonth, 1);
+    const monthEndDate = new Date(calculationYear, calculationMonth + 1, 0);
+    listingData.forEach((row) => {
+      if (row.Type === 'Reservation') {
+        const startDate = parseDate(row['Start date']);
+        const endDate = parseDate(row['End date']);
+
+        // Adjust dates to be within the month
+        const adjustedStartDate =
+          startDate < monthStartDate ? monthStartDate : startDate;
+        const adjustedEndDate = endDate > monthEndDate ? monthEndDate : endDate;
+
+        if (
+          adjustedEndDate > monthStartDate &&
+          adjustedStartDate <= monthEndDate
+        ) {
+          let nights = Math.ceil(
+            (adjustedEndDate.getTime() - adjustedStartDate.getTime()) /
+              (1000 * 60 * 60 * 24)
+          );
+
+          // Include the night from the last day of previous month if applicable
+          if (startDate < monthStartDate) {
+            nights += 1;
+          }
+
+          occupiedNightsInMonth += nights;
+        }
+      }
+    });
+
+    const daysInMonth = calculateDaysInMonth(firstReservationDate);
+
+    // Calculate occupancy rate
+    const occupancyRate = ((occupiedNightsInMonth / daysInMonth) * 100).toFixed(
+      2
+    );
+
+    // Calculate service fees
+    const serviceFees = listingData
+      .reduce((sum, row) => sum + (parseFloat(row['Service fee']) || 0), 0)
+      .toFixed(2);
+
+    return {
+      airbnbAmountVat10,
+      airbnbAmount,
+      commissionVat0,
+      commissionVat24,
+      customerAmount,
+      reservationsAmount,
+      occupiedNightsInMonth,
+      occupancyRate,
+      serviceFees,
+      calculationMonth,
+      calculationYear
+    };
+  };
+
+  const overallSummary = calculateSummary(formattedData, vatChecked);
+
+  const summaries = Object.keys(groupedData).map((listingKey) => {
+    const listingData = groupedData[listingKey];
+    return {
+      listing: listingKey,
+      summary: calculateSummary(listingData, vatChecked)
+    };
+  });
+
+  // Filter summaries because of the adding of the resolution payout
+  const filteredSummaries = summaries.filter(({ listing }) =>
+    listings.some((l) => l.listing === listing)
+  );
 
   return (
     <div className={styles.tableContainer} ref={contentRef}>
       <table className={cn('table', styles.table)}>
-        <caption className={styles.tableTitle}>Airbnb Report</caption>
+        <caption className={styles.tableTitle}>
+          {filteredSummaries.length === 1
+            ? `${
+                listings.find((l) => l.listing === summaries[0].listing)
+                  ?.internal_name || ''
+              }, ${summaries[0].summary.calculationMonth + 1}/${
+                summaries[0].summary.calculationYear
+              }`
+            : `${overallSummary.calculationMonth + 1}/${
+                overallSummary.calculationYear
+              }`}
+        </caption>
         <thead className="text-neutral text-base">
           <tr>
             {columns.map((column, columnIndex) => (
@@ -94,69 +241,130 @@ export default function DataTable({ data, contentRef }: DataTableProps) {
               </tr>
             </thead>
             <tbody>
+              {vatChecked && (
+                <tr>
+                  <td>Airbnb amount (VAT 10%)</td>
+                  <td>EUR</td>
+                  <td>{overallSummary.airbnbAmountVat10}</td>
+                </tr>
+              )}
               <tr>
                 <td>Airbnb amount (VAT 0%)</td>
                 <td>EUR</td>
-                <td>{sumAmount.toFixed(2)}</td>
+                <td>{overallSummary.airbnbAmount}</td>
               </tr>
               <tr>
                 <td>Commission (VAT 0%)</td>
                 <td>EUR</td>
-                <td>{((sumAmount * 0.4) / 1.24).toFixed(2)}</td>
+                <td>{overallSummary.commissionVat0}</td>
               </tr>
               <tr>
                 <td>Commission 40% (VAT 24%)</td>
                 <td>EUR</td>
-                <td>{(sumAmount * 0.4).toFixed(2)}</td>
+                <td>{overallSummary.commissionVat24}</td>
               </tr>
               <tr>
                 <td>The customer is paid</td>
                 <td>EUR</td>
-                <td>{(sumAmount - commissionAmount).toFixed(2)}</td>
-              </tr>
-              <tr>
-                <td>Number of reservations</td>
-                <td>Amount</td>
-                <td>
-                  {
-                    filteredData.filter((row) => row.Type === 'Reservation')
-                      .length
-                  }
-                </td>
-              </tr>
-              <tr>
-                <td>Number of nights booked</td>
-                <td>Amount</td>
-                <td>
-                  {filteredData.reduce(
-                    (sum, row) => sum + (parseInt(row.Nights) || 0),
-                    0
-                  )}
-                </td>
+                <td>{overallSummary.customerAmount}</td>
               </tr>
               <tr>
                 <td>Airbnb service fee</td>
                 <td>EUR</td>
-                <td>{sumHostFee.toFixed(2)}</td>
+                <td>{overallSummary.serviceFees}</td>
               </tr>
+              <tr>
+                <td>Number of reservations</td>
+                <td>Amount</td>
+                <td>{overallSummary.reservationsAmount}</td>
+              </tr>
+              <tr>
+                <td>Number of nights booked</td>
+                <td>Amount</td>
+                <td>{overallSummary.occupiedNightsInMonth}</td>
+              </tr>
+              {filteredSummaries.length === 1 && (
+                <tr>
+                  <td>Occupancy rate</td>
+                  <td>%</td>
+                  <td>{overallSummary.occupancyRate}</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
-        <div className={styles.footerContainer}>
-          <div className={styles.footerContent}>
-            <EnvelopeIcon className={styles.footerIcon} />
-            <span className={styles.footerText}>info@housti.fi</span>
-          </div>
-          <div className={styles.footerContent}>
-            <GlobeAltIcon className={styles.footerIcon} />
-            <span className={styles.footerText}>www.housti.fi</span>
-          </div>
-          <div className={styles.footerContent}>
-            <PhoneIcon className={styles.footerIcon} />
-            <span className={styles.footerText}>+358 44 986 4928</span>
-          </div>
-        </div>
       </div>
+      {filteredSummaries.length > 1 && (
+        <div>
+          {filteredSummaries.map(({ listing, summary }, index) => (
+            <div key={index} className={cn('page-break', styles.pageBreak)}>
+              <div className={styles.summaryContainer}>
+                <table className={cn('table', styles.summaryTable)}>
+                  <caption className={styles.tableTitle}>
+                    {listings.find((l) => l.listing === listing)?.internal_name}
+                  </caption>
+                  <thead className={styles.summaryTableHeaders}>
+                    <tr>
+                      <th>Event</th>
+                      <th>Type</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {vatChecked && (
+                      <tr>
+                        <td>Airbnb amount (VAT 10%)</td>
+                        <td>EUR</td>
+                        <td>{summary.airbnbAmountVat10}</td>
+                      </tr>
+                    )}
+                    <tr>
+                      <td>Airbnb amount (VAT 0%)</td>
+                      <td>EUR</td>
+                      <td>{summary.airbnbAmount}</td>
+                    </tr>
+                    <tr>
+                      <td>Commission (VAT 0%)</td>
+                      <td>EUR</td>
+                      <td>{summary.commissionVat0}</td>
+                    </tr>
+                    <tr>
+                      <td>Commission 40% (VAT 24%)</td>
+                      <td>EUR</td>
+                      <td>{summary.commissionVat24}</td>
+                    </tr>
+                    <tr>
+                      <td>The customer is paid</td>
+                      <td>EUR</td>
+                      <td>{summary.customerAmount}</td>
+                    </tr>
+                    <tr>
+                      <td>Airbnb service fee</td>
+                      <td>EUR</td>
+                      <td>{summary.serviceFees}</td>
+                    </tr>
+                    <tr>
+                      <td>Number of reservations</td>
+                      <td>Amount</td>
+                      <td>{summary.reservationsAmount}</td>
+                    </tr>
+                    <tr>
+                      <td>Number of nights booked</td>
+                      <td>Amount</td>
+                      <td>{summary.occupiedNightsInMonth}</td>
+                    </tr>
+                    <tr>
+                      <td>Occupancy rate</td>
+                      <td>%</td>
+                      <td>{summary.occupancyRate}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

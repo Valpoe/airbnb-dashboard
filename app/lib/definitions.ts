@@ -21,6 +21,28 @@ export type Reservation = {
   listing_id: number;
 };
 
+export type MonthlyReportListingData = {
+  Amount: string;
+  Type: string;
+  'Start date': string;
+  'End date': string;
+  'Service fee': string;
+};
+
+export type MonthlyReportSummary = {
+  airbnbAmountVat10: string;
+  airbnbAmount: string;
+  commissionVat0: number;
+  commissionVat24: number;
+  customerAmount: number;
+  reservationsAmount: number;
+  occupiedNightsInMonth: number;
+  occupancyRate: string;
+  serviceFees: string;
+  calculationMonth: number;
+  calculationYear: number;
+};
+
 export type Listing = {
   id: number;
   listing: string;
@@ -54,24 +76,24 @@ export const dataTypes: Record<string, DataType> = {
 export type DataTypeKey = keyof typeof dataTypes;
 
 export const monthlyReportColumns = [
-  'Date',
   'Type',
+  'Start date',
+  'End date',
   'Nights',
-  'Guests',
+  'Guest',
   'Listing',
-  'Currency',
   'Amount',
   'Service fee'
 ];
 
 export const reservationsTableColumns = [
-  'Date',
-  'Event Type',
+  'Payout date',
+  'Event type',
   'Nights',
   'Guest',
   'Listing',
   'Currency',
   'Amount',
-  'Host Fee',
-  'Earnings Year'
+  'Service fee',
+  'Earnings year'
 ];

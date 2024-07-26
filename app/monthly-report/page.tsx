@@ -11,13 +11,22 @@ import styles from './monthly-report.module.scss';
 export default function MonthlyReport() {
   const [csvData, setCsvData] = useState<any[]>([]);
   const contentRef = useRef(null);
+  const [vatChecked, setVatChecked] = useState(false);
   const [resolutionPayoutChecked, setResolutionPayoutChecked] = useState(false);
-  const [resolutionPayoutAmount, setResolutionPayoutAmount] = useState(0);
+  const [resolutionPayoutAmount, setResolutionPayoutAmount] = useState<
+    number | undefined
+  >(0);
   const [resolutionPayoutDescription, setResolutionPayoutDescription] =
     useState('');
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const handleDataUpload = (data: any[]) => {
     setCsvData(data);
+  };
+
+  const handleVatChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setVatChecked(e.target.checked);
   };
 
   const handleResolutionPayoutChange = (
@@ -29,7 +38,7 @@ export default function MonthlyReport() {
   const handleResolutionPayoutAmountChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setResolutionPayoutAmount(parseFloat(e.target.value) || 0);
+    setResolutionPayoutAmount(parseFloat(e.target.value) || undefined);
   };
 
   const handleResolutionPayoutDescriptionChange = (
@@ -40,12 +49,12 @@ export default function MonthlyReport() {
 
   const handleAddResolutionPayout = () => {
     const newResolutionPayout = {
-      Date: new Date().toISOString(),
       Type: 'Resolution Payout',
+      'Start date': '',
+      'End date': '',
       Nights: '',
-      Guest: 'Selite',
+      Guest: 'Description',
       Listing: resolutionPayoutDescription,
-      Currency: 'EUR',
       Amount: resolutionPayoutAmount,
       'Service fee': ''
     };
@@ -53,13 +62,27 @@ export default function MonthlyReport() {
     setCsvData((prevData) => [...prevData, newResolutionPayout]);
 
     // Reset the resolution payout amount and checkbox
-    setResolutionPayoutAmount(0);
+    setResolutionPayoutAmount(undefined);
     setResolutionPayoutChecked(false);
     setResolutionPayoutDescription('');
+
+    // Show toast message for 3 seconds
+    setToastMessage('Resolution Payout added');
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
   };
 
   return (
     <main className={styles.mainContainer}>
+      {showToast && (
+        <div className={cn('toast', 'toast-top', styles.toastContainer)}>
+          <div className="alert alert-success">
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
       <div>
         <h1 className={styles.headerText}>
           Upload Airbnb csv file with fields:
@@ -85,13 +108,19 @@ export default function MonthlyReport() {
                 documentTitle="Airbnb Report"
               />
               <div className={styles.resolutionPayoutContainer}>
-                <label className={cn('label', styles.resolutionPayoutCheckbox)}>
-                  <span
-                    className={cn(
-                      'label-text',
-                      styles.resolutionPayoutCheckboxLabel
-                    )}
-                  >
+                <label className={cn('label', styles.checkBox)}>
+                  <span className={cn('label-text', styles.checkBoxLabel)}>
+                    Include VAT 10%
+                  </span>
+                  <input
+                    type="checkbox"
+                    className="checkbox checkbox-primary"
+                    checked={vatChecked}
+                    onChange={handleVatChange}
+                  />
+                </label>
+                <label className={cn('label', styles.checkBox)}>
+                  <span className={cn('label-text', styles.checkBoxLabel)}>
                     Resolution Payout
                   </span>
                   <input
@@ -117,7 +146,7 @@ export default function MonthlyReport() {
                     />
                     <input
                       type="text"
-                      placeholder="Selite"
+                      placeholder="Description"
                       className={cn(
                         'input',
                         'input-bordered',
@@ -140,7 +169,11 @@ export default function MonthlyReport() {
           )}
         </div>
         {csvData.length > 0 && (
-          <DataTable data={csvData} contentRef={contentRef} />
+          <DataTable
+            data={csvData}
+            contentRef={contentRef}
+            vatChecked={vatChecked}
+          />
         )}
       </div>
     </main>

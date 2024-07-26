@@ -12,7 +12,7 @@ export default function NotFound() {
           Sorry, we couldn’t find the page you’re looking for.
         </p>
         <div className={styles.buttonContainer}>
-          <Link href="/reservations-data" className={cn('btn', styles.button)}>
+          <Link href="/analytics" className={cn('btn', styles.button)}>
             Go back <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
