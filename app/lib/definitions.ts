@@ -21,6 +21,28 @@ export type Reservation = {
   listing_id: number;
 };
 
+export type MonthlyReportListingData = {
+  Amount: string;
+  Type: string;
+  'Start date': string;
+  'End date': string;
+  'Service fee': string;
+};
+
+export type MonthlyReportSummary = {
+  airbnbAmountVat10: string;
+  airbnbAmount: string;
+  commissionVat0: number;
+  commissionVat24: number;
+  customerAmount: number;
+  reservationsAmount: number;
+  occupiedNightsInMonth: number;
+  occupancyRate: string;
+  serviceFees: string;
+  calculationMonth: number;
+  calculationYear: number;
+};
+
 export type Listing = {
   id: number;
   listing: string;

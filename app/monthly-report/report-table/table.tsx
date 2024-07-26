@@ -1,5 +1,9 @@
 import { fetchListings } from '@/app/lib/database';
-import { Listing } from '@/app/lib/definitions';
+import {
+  Listing,
+  MonthlyReportListingData,
+  MonthlyReportSummary
+} from '@/app/lib/definitions';
 import { calculateDaysInMonth, formatDate, parseDate } from '@/app/lib/utils';
 import cn from 'classnames';
 import React, { useEffect, useState } from 'react';
@@ -74,10 +78,13 @@ export default function DataTable({
   }, {});
 
   // Helper function to calculate summary for each listing
-  const calculateSummary = (listingData: any) => {
+  const calculateSummary = (
+    listingData: MonthlyReportListingData[],
+    vatChecked: boolean
+  ): MonthlyReportSummary => {
     // Calculate Airbnb amount VAT 10%
     const airbnbAmountVat10 = listingData
-      .reduce((sum: any, row: any) => sum + (parseFloat(row.Amount) || 0), 0)
+      .reduce((sum, row) => sum + (parseFloat(row.Amount) || 0), 0)
       .toFixed(2);
 
     // Calculate Airbnb amount considering VAT 10% if checked
@@ -86,22 +93,28 @@ export default function DataTable({
       : airbnbAmountVat10;
 
     // Calculate commission VAT 0%
-    const commissionVat0 = parseFloat(((airbnbAmount * 0.4) / 1.24).toFixed(2));
+    const commissionVat0 = parseFloat(
+      ((parseFloat(airbnbAmount) * 0.4) / 1.24).toFixed(2)
+    );
 
     // Calculate commission VAT 24%
-    const commissionVat24 = parseFloat((airbnbAmount * 0.4).toFixed(2));
+    const commissionVat24 = parseFloat(
+      (parseFloat(airbnbAmount) * 0.4).toFixed(2)
+    );
 
     // Calculate commission amount
-    const commissionAmount = parseFloat((airbnbAmount * 0.4).toFixed(2));
+    const commissionAmount = parseFloat(
+      (parseFloat(airbnbAmount) * 0.4).toFixed(2)
+    );
 
     // Calculate customer amount
     const customerAmount = parseFloat(
-      (airbnbAmount - commissionAmount).toFixed(2)
+      (parseFloat(airbnbAmount) - commissionAmount).toFixed(2)
     );
 
     // Calculate reservations amount
     const reservationsAmount = listingData.filter(
-      (row: any) => row.Type === 'Reservation'
+      (row) => row.Type === 'Reservation'
     ).length;
 
     // Get the month we're calculating for
@@ -113,7 +126,7 @@ export default function DataTable({
     let occupiedNightsInMonth = 0;
     const monthStartDate = new Date(calculationYear, calculationMonth, 1);
     const monthEndDate = new Date(calculationYear, calculationMonth + 1, 0);
-    listingData.forEach((row: any) => {
+    listingData.forEach((row) => {
       if (row.Type === 'Reservation') {
         const startDate = parseDate(row['Start date']);
         const endDate = parseDate(row['End date']);
@@ -151,10 +164,7 @@ export default function DataTable({
 
     // Calculate service fees
     const serviceFees = listingData
-      .reduce(
-        (sum: any, row: any) => sum + (parseFloat(row['Service fee']) || 0),
-        0
-      )
+      .reduce((sum, row) => sum + (parseFloat(row['Service fee']) || 0), 0)
       .toFixed(2);
 
     return {
@@ -172,13 +182,13 @@ export default function DataTable({
     };
   };
 
-  const overallSummary = calculateSummary(formattedData);
+  const overallSummary = calculateSummary(formattedData, vatChecked);
 
   const summaries = Object.keys(groupedData).map((listingKey) => {
     const listingData = groupedData[listingKey];
     return {
       listing: listingKey,
-      summary: calculateSummary(listingData)
+      summary: calculateSummary(listingData, vatChecked)
     };
   });
 

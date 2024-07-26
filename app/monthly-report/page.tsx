@@ -18,6 +18,8 @@ export default function MonthlyReport() {
   >(0);
   const [resolutionPayoutDescription, setResolutionPayoutDescription] =
     useState('');
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const handleDataUpload = (data: any[]) => {
     setCsvData(data);
@@ -63,10 +65,23 @@ export default function MonthlyReport() {
     setResolutionPayoutAmount(undefined);
     setResolutionPayoutChecked(false);
     setResolutionPayoutDescription('');
+
+    setToastMessage('Resolution Payout added');
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
   };
 
   return (
     <main className={styles.mainContainer}>
+      {showToast && (
+        <div className={cn('toast', 'toast-top', styles.toastContainer)}>
+          <div className="alert alert-success">
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
       <div>
         <h1 className={styles.headerText}>
           Upload Airbnb csv file with fields:
