@@ -17,7 +17,6 @@
 @mixin regular-button {
   background-color: $neutral;
   max-width: 20rem;
-  width: 8rem;
 
   &:hover {
     background-color: $neutral;

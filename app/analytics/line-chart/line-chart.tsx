@@ -1,117 +1,40 @@
 import DataTypeButtons from '@/app/analytics/components/data-type-buttons';
-import { createLineChart } from '@/app/components/create-chart';
+import { chartjsGlobals } from '@/app/lib/chartjs-globals';
 import {
   DataTypeKey,
   Listing,
   Reservation,
   dataTypes
 } from '@/app/lib/definitions';
-import { calculateAmountOfDays } from '@/app/lib/utils';
-import {
-  AxisScrollStrategies,
-  AxisTickStrategies,
-  ChartXY,
-  LegendBoxBuilders,
-  UIDraggingModes,
-  UIOrigins,
-  emptyTick
-} from '@arction/lcjs';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { calculateAmountOfDays, getDataColors } from '@/app/lib/utils';
+import 'chart.js/auto';
+import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm';
+import dayjs from 'dayjs';
+import { useState } from 'react';
+import { Line } from 'react-chartjs-2';
 import styles from './line-chart.module.scss';
 
-type LineChartDataSet = {
-  x: number;
-  y: number;
-  listing_id: number;
-};
-
-export default function LCLineChart({
+export default function LineChart({
   reservations,
   listings,
   selectedListings,
-  dateRange,
-  selectedDataType,
-  toggleDataType,
-  id
+  dateRange
 }: {
   reservations: Reservation[];
   listings: Listing[];
   selectedListings: number[];
   dateRange: { startDate: string; endDate: string };
-  selectedDataType: DataTypeKey;
-  toggleDataType: (dataType: DataTypeKey) => void;
-  id: string;
 }) {
-  const chartRef = useRef<ChartXY | null>(null);
-  const containerRef = useRef(null);
+  chartjsGlobals.setGlobalChartOptions();
+  const [selectedDataType, setSelectedDataType] =
+    useState<DataTypeKey>('amount');
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) {
-      return;
-    }
-    const initChart = () => {
-      try {
-        const chart = createLineChart(container);
-        chartRef.current = chart;
-        chart.setTitle('');
+  const toggleDataType = (dataType: DataTypeKey) => {
+    setSelectedDataType(dataType);
+  };
 
-        const axisX = chart.getDefaultAxisX();
-        axisX
-          .setScrollStrategy(AxisScrollStrategies.fitting)
-          .fit()
-          .setTickStrategy(AxisTickStrategies.DateTime, (ticks) =>
-            ticks
-              .setFormattingMinute(
-                {},
-                {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                  hour12: false
-                },
-                {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                  hour12: false
-                }
-              )
-              .setFormattingHour(
-                {},
-                { hour: '2-digit', minute: '2-digit', hour12: false },
-                { hour: '2-digit', minute: '2-digit', hour12: false }
-              )
-              .setFormattingDay(
-                {},
-                { day: 'numeric', weekday: 'short' },
-                { hour: '2-digit', minute: '2-digit', hour12: false }
-              )
-              .setCursorFormatter((x) =>
-                new Date(x).toLocaleDateString(undefined, {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit'
-                })
-              )
-              .setGreatTickStyle(emptyTick)
-          );
-        chart.getDefaultAxisY().setTickStrategy(AxisTickStrategies.Numeric);
-      } catch (error) {
-        console.error('Error initializing chart:', error);
-      }
-    };
-    initChart();
-    return () => {
-      if (chartRef.current) {
-        chartRef.current.dispose();
-        chartRef.current = null;
-      }
-    };
-  }, [id]);
-
-  const getChartData = useCallback((): LineChartDataSet[] => {
-    return selectedListings.flatMap((selectedListingId) => {
+  const getStatisticsForSelectedListings = () => {
+    return selectedListings.map((selectedListingId) => {
       const listingReservations = reservations
         .filter((reservation) => reservation.listing_id === selectedListingId)
         .sort(
@@ -120,127 +43,100 @@ export default function LCLineChart({
             new Date(b.payout_date).getTime()
         );
 
-      const totalDays = calculateAmountOfDays(
-        dateRange.startDate,
-        dateRange.endDate
-      );
+      let cumulativeAmount = 0;
 
-      return listingReservations.map(
-        (reservation, index, array): LineChartDataSet => {
-          let yValue = 0;
+      const data = listingReservations.map((reservation) => {
+        let totalValue;
 
-          const currentReservations = array.slice(0, index + 1);
-
-          switch (selectedDataType) {
-            case 'amount':
-              yValue = currentReservations.reduce(
-                (acc, cur) => acc + cur.amount,
-                0
-              );
-              break;
-            case 'nights':
-              yValue = currentReservations.reduce(
-                (acc, cur) => acc + cur.nights,
-                0
-              );
-              break;
-            case 'reservations':
-              yValue = currentReservations.filter(
-                (row) => row.event_type === 'Reservation'
-              ).length;
-              break;
-            case 'occupancy_rate':
-              const totalNights = currentReservations.reduce(
-                (acc, cur) => acc + cur.nights,
-                0
-              );
-              yValue = (totalNights / totalDays) * 100;
-              break;
-            default:
-              yValue = 0;
-          }
-
-          return {
-            x: new Date(reservation.payout_date).getTime(),
-            y: yValue,
-            listing_id: selectedListingId
-          };
+        if (dataTypes[selectedDataType].label === 'Reservations') {
+          // For 'Reservations' type, calculate the count of rows
+          totalValue = 1;
+        } else if (dataTypes[selectedDataType].label === 'Occupancy Rate') {
+          // For 'Occupancy Rate' type, calculate the occupancy rate
+          const totalNights = reservation.nights;
+          totalValue =
+            (totalNights /
+              calculateAmountOfDays(dateRange.startDate, dateRange.endDate)) *
+            100;
+        } else {
+          totalValue = reservation[dataTypes[selectedDataType].property];
         }
-      );
-    });
-  }, [selectedDataType, reservations, selectedListings, dateRange]);
 
-  const chartDataSet = useMemo(() => getChartData(), [getChartData]);
+        cumulativeAmount += typeof totalValue === 'number' ? totalValue : 0;
 
-  useEffect(() => {
-    const chart = chartRef.current;
-    if (chart) {
-      chart.getLegendBoxes().forEach((legend) => legend.dispose());
-      chart.getSeries().forEach((series) => series.dispose());
-
-      // Set up chart axes
-      chart.getDefaultAxisY().setTitle(dataTypes[selectedDataType].label);
-      const startMillis = new Date(dateRange.startDate).getTime();
-      const endMillis = new Date(dateRange.endDate).getTime();
-      chart
-        .getDefaultAxisX()
-        .setInterval({ start: startMillis, end: endMillis });
-
-      // Create legend
-      const legend = chart
-        .addLegendBox(LegendBoxBuilders.VerticalLegendBox)
-        .setTitle('Listings')
-        .setPosition({ x: 100, y: 100 })
-        .setOrigin(UIOrigins.RightTop)
-        .setDraggingMode(UIDraggingModes.draggable)
-        .setMargin(1)
-        .setBackground((background) =>
-          background.setFillStyle(chart.getTheme().uiBackgroundFillStyle)
-        )
-        .setAutoDispose({ type: 'max-height', maxHeight: 0.75 });
-
-      // Group data by listing_id
-      const groupedData = chartDataSet.reduce(
-        (acc, dataPoint) => {
-          if (!acc[dataPoint.listing_id]) {
-            acc[dataPoint.listing_id] = [];
-          }
-          acc[dataPoint.listing_id].push({ x: dataPoint.x, y: dataPoint.y });
-          return acc;
-        },
-        {} as Record<number, { x: number; y: number }[]>
-      );
-
-      // Create a series for each listing
-      Object.entries(groupedData).forEach(([listingId, data]) => {
-        const listing = listings.find((l) => l.id === Number(listingId));
-        const seriesName = listing?.internal_name ?? `Listing ${listingId}`;
-
-        const lineSeries = chart.addLineSeries({
-          dataPattern: { pattern: 'ProgressiveX' }
-        });
-
-        lineSeries.setName(seriesName);
-        lineSeries.add(data);
-
-        legend.add(lineSeries);
+        return {
+          x: dayjs(reservation.payout_date).format('YYYY-MM-DD'),
+          y: cumulativeAmount
+        };
       });
+
+      const startDate = new Date(listingReservations[0]?.payout_date);
+      const endDate = new Date(
+        listingReservations[listingReservations.length - 1]?.payout_date
+      );
+
+      return {
+        label: listings.find((listing) => listing.id === selectedListingId)
+          ?.internal_name,
+        data,
+        fill: false,
+        borderColor: getDataColors(selectedListings.indexOf(selectedListingId)),
+        startDate,
+        endDate
+      };
+    });
+  };
+
+  const datasets = getStatisticsForSelectedListings();
+
+  const data = {
+    datasets
+  };
+
+  const options = {
+    responsive: true,
+    pointStyle: false,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+        labels: {
+          boxWidth: 20
+        }
+      }
+    },
+    scales: {
+      x: {
+        type: 'time' as const,
+        time: {
+          unit: 'day' as const,
+          displayFormats: {
+            day: 'MMM D'
+          },
+          tooltipFormat: 'MMMM D, YYYY'
+        },
+        title: {
+          display: true,
+          text: 'Date Range'
+        }
+      },
+      y: {
+        title: {
+          display: true,
+          text: dataTypes[selectedDataType].label
+        }
+      }
     }
-  }, [chartDataSet, selectedDataType, dateRange, listings]);
+  };
 
   return (
     <div className={styles.mainContainer}>
       <div className={styles.gridContainer}>
         <DataTypeButtons
-          toggleDataType={toggleDataType}
           selectedDataType={selectedDataType}
+          toggleDataType={toggleDataType}
         />
       </div>
-      <div
-        id={id}
-        ref={containerRef}
-        style={{ width: '100%', height: '600px' }}
-      ></div>
+      <Line options={options} data={data} />
     </div>
   );
 }

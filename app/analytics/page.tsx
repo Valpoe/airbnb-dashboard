@@ -1,8 +1,8 @@
 'use client';
-import LCBarChart from '@/app/analytics/bar-chart/bar-chart';
+import BarChart from '@/app/analytics/bar-chart/bar-chart';
 import DataButtons from '@/app/analytics/components/data-buttons';
 import DatePicker from '@/app/analytics/components/date-picker';
-import LCLineChart from '@/app/analytics/line-chart/line-chart';
+import LineChart from '@/app/analytics/line-chart/line-chart';
 import Statistics from '@/app/analytics/statistics/statistics';
 import ReservationsTable from '@/app/analytics/table/table';
 import {
@@ -92,28 +92,20 @@ export default function ReservationData() {
         return <ReservationsTable reservations={reservations} />;
       case 'line-chart':
         return (
-          <LCLineChart
-            key={`${selectedDataType}-${selectedListings.join('-')}`}
+          <LineChart
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}
             dateRange={dateRange}
-            selectedDataType={selectedDataType}
-            toggleDataType={toggleDataType}
-            id="line-chart-container"
           />
         );
       case 'bar-chart':
         return (
-          <LCBarChart
-            key={`${selectedDataType}-${selectedListings.join('-')}`}
+          <BarChart
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}
             dateRange={dateRange}
-            selectedDataType={selectedDataType}
-            toggleDataType={toggleDataType}
-            id="bar-chart-container"
           />
         );
       default:
