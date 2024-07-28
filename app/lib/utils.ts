@@ -25,3 +25,22 @@ export const parseDate = (dateString: string): Date => {
   const [day, month, year] = dateString.split('/').map(Number);
   return new Date(year, month - 1, day);
 };
+
+const dataColors = [
+  '#8b5cd6',
+  '#2be3bb',
+  '#d69b5c',
+  '#e268b0',
+  '#6877e2',
+  '#9cd63d',
+  '#ba68e2',
+  '#45c4dd',
+  '#cf8172',
+  '#db4cdb',
+  '#429de3',
+  '#e0c931'
+];
+
+export const getDataColors = (index: number) => {
+  return dataColors[index % dataColors.length];
+};
