@@ -1,6 +1,7 @@
 import {
   ArrowTrendingUpIcon,
   ChartBarIcon,
+  ChartPieIcon,
   DocumentMagnifyingGlassIcon,
   TableCellsIcon
 } from '@heroicons/react/24/outline';
@@ -14,7 +15,13 @@ export default function DataButtons({
   selectedButton: string;
   setselectedButton: (buttonType: string) => void;
 }) {
-  const dataContent = ['statistics', 'table', 'line-chart', 'bar-chart'];
+  const dataContent = [
+    'statistics',
+    'table',
+    'line-chart',
+    'bar-chart',
+    'pie-chart'
+  ];
 
   const getIconForButtonType = (buttonType: string) => {
     switch (buttonType) {
@@ -26,6 +33,8 @@ export default function DataButtons({
         return <ArrowTrendingUpIcon className={styles.icon} />;
       case 'bar-chart':
         return <ChartBarIcon className={styles.icon} />;
+      case 'pie-chart':
+        return <ChartPieIcon className={styles.icon} />;
       default:
         return null;
     }

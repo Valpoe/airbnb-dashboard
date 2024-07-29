@@ -20,9 +20,9 @@
 
 .tableContainer {
   overflow-x: auto;
-  padding-top: 1.25rem;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+  padding-top: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   background-color: $secondary-30;
 }
 
@@ -37,7 +37,7 @@
 }
 
 .tableTitle {
-  padding: 1.25rem;
+  padding-bottom: 1rem;
   font-size: 1.25rem;
   line-height: 1.75rem;
   font-weight: 600;
@@ -45,8 +45,10 @@
   color: $primary;
 }
 
-.pageBreak {
-  padding: 1.25rem;
+.tableHeaders {
+  color: $primary;
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 
 .summaryContainer {
@@ -58,13 +60,7 @@
 .summaryTable {
   border-width: 1px;
   border-color: $secondary-90;
-  margin-bottom: 5rem;
+  margin-bottom: 1rem;
   color: $primary;
   width: auto;
-}
-
-.summaryTableHeaders {
-  color: $primary;
-  font-size: 1rem;
-  line-height: 1.5rem;
 }

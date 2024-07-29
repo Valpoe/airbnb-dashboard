@@ -3,13 +3,14 @@ import BarChart from '@/app/analytics/bar-chart/bar-chart';
 import DataButtons from '@/app/analytics/components/data-buttons';
 import DatePicker from '@/app/analytics/components/date-picker';
 import LineChart from '@/app/analytics/line-chart/line-chart';
+import PieChart from '@/app/analytics/pie-chart/pie-chart';
 import Statistics from '@/app/analytics/statistics/statistics';
 import ReservationsTable from '@/app/analytics/table/table';
 import {
-  fetchListings,
-  fetchListingsByDateRangeAndListings
+  fetchListingsByDateRange,
+  fetchReservationsByDateRangeAndListings
 } from '@/app/lib/database';
-import { DataTypeKey, Listing, Reservation } from '@/app/lib/definitions';
+import { Listing, Reservation } from '@/app/lib/definitions';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import cn from 'classnames';
 import { useEffect, useRef, useState } from 'react';
@@ -26,30 +27,28 @@ export default function ReservationData() {
   });
   const [listings, setListings] = useState<Listing[]>([]);
   const [selectedListings, setSelectedListings] = useState<number[]>([]);
-  const [selectedDataType, setSelectedDataType] =
-    useState<DataTypeKey>('amount');
-  const toggleDataType = (dataType: DataTypeKey) => {
-    setSelectedDataType(dataType);
+
+  const fetchAndSetListings = async (startDate: string, endDate: string) => {
+    try {
+      const fetchedListings = await fetchListingsByDateRange(
+        startDate,
+        endDate
+      );
+      setListings(fetchedListings);
+      setSelectedListings(fetchedListings.map((listing) => listing.id));
+    } catch (error) {
+      console.error('Error fetching initial data: ', error);
+    }
   };
 
   useEffect(() => {
-    const fetchAndSetListings = async () => {
-      try {
-        const fetchedListings = await fetchListings();
-        setListings(fetchedListings);
-        setSelectedListings(fetchedListings.map((listing) => listing.id));
-      } catch (error) {
-        console.error('Error fetching initial data: ', error);
-      }
-    };
-
-    fetchAndSetListings();
-  }, []);
+    fetchAndSetListings(dateRange.startDate, dateRange.endDate);
+  }, [dateRange.startDate, dateRange.endDate]);
 
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const reservations = await fetchListingsByDateRangeAndListings(
+        const reservations = await fetchReservationsByDateRangeAndListings(
           dateRange.startDate,
           dateRange.endDate,
           selectedListings
@@ -102,6 +101,15 @@ export default function ReservationData() {
       case 'bar-chart':
         return (
           <BarChart
+            reservations={reservations}
+            listings={listings}
+            selectedListings={selectedListings}
+            dateRange={dateRange}
+          />
+        );
+      case 'pie-chart':
+        return (
+          <PieChart
             reservations={reservations}
             listings={listings}
             selectedListings={selectedListings}
