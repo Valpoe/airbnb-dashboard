@@ -15,6 +15,10 @@
     height: 100vh;
     page-break-before: always;
   }
+
+  thead {
+    display: table-row-group;
+  }
 }
 
 @page {

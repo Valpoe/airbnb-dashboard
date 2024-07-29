@@ -212,7 +212,7 @@ export default function DataTable({
                 overallSummary.calculationYear
               }`}
         </caption>
-        <thead className="text-neutral text-base">
+        <thead className={styles.tableHeaders}>
           <tr>
             {columns.map((column, columnIndex) => (
               <th key={columnIndex}>{column}</th>
@@ -229,11 +229,11 @@ export default function DataTable({
           ))}
         </tbody>
       </table>
-      <div className={cn('page-break', styles.pageBreak)}>
+      <div className="page-break">
         <div className={styles.summaryContainer}>
           <table className={cn('table', styles.summaryTable)}>
             <caption className={styles.tableTitle}>Summary</caption>
-            <thead className={styles.summaryTableHeaders}>
+            <thead className={styles.tableHeaders}>
               <tr>
                 <th>Event</th>
                 <th>Type</th>
@@ -297,13 +297,13 @@ export default function DataTable({
       {filteredSummaries.length > 1 && (
         <div>
           {filteredSummaries.map(({ listing, summary }, index) => (
-            <div key={index} className={cn('page-break', styles.pageBreak)}>
+            <div key={index} className="page-break">
               <div className={styles.summaryContainer}>
                 <table className={cn('table', styles.summaryTable)}>
                   <caption className={styles.tableTitle}>
                     {listings.find((l) => l.listing === listing)?.internal_name}
                   </caption>
-                  <thead className={styles.summaryTableHeaders}>
+                  <thead className={styles.tableHeaders}>
                     <tr>
                       <th>Event</th>
                       <th>Type</th>
