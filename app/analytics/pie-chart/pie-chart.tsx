@@ -8,11 +8,12 @@ import {
 } from '@/app/lib/definitions';
 import { calculateAmountOfDays, getDataColors } from '@/app/lib/utils';
 import 'chart.js/auto';
+import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm';
 import { useState } from 'react';
-import { Bar } from 'react-chartjs-2';
-import styles from './bar-chart.module.scss';
+import { Pie } from 'react-chartjs-2';
+import styles from './pie-chart.module.scss';
 
-export default function BarChart({
+export default function PieChart({
   reservations,
   listings,
   selectedListings,
@@ -24,7 +25,6 @@ export default function BarChart({
   dateRange: { startDate: string; endDate: string };
 }) {
   chartjsGlobals.setGlobalChartOptions();
-
   const [selectedDataType, setSelectedDataType] =
     useState<DataTypeKey>('amount');
 
@@ -33,7 +33,7 @@ export default function BarChart({
   };
 
   const getStatisticsForSelectedListings = () => {
-    return selectedListings.map((selectedListingId) => {
+    return selectedListings.map((selectedListingId, index) => {
       const listingReservations = reservations.filter(
         (reservation) => reservation.listing_id === selectedListingId
       );
@@ -76,25 +76,22 @@ export default function BarChart({
       return {
         label: listings.find((listing) => listing.id === selectedListingId)
           ?.internal_name,
-        totalValue,
-        backgroundColor: getDataColors(
-          selectedListings.indexOf(selectedListingId)
-        )
+        data: totalValue,
+        backgroundColor: getDataColors(index)
       };
     });
   };
 
   const statistics = getStatisticsForSelectedListings();
 
-  const labels = ['Listing'];
-
   const data = {
-    labels,
-    datasets: statistics.map((statistic) => ({
-      label: statistic.label,
-      data: [statistic.totalValue],
-      backgroundColor: statistic.backgroundColor
-    }))
+    labels: statistics.map((stat) => stat.label),
+    datasets: [
+      {
+        data: statistics.map((stat) => stat.data),
+        backgroundColor: statistics.map((stat) => stat.backgroundColor)
+      }
+    ]
   };
 
   const options = {
@@ -104,19 +101,11 @@ export default function BarChart({
         labels: {
           boxWidth: 20
         }
-      }
-    },
-    scales: {
-      x: {
-        title: {
-          display: false
-        }
       },
-      y: {
-        title: {
-          display: true,
-          text: dataTypes[selectedDataType].label
-        }
+      title: {
+        display: true,
+        position: 'bottom' as const,
+        text: dataTypes[selectedDataType].label
       }
     }
   };
@@ -129,7 +118,9 @@ export default function BarChart({
           toggleDataType={toggleDataType}
         />
       </div>
-      <Bar options={options} data={data} />
+      <div className={styles.chartContainer}>
+        <Pie options={options} data={data} />
+      </div>
     </div>
   );
 }

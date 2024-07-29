@@ -18,7 +18,29 @@ export async function fetchListings() {
   }
 }
 
-export async function fetchListingsByDateRangeAndListings(
+export async function fetchListingsByDateRange(
+  startDate: string,
+  endDate: string
+) {
+  noStore();
+  try {
+    const result = await sql<Listing>`
+      SELECT * FROM listings
+      WHERE id IN (
+        SELECT DISTINCT listing_id FROM airbnb_data
+        WHERE payout_date >= ${startDate}
+          AND payout_date <= ${endDate}
+      )
+    `;
+    const data = result.rows;
+    return data;
+  } catch (error) {
+    console.log('Database error: ', error);
+    throw new Error('Error fetching listings');
+  }
+}
+
+export async function fetchReservationsByDateRangeAndListings(
   startDate: string,
   endDate: string,
   selectedListings: number[]
