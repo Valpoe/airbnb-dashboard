@@ -6,7 +6,7 @@ export const formatDate = (date: string | Date): string =>
 export const calculateAmountOfDays = (startDate: string, endDate: string) => {
   const start = new Date(startDate);
   const end = new Date(endDate);
-  const days = (end.getTime() - start.getTime()) / (1000 * 3600 * 24);
+  const days = (end.getTime() - start.getTime()) / (1000 * 3600 * 24); // 1 day in milliseconds
   return days;
 };
 
