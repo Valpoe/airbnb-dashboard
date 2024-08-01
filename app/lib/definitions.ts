@@ -75,6 +75,14 @@ export const dataTypes: Record<string, DataType> = {
 
 export type DataTypeKey = keyof typeof dataTypes;
 
+export type CalculatorType = 'apartmentRevenue' | 'calculator2' | 'calculator3';
+
+export const calculatorTypes: Record<CalculatorType, string> = {
+  apartmentRevenue: 'Apartment revenue',
+  calculator2: 'Calculator 2',
+  calculator3: 'Calculator 3'
+};
+
 export const monthlyReportColumns = [
   'Type',
   'Start date',

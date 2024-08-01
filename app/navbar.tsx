@@ -15,7 +15,7 @@ import { useEffect, useRef, useState } from 'react';
 const navigation = [
   { name: 'Monthly Report', href: '/monthly-report' },
   { name: 'Analytics', href: '/analytics' },
-  { name: 'Playground', href: '/playground' }
+  { name: 'Calculators', href: '/calculators' }
 ];
 
 export default function Navbar({ user }: { user: any }) {
