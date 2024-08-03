@@ -102,15 +102,12 @@ export default function DataTable({
       (parseFloat(airbnbAmount) * 0.4).toFixed(2)
     );
 
-    // Calculate commission amount
-    const commissionAmount = parseFloat(
-      (parseFloat(airbnbAmount) * 0.4).toFixed(2)
-    );
-
     // Calculate customer amount
-    const customerAmount = parseFloat(
-      (parseFloat(airbnbAmount) - commissionAmount).toFixed(2)
-    );
+    const customerAmount = vatChecked
+      ? parseFloat(
+          (parseFloat(airbnbAmountVat10) - commissionVat24 + 50).toFixed(2)
+        )
+      : parseFloat((parseFloat(airbnbAmount) - commissionVat24).toFixed(2));
 
     // Calculate reservations amount
     const reservationsAmount = listingData.filter(
@@ -181,6 +178,8 @@ export default function DataTable({
       calculationYear
     };
   };
+
+  console.log('formattedData', formattedData);
 
   const overallSummary = calculateSummary(formattedData, vatChecked);
 
@@ -273,7 +272,7 @@ export default function DataTable({
                 <td>EUR</td>
                 <td>{overallSummary.serviceFees}</td>
               </tr>
-              <tr>
+              {/* <tr>
                 <td>Number of reservations</td>
                 <td>Amount</td>
                 <td>{overallSummary.reservationsAmount}</td>
@@ -289,7 +288,7 @@ export default function DataTable({
                   <td>%</td>
                   <td>{overallSummary.occupancyRate}</td>
                 </tr>
-              )}
+              )} */}
             </tbody>
           </table>
         </div>
@@ -343,7 +342,7 @@ export default function DataTable({
                       <td>EUR</td>
                       <td>{summary.serviceFees}</td>
                     </tr>
-                    <tr>
+                    {/* <tr>
                       <td>Number of reservations</td>
                       <td>Amount</td>
                       <td>{summary.reservationsAmount}</td>
@@ -357,7 +356,7 @@ export default function DataTable({
                       <td>Occupancy rate</td>
                       <td>%</td>
                       <td>{summary.occupancyRate}</td>
-                    </tr>
+                    </tr> */}
                   </tbody>
                 </table>
               </div>
