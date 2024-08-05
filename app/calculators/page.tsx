@@ -21,7 +21,9 @@ export default function CalculatorsPage() {
     useState<CalculatorType>('apartmentRevenue');
   return (
     <main className={styles.mainContainer}>
-      <h1 className={styles.headerText}>Hello from playground</h1>
+      <h1 className={styles.headerText}>
+        {calculatorTypes[selectedCalculator].description}
+      </h1>
       <div role="tablist" className="tabs tabs-bordered tabs-lg">
         {Object.keys(calculatorTypes).map((key, index) => (
           <React.Fragment key={key}>
@@ -33,7 +35,7 @@ export default function CalculatorsPage() {
                 selectedCalculator === key ? styles.activeTab : ''
               }`}
               onChange={() => setSelectedCalculator(key as CalculatorType)}
-              aria-label={calculatorTypes[key as CalculatorType]}
+              aria-label={calculatorTypes[key as CalculatorType].name}
               defaultChecked={index === 0}
             />
             <div
